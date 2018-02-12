@@ -1,0 +1,34 @@
+type *nom { }
+type element {}
+type *elements { element:val }
+type functionDef:element {nom:nom champs:champs code:code } 
+type *functions { functionDef:val }
+type functionLiteral :code {  functionDef:main functions:interne }
+type code {}
+type *codes {code:code}
+type *champsCreer { nom:nom code:code }
+type appel:code {  nom:nom  codes:codes }
+type var:code { nom:nom }
+type creer:code { tp:tp champsCreer:champs  } 
+type si:code { code:code tp:tp code:alors code:sinon }
+type typeBase {}
+type tp:typeBase { nom:nom }
+type *lsTp { tp:tp }
+type tpFunction:typeBase  { tp:tpReturn lsTp:lsTp } 
+type tpMultiple:tp { }
+type *champs {nom:nom tp:tp }
+type typeDef:element {tp:tp typeBase:super champs:champs  }
+type acces :code {  code:code nom:var }
+type expression  { types:types functions:functions code:code }
+
+
+
+
+ 
+
+
+ 
+
+	
+
+

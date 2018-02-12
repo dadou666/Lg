@@ -1,0 +1,37 @@
+abstract type nb {}
+abstract type anb:nb { }
+type ls : anb {anb:next}
+type positif : anb {}
+type negatif : anb {}
+type zero : nb {}
+
+
+const zero zero {}
+const pu positif {}
+const nu negatif {}
+
+
+function suc  anb:a  |  ls { next= a }
+	
+
+function pred  anb:a | if a is ls then a.next else zero 
+
+function sign anb:a | if a is ls then sign(a.next) else a
+
+function neg nb:a |  if a is zero then a else ( if a is ls then  ls { next=neg(a) } else (if a is positif then nu else pu ))
+
+function -  nb:a nb:b | a +neg(b)
+
+function * nb:a nb:b | if a is zero then zero else (if sign(a) is positif then pred(a)*b+b else neg(pred(a)*b+b) )
+
+function + nb:a nb:b | 
+	if a is zero then 
+		b
+	else (
+		if b is positif then
+			(if sign(a) is positif then suc(a) else pred(a))
+		else
+			(if b is negatif then 
+				(if sign(a) is positif then pred(b) else suc(b))
+			else
+				(if sign(a) is positif then (a+nu)+(b+pu) else (a+pu)+(b+nu)	)))

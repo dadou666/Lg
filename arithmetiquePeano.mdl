@@ -1,0 +1,133 @@
+type naturel:nombre {}
+type *positif:naturel { }
+type negatif:naturel { *positif:val}
+type fraction:nombre { naturel:num naturel:dem }
+
+
+function suc naturel:a | 
+	if a is negatif then ( 
+		if  a.val.next is *positif then 
+			negatif { next=a.val.next } 
+		else 
+			positif {} ) 
+	else *positif { next=a } 
+	
+function pred naturel:a | 
+	if a is negatif then 
+		negatif {next=suc(a.val) } 
+	else 
+		(if a is *positif then 
+			a.next 
+		else 
+			negatif { next=*positif {next=positif{}} })
+
+
+
+function addNaturel naturel:a naturel:b |  
+	if a is negatif then 
+		addNaturel(suc(a) pred(b)) 
+	else (
+		if a is *positif then 
+			addNaturel(pred(a) suc(b)) 
+		else 
+			b ) 
+			
+
+function neg  naturel:a| 
+	if a is negatif then
+		a.val
+	else
+		(if a is *positif then
+			negatif {val=a}
+		else
+			a)	
+function subNaturel naturel:a naturel:b | addNaturel(a neg(b)) 
+
+function mulPositif positif:a positif:b |
+	if a is *positif then
+		addNaturel(b mulPositif(a.next b))
+	else
+		a	
+	
+	
+function mulNaturel naturel:a naturel:b |
+	if a is negatif then
+		(if b is negatif then
+			mulPositif(a.val b.val)
+		else
+			neg(mulPositif(a.val b)) )
+	else
+		(if b is negatif then
+			mulNaturel(b a)
+		else
+			mulPositif(a b))		
+		
+		
+		
+
+function *  nombre:a nombre:b |
+	if a is fraction then
+		(a.num*b)/a.dem
+	else
+		(if b is fraction then
+			b*a
+		else
+			mulNaturel(a b))
+
+function /  nombre:a nombre:b |
+	if a is fraction then
+		(if b is fraction then
+			fraction { num=a.num*b.dem dem=a.dem*b.num }
+		else
+			fraction  { num=a.num dem=a.dem*b })
+	else
+		(if b is fraction then
+			fraction {num=a*b.dem dem=b.num }
+		else
+			fraction {num=a num=b} )
+
+
+function +  nombre:a nombre:b|
+	if a is fraction then
+		(if b is fraction then						
+			fraction {num=a.num*b.dem+b.num*a.dem dem=a.dem*b.dem }
+		else
+			fraction { num=a.num+b*a.dem dem=a.dem })
+	else
+		(if b is fraction then
+			b+a
+		else 
+			addNaturel(a b) )		
+					 				
+function puissance positif:ordre nombre:a |
+	if ordre is *positif then
+		a*puissance(ordre.next a)
+	else
+		un() 
+			
+function sigma positif:ordre [positif]->nombre:f|
+	if ordre is *positif then
+		f(ordre)+sigma(ordre.next f)
+	else
+		f(ordre) 
+function un |*positif { next=positif {} } 
+function m  positif:a|un()/((a+un())*(a+un())) 
+function u  positif:ordre | sigma(ordre m) 								 						
+				
+
+
+
+				
+	
+
+							 
+
+
+
+
+
+
+
+
+
+

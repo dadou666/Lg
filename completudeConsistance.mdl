@@ -1,0 +1,61 @@
+abstract type boolean {}
+type true:boolean { }
+type false:boolean { }
+
+function => boolean:a boolean:b | if a is true then b else true
+function & boolean:a boolean:b | if a is true then b else false
+
+
+
+predicat  commu  | All n:x n:y | ( x+y = y+x  ) is true
+
+predicat converge [fraction]->fraction:f fraction:l | All fraction:epsilon | Exist fraction:theta | All fraction :x |
+		 (( x > theta ) => (abs(f(x)-l) < epsilon)) is true
+
+
+
+
+
+predicat consistante  [ dem  system  pred ]->pred  : dem  | All system:s pred:p dem:a dem:b | 
+	 valide(p s) => not(dem(a s p )= true &   dem(b s p) = false )   is true
+
+
+predicat complet [ dem  system  pred ]->pred  : dem  | All system:s pred:p | Exist dem:dem |  
+	 valide(p s)=> ( dem(dem s p) =true  |  dem(dem s p) =false )  is true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+def commutatif() = All nb:a All nb:b a+b=b+a
+
+
+
+
+
+
+
+
