@@ -13,7 +13,7 @@ public class Champ {
 		return nom;
 	}
 	public String toString() {
-		return type.toString()+":"+nom;
+		return type.toString()+":"+nom();
 	}
 
 }

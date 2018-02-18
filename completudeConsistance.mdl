@@ -1,7 +1,8 @@
 abstract type boolean {}
 type true:boolean { }
 type false:boolean { }
-
+const true true {}
+const false false {}
 function => boolean:a boolean:b | if a is true then b else true
 function & boolean:a boolean:b | if a is true then b else false
 

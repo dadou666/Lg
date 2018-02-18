@@ -73,4 +73,22 @@ public class Univers {
 		}
 
 	}
+	
+	public TypeLiteral typeChamp( String nomType,String nomChamp) {
+		TypeDef td =this.types.get(nomType);
+		for(Champ c:td.champs) {
+			if (c.nom().equals(nomChamp)) {
+				return c.type;
+			}
+			
+		}
+		if (td.superType == null )
+		{
+			return null;
+		}
+		
+		return typeChamp(td.superType,nomChamp);
+		
+		
+	}
 }

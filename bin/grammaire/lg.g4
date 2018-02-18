@@ -3,31 +3,32 @@ system : ( element   )*;
 
 element : type | function | defPredicat | constante;
 constante :'const' ID tmpCode;
-type  :  abstractFlag 'type' (multiple | simple ) ( superType | )  '{' champs  '}' ;
+type  :  abstractFlag 'type' (multipleFlag | ) ID  ( superType | )  '{' champs  '}' ;
+multipleFlag :'*';
 abstractFlag :'abstract'  | ;
-superType :      (':' ID )  ;
+superType :      (':' (ID | id_externe ) )  ;
 champs : champ *;
 champ : defType ':' ID ;
-multiple : '*' ID ;
-simple : ID ;
+multiple : '*' ( ID| id_externe ) ;
+simple : (ID |id_externe );
 typeBase :  multiple | simple ;
 attribut : ID '='  tmpCode ;
 defTypeFunction : '[' defTypes ']' '->' defType;
 defTypes :defType *;
 defType :  typeBase  | defTypeFunction ; 
 attributs : attribut * ;
-code :(  ('(' code ')' ) |  (appel|creerNombre|creerListe| creer | var | ('(' (  si) ')' ) ) ) operationOuAcces *    ;
+code :(  ('(' code ')' ) |  (appel|creerListe| creer | var | ('(' (  si) ')' ) ) ) operationOuAcces *    ;
 var : ID ;
-appel :  ID '(' tmpCode * ')' ;
+appel :  (ID | id_externe ) '(' tmpCode * ')' ;
 creer : (simple | multiple ) '{' attributs  '}';
 creerListe : ID '[' (  (('{' attributs  '}' ) + )      ) ']' ;
 
-creerNombre :'$' ID  V;
 
+id_externe : ID '$' ID;
 acces :  '.' ID ;
 operation : operateur tmpCode;
 operationOuAcces :  (acces |operation )  ;
-operateur : '->' |'=>' | '+' | '-' |'*' |'/'|'>' | '<' |'@'  | '%'|'&' |'|' |'=' ;
+operateur : '->' |'=>' | '+' | '-' |'*' |'/'|'>' | '<'  | '%'|'&' |'|' |'=' ;
 
 si :  'if' code 'is' negation (simple | multiple ) 'then' code 'else' ( si |code );
 negation : '!' | ;  
@@ -48,6 +49,6 @@ defPredicat : 'predicat' ID  champs '|'  ( exist | all  );
 
     // match keyword hello followed by an identifier
 V : [0-9]+;  
-ID : [a-zA-Z0-9]+  ;             // match lower-case identifiers
+ID : [a-zA-Z0-9_]+  ;             // match lower-case identifiers
 
 WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines

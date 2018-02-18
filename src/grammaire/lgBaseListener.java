@@ -22,9 +22,6 @@ public class lgBaseListener implements lgListener {
 	@Override public void enterDefTypes(lgParser.DefTypesContext ctx) { }
 	@Override public void exitDefTypes(lgParser.DefTypesContext ctx) { }
 
-	@Override public void enterCreerNombre(lgParser.CreerNombreContext ctx) { }
-	@Override public void exitCreerNombre(lgParser.CreerNombreContext ctx) { }
-
 	@Override public void enterOperationOuAcces(lgParser.OperationOuAccesContext ctx) { }
 	@Override public void exitOperationOuAcces(lgParser.OperationOuAccesContext ctx) { }
 
@@ -64,6 +61,9 @@ public class lgBaseListener implements lgListener {
 	@Override public void enterAll(lgParser.AllContext ctx) { }
 	@Override public void exitAll(lgParser.AllContext ctx) { }
 
+	@Override public void enterMultipleFlag(lgParser.MultipleFlagContext ctx) { }
+	@Override public void exitMultipleFlag(lgParser.MultipleFlagContext ctx) { }
+
 	@Override public void enterVar(lgParser.VarContext ctx) { }
 	@Override public void exitVar(lgParser.VarContext ctx) { }
 
@@ -93,6 +93,9 @@ public class lgBaseListener implements lgListener {
 
 	@Override public void enterSystem(lgParser.SystemContext ctx) { }
 	@Override public void exitSystem(lgParser.SystemContext ctx) { }
+
+	@Override public void enterId_externe(lgParser.Id_externeContext ctx) { }
+	@Override public void exitId_externe(lgParser.Id_externeContext ctx) { }
 
 	@Override public void enterFunctionDef(lgParser.FunctionDefContext ctx) { }
 	@Override public void exitFunctionDef(lgParser.FunctionDefContext ctx) { }

@@ -47,7 +47,7 @@ public class FonctionLocal extends Element {
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(nom);
+		sb.append(nom());
 		sb.append("=");
 		for (Champ champ : params) {
 			sb.append(champ);

@@ -25,4 +25,15 @@ public class Var extends Code implements Reference {
 		return c.tl(u);
 
 	}
+	public TypeLiteral ajouterPourSi(Si si,Map<String,TypeLiteral> variables) {
+		TypeLiteral oldTL = variables.get(nom);
+		variables.put(nom, si.type);
+		return oldTL;
+	}
+	public void supprimerPourSi(Map<String,TypeLiteral> variables,TypeLiteral tl) {
+		if (tl != null) {
+			variables.put(nom, tl);
+		}
+		
+	}
 }

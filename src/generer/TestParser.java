@@ -34,8 +34,8 @@ public class TestParser {
 		test("function +   m:x |  x+this");
 		test("function +  m:x | ( x+this )+f(this)");
 		test("function +  m:x |( x+this )/(m-x)");
-		test("function +  m:x | f($ u  785  $l 78)");
-		test("function s | $ m 778  ");
+		test("function +  m:x | f( u    l )");
+		test("function s |  m   ");
 		test(" function s  [a]->e:x | x(m)");
 		test(" type a { [a u]->m:ok } ");
 		test("function s m:a | a.u.o  ");

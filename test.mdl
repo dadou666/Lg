@@ -1,12 +1,12 @@
-predicat m [t]->o :x m:o |  All t:x | m is x
-function o m:x | m(x) => d(x)
-predicat t | All t:x| ( es(x ) => m(x & e) ) is true
 
-function m t:x | if x is ! *m then a else b
+function u * toto$m:x |  toto$chose { }
 
 
-predicat consistante  [ dem  system  pred ]->pred  : dem  | All system:s pred:p dem:a dem:b  |
-       estvalide(p s) =>  not( d)  is true
+
+
+
+
+
 
 
 

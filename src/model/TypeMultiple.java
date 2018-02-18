@@ -4,14 +4,16 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class TypeMultiple extends TypeBasic {
 	public TerminalNode tn;
-private String nom;
+	String nom;
+
 	public TypeMultiple(TerminalNode tn) {
-		this.tn=tn;
+		this.tn = tn;
 	}
+
 	public void nom(String nom) {
-		this.nom= nom;
+		this.nom = nom;
 	}
-	
+
 	public String nom() {
 		if (nom == null) {
 			nom = tn.getText();

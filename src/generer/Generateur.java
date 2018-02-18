@@ -13,7 +13,6 @@ import grammaire.lgParser.ChampsContext;
 import grammaire.lgParser.CodeContext;
 import grammaire.lgParser.CreerContext;
 import grammaire.lgParser.CreerListeContext;
-import grammaire.lgParser.CreerNombreContext;
 import grammaire.lgParser.DefPredicatContext;
 import grammaire.lgParser.DefTypeContext;
 import grammaire.lgParser.DefTypeFunctionContext;
@@ -24,12 +23,9 @@ import grammaire.lgParser.FunctionContext;
 import grammaire.lgParser.FunctionDefContext;
 import grammaire.lgParser.FunctionLocalContext;
 import grammaire.lgParser.MultipleContext;
-
 import grammaire.lgParser.OperateurContext;
 import grammaire.lgParser.OperationContext;
 import grammaire.lgParser.OperationOuAccesContext;
-
-
 import grammaire.lgParser.SiContext;
 import grammaire.lgParser.SimpleContext;
 import grammaire.lgParser.SuperTypeContext;
@@ -54,11 +50,14 @@ import model.Element;
 import model.FonctionDef;
 import model.FonctionLocal;
 import model.Si;
+import model.TypeBasic;
 import model.TypeDef;
 import model.TypeFunction;
 import model.TypeLiteral;
 import model.TypeMultiple;
+import model.TypeMultipleExterne;
 import model.TypeSimple;
+import model.TypeSimpleExterne;
 import model.Univers;
 import model.Var;
 
@@ -67,6 +66,8 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
+
+import com.sun.xml.internal.bind.v2.schemagen.xmlschema.SimpleContent;
 
 import components.Terminal;
 
@@ -133,15 +134,9 @@ public class Generateur {
 
 	public TypeDef transformer(TypeContext tc) {
 		TypeDef td = new TypeDef();
-		if (tc.multiple() != null) {
+		td.multiple = tc.multipleFlag() != null;
+		td.tn = tc.ID();
 
-			td.nom = new TypeMultiple(tc.multiple().ID());
-
-		}
-		if (tc.simple() != null) {
-			td.nom = new TypeSimple(tc.simple());
-
-		}
 		if (tc.superType() != null) {
 			td.superType = tc.superType().ID().getText();
 		}
@@ -189,7 +184,7 @@ public class Generateur {
 		if (flc.champs() != null) {
 			for (ChampContext cc : flc.champs().champ()) {
 				Champ champ = new Champ();
-				champ.tn= cc.ID();
+				champ.tn = cc.ID();
 
 				champ.type = this.transformer(cc.defType());
 				r.params.add(champ);
@@ -227,17 +222,40 @@ public class Generateur {
 
 	}
 
+	public TypeBasic transformer(MultipleContext mc) {
+		if (mc.id_externe() != null) {
+			TerminalNode mn = mc.id_externe().ID(0);
+			TerminalNode tn = mc.id_externe().ID(1);
+			TypeMultipleExterne ts = new TypeMultipleExterne(tn, mn);
+
+			return ts;
+		}
+
+		return new TypeMultiple(mc.ID());
+
+	}
+
+	public TypeBasic transformer(SimpleContext sc) {
+
+		if (sc.id_externe() != null) {
+			TerminalNode mn = sc.id_externe().ID(0);
+			TerminalNode tn = sc.id_externe().ID(1);
+			TypeSimpleExterne ts = new TypeSimpleExterne();
+			ts.mn = mn;
+			ts.tn = tn;
+			return ts;
+		}
+		return new TypeSimple(sc);
+
+	}
+
 	public Creer transformer(CreerContext cc) {
 		Creer r = new Creer();
 		if (cc.multiple() != null) {
-			TypeMultiple tm = new TypeMultiple(cc.multiple().ID());
-
-			r.type = tm;
+			r.type = this.transformer(cc.multiple());
 		}
 		if (cc.simple() != null) {
-			TypeSimple ts = new TypeSimple(cc.simple());
-
-			r.type = ts;
+			r.type = this.transformer(cc.simple());
 		}
 		r.attributs = new ArrayList<>();
 		for (AttributContext ac : cc.attributs().attribut()) {
@@ -270,7 +288,7 @@ public class Generateur {
 			}
 			if (creer != null) {
 				Attribut a = new Attribut();
-				a.nom( "next");
+				a.nom("next");
 				a.code = creerTmp;
 				creer.attributs.add(a);
 
@@ -313,7 +331,12 @@ public class Generateur {
 		}
 		if (ct.appel() != null) {
 			Appel appel = new Appel();
-			appel.tn = ct.appel().ID();
+			if (ct.appel().id_externe() != null) {
+				appel.mn = ct.appel().id_externe().ID(0);
+				appel.tn = ct.appel().id_externe().ID(1);
+			} else {
+				appel.tn = ct.appel().ID();
+			}
 			appel.params = new ArrayList<Code>();
 			for (TmpCodeContext cc : ct.appel().tmpCode()) {
 				appel.params.add(this.transformer(cc));
@@ -353,7 +376,7 @@ public class Generateur {
 
 		Si si = new Si();
 		si.test = transformer(sic.code(0));
-		if (sic.negation() != null) {
+		if (!sic.negation().getText().isEmpty()) {
 			si.negation = true;
 		}
 		si.alors = transformer(sic.code(1));
@@ -364,16 +387,14 @@ public class Generateur {
 			si.sinon = transformer(sic.code(2));
 		}
 		if (sic.multiple() != null) {
-			TypeMultiple tm = new TypeMultiple(sic.multiple().ID());
 
-			si.type = tm;
+			si.type = this.transformer(sic.multiple());
 
 		}
 
 		if (sic.simple() != null) {
-			TypeSimple ts = new TypeSimple(sic.simple());
 
-			si.type = ts;
+			si.type = this.transformer(sic.simple());
 
 		}
 		return si;
@@ -389,7 +410,12 @@ public class Generateur {
 		}
 		if (tmpCode.appel() != null) {
 			Appel appel = new Appel();
-			appel.tn = tmpCode.appel().ID();
+			if (tmpCode.appel().id_externe() != null) {
+				appel.mn = tmpCode.appel().id_externe().ID(0);
+				appel.tn = tmpCode.appel().id_externe().ID(1);
+			} else {
+				appel.tn = tmpCode.appel().ID();
+			}
 			appel.params = new ArrayList<Code>();
 			for (TmpCodeContext cc : tmpCode.appel().tmpCode()) {
 				appel.params.add(this.transformer(cc));
@@ -407,13 +433,15 @@ public class Generateur {
 
 	public TypeLiteral transformer(TypeBaseContext tbc) {
 		if (tbc.multiple() != null) {
-			TypeMultiple tm = new TypeMultiple(tbc.multiple().ID());
+			return this.transformer(tbc.multiple());
 
-			return tm;
+			
 		}
-		TypeSimple ts = new TypeSimple(tbc);
-
-		return ts;
+	//	TypeSimple ts = new TypeSimple(tbc);
+		if (tbc.simple() != null) {
+			return this.transformer(tbc.simple());
+		}
+		return null;
 	}
 
 	public TypeLiteral transformer(DefTypeContext dtc) {

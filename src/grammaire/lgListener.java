@@ -19,9 +19,6 @@ public interface lgListener extends ParseTreeListener {
 	void enterDefTypes(lgParser.DefTypesContext ctx);
 	void exitDefTypes(lgParser.DefTypesContext ctx);
 
-	void enterCreerNombre(lgParser.CreerNombreContext ctx);
-	void exitCreerNombre(lgParser.CreerNombreContext ctx);
-
 	void enterOperationOuAcces(lgParser.OperationOuAccesContext ctx);
 	void exitOperationOuAcces(lgParser.OperationOuAccesContext ctx);
 
@@ -61,6 +58,9 @@ public interface lgListener extends ParseTreeListener {
 	void enterAll(lgParser.AllContext ctx);
 	void exitAll(lgParser.AllContext ctx);
 
+	void enterMultipleFlag(lgParser.MultipleFlagContext ctx);
+	void exitMultipleFlag(lgParser.MultipleFlagContext ctx);
+
 	void enterVar(lgParser.VarContext ctx);
 	void exitVar(lgParser.VarContext ctx);
 
@@ -90,6 +90,9 @@ public interface lgListener extends ParseTreeListener {
 
 	void enterSystem(lgParser.SystemContext ctx);
 	void exitSystem(lgParser.SystemContext ctx);
+
+	void enterId_externe(lgParser.Id_externeContext ctx);
+	void exitId_externe(lgParser.Id_externeContext ctx);
 
 	void enterFunctionDef(lgParser.FunctionDefContext ctx);
 	void exitFunctionDef(lgParser.FunctionDefContext ctx);

@@ -45,5 +45,22 @@ public class Si extends Code {
 		
 		return tpAlors.typeUnion(tpSinon,u);
 	}
+	
+	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables) throws ErreurSemantique {
+		test.verifierSemantique(u, variables);
+		TypeLiteral tl = null;
+		if (!negation) {
+			tl=test.ajouterPourSi(this, variables);
+		}
+		alors.verifierSemantique(u, variables);
+		test.supprimerPourSi(variables, tl);
+		if (negation) {
+			tl = test.ajouterPourSi(this, variables);
+		}
+		sinon.verifierSemantique(u, variables);
+		test.supprimerPourSi(variables, tl);
+		
+
+	}
 
 }

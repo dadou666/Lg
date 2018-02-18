@@ -9,6 +9,8 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 public class Appel extends Code implements Reference {
 	public boolean isOp = false;
 	private String nom;
+	private String module;
+	public TerminalNode mn;
 
 	public TerminalNode tn;
 	public ParserRuleContext pr;
@@ -21,6 +23,12 @@ public class Appel extends Code implements Reference {
 			} else {
 				nom = pr.getText();
 			}
+			if (mn != null) {
+				module = mn.getText();
+				nom=module+"$"+nom;
+			}
+			
+			
 		}
 		return nom;
 	}

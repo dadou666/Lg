@@ -1,0 +1,15 @@
+package model;
+
+public class ErreurAccesChampInexistant extends ErreurSemantique {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2769582434778846952L;
+	public Acces acces;
+	public TypeLiteral tl;
+	public ErreurAccesChampInexistant(Acces acces,TypeLiteral tl) {
+		this.acces=acces;
+		this.tl=tl;
+	}
+
+}

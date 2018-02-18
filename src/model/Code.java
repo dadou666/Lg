@@ -10,4 +10,11 @@ public class Code {
 		return null;
 		
 	}
+	public TypeLiteral ajouterPourSi(Si si,Map<String,TypeLiteral> variables) {
+		
+		return null;
+	}
+	public void supprimerPourSi(Map<String,TypeLiteral> variables,TypeLiteral tl) {
+		
+	}
 }
