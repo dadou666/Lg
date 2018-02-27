@@ -37,7 +37,9 @@ import grammaire.lgParser.VarContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.Acces;
 import model.Appel;
@@ -74,16 +76,17 @@ import components.Terminal;
 
 public class Generateur {
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
-	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-		new Generateur().lireFichier("src\\arithmetiquePeano.txt");
-
-	}
-
+	public Map<Appel, AppelContext> appels = new HashMap<>();
+	public Map<Appel, OperationContext> operations = new HashMap<>();
+	public Map<TypeMultiple,MultipleContext> typeMultiples = new HashMap<>();
+	public Map<Creer,CreerListeContext> listeCreer = new HashMap<>();
+	public Map<Var,VarContext> vars = new HashMap<>();
+	public Map<TypeSimple,SimpleContext> typeSimples = new HashMap<>();
+	public Map<Champ,ChampContext> champs = new HashMap<>();
+	public Map<Attribut,AttributContext> attributs = new HashMap<>();
+	public Map<FonctionLocal,FunctionContext> fonctions = new HashMap<>();
+	public Map<FonctionLocal,FunctionLocalContext> fonctionLocals = new HashMap<>();
+	public Map<TypeDef,TypeContext> types = new HashMap<>();
 	public Univers lireFichier(String file) throws IOException {
 		lgLexer lgLexer = new lgLexer(
 				org.antlr.v4.runtime.CharStreams.fromFileName(file));
@@ -134,42 +137,44 @@ public class Generateur {
 	}
 
 	public TypeDef transformer(TypeContext tc) {
-		TypeDef td = new TypeDef();
-		td.multiple = tc.multipleFlag() != null;
-		td.tn = tc.ID();
+	
 
+		TypeDef td = new TypeDef(tc.ID().getText());
+		
+		td.multiple = tc.multipleFlag() != null;
 		if (tc.superType() != null) {
 			td.superType = tc.superType().ID().getText();
 		}
 		td.champs = new ArrayList<Champ>();
+		this.types.put(td, tc);
 		for (ChampContext cc : tc.champs().champ()) {
-			Champ champ = new Champ();
-			champ.type = this.transformer(cc.defType());
-			champ.tn = cc.ID();
+			Champ champ = new Champ(cc.ID().getText(),this.transformer(cc.defType()));
+		
 			td.champs.add(champ);
+			this.champs.put(champ, cc);
 
 		}
 		return td;
 	}
 
 	public FonctionLocal transformer(FunctionContext fc) {
-		FonctionLocal f = new FonctionLocal();
+		FonctionLocal f =null;
 		if (fc.ID() != null) {
-			f.tn = fc.ID();
+			f = new FonctionLocal(fc.ID().getText());
+		
 		}
 		if (fc.operateur() != null) {
-			f.pr = fc.operateur();
+			f = new FonctionLocal(fc.operateur().getText());
+		
 		}
-
+		this.fonctions.put(f, fc);
 		f.params = new ArrayList<Champ>();
 		if (fc.champs() != null) {
 			for (ChampContext cc : fc.champs().champ()) {
-				Champ champ = new Champ();
-				champ.tn = cc.ID();
-				
-				champ.type = this.transformer(cc.defType());
+				Champ champ = new Champ(cc.ID().getText(),this.transformer(cc.defType()));
+			
 				f.params.add(champ);
-
+				this.champs.put(champ, cc);
 			}
 			f.code = this.transformer(fc.tmpCode());
 
@@ -179,20 +184,21 @@ public class Generateur {
 	}
 
 	public FonctionLocal transformer(FunctionLocalContext flc) {
-		FonctionLocal r = new FonctionLocal();
-		r.tn = flc.ID();
+		FonctionLocal r = new FonctionLocal(flc.ID().getText());
+	
 		r.params = new ArrayList<Champ>();
+		this.fonctionLocals.put(r, flc);
 		if (flc.champs() != null) {
 			for (ChampContext cc : flc.champs().champ()) {
-				Champ champ = new Champ();
-				champ.tn = cc.ID();
-
-				champ.type = this.transformer(cc.defType());
+				Champ champ = new Champ(cc.ID().getText(),this.transformer(cc.defType()));
+	
 				r.params.add(champ);
+				this.champs.put(champ, cc);
 
 			}
 
 		}
+		
 		r.code = this.transformer(flc.tmpCode());
 		return r;
 
@@ -203,11 +209,10 @@ public class Generateur {
 		r.params = new ArrayList<Champ>();
 		if (fdc.champs() != null) {
 			for (ChampContext cc : fdc.champs().champ()) {
-				Champ champ = new Champ();
-				champ.tn = cc.ID();
-
-				champ.type = this.transformer(cc.defType());
+				Champ champ = new Champ(cc.ID().getText(),this.transformer(cc.defType()));
+			
 				r.params.add(champ);
+				this.champs.put(champ, cc);
 
 			}
 
@@ -227,12 +232,15 @@ public class Generateur {
 		if (mc.id_externe() != null) {
 			TerminalNode mn = mc.id_externe().ID(0);
 			TerminalNode tn = mc.id_externe().ID(1);
-			TypeMultipleExterne ts = new TypeMultipleExterne(tn, mn);
+			TypeMultipleExterne ts = new TypeMultipleExterne(tn.getText(), mn.getText());
+			this.typeMultiples.put(ts, mc);
 
 			return ts;
 		}
 
-		return new TypeMultiple(mc.ID());
+		TypeMultiple tm= new TypeMultiple(mc.ID().getText());
+		this.typeMultiples.put(tm, mc);
+		return tm;
 
 	}
 
@@ -241,12 +249,14 @@ public class Generateur {
 		if (sc.id_externe() != null) {
 			TerminalNode mn = sc.id_externe().ID(0);
 			TerminalNode tn = sc.id_externe().ID(1);
-			TypeSimpleExterne ts = new TypeSimpleExterne();
-			ts.mn = mn;
-			ts.tn = tn;
+			TypeSimpleExterne ts = new TypeSimpleExterne(tn.getText(),mn.getText());
+			this.typeSimples.put(ts, sc);
 			return ts;
 		}
-		return new TypeSimple(sc);
+		TypeSimple ts= new TypeSimple(sc.getText());
+		this.typeSimples.put(ts, sc);
+		return ts;
+		
 
 	}
 
@@ -260,9 +270,8 @@ public class Generateur {
 		}
 		r.attributs = new ArrayList<>();
 		for (AttributContext ac : cc.attributs().attribut()) {
-			Attribut a = new Attribut();
-			a.tn = ac.ID();
-			a.code = this.transformer(ac.tmpCode());
+			Attribut a = new Attribut(ac.ID().getText(),this.transformer(ac.tmpCode()));
+			this.attributs.put(a, ac);
 			r.attributs.add(a);
 
 		}
@@ -273,7 +282,8 @@ public class Generateur {
 	public Creer transformer(CreerListeContext clc) {
 		Creer creer = null;
 		Creer creerRacine = null;
-		TypeMultiple tp = new TypeMultiple(clc.ID());
+		TypeMultiple tp = new TypeMultiple(clc.ID().getText());
+		
 
 		for (AttributsContext asc : clc.attributs()) {
 			Creer creerTmp = new Creer();
@@ -281,16 +291,13 @@ public class Generateur {
 			creerTmp.attributs = new ArrayList<>();
 
 			for (AttributContext ac : asc.attribut()) {
-				Attribut a = new Attribut();
-				a.tn = ac.ID();
-				a.code = this.transformer(ac.tmpCode());
+				Attribut a = new Attribut(ac.ID().getText(),this.transformer(ac.tmpCode()));
+				this.attributs.put(a,ac);
 				creerTmp.attributs.add(a);
 
 			}
 			if (creer != null) {
-				Attribut a = new Attribut();
-				a.nom("next");
-				a.code = creerTmp;
+				Attribut a = new Attribut("next",creerTmp);
 				creer.attributs.add(a);
 
 			} else {
@@ -299,7 +306,7 @@ public class Generateur {
 			creer = creerTmp;
 
 		}
-
+		this.listeCreer.put(creerRacine, clc);
 		return creerRacine;
 	}
 
@@ -320,9 +327,9 @@ public class Generateur {
 
 		}
 		if (ct.var() != null) {
-			Var v = new Var();
+			Var v = new Var(ct.var().ID().getText());
 
-			v.tn = ct.var().ID();
+			this.vars.put(v,ct.var());
 			r = v;
 			if (ret) {
 				return r;
@@ -342,13 +349,16 @@ public class Generateur {
 		}
 
 		if (ct.appel() != null) {
-			Appel appel = new Appel();
+			Appel appel = null;
 			if (ct.appel().id_externe() != null) {
-				appel.mn = ct.appel().id_externe().ID(0);
-				appel.tn = ct.appel().id_externe().ID(1);
+				appel = new Appel(ct.appel().id_externe().ID(1).getText(), ct
+						.appel().id_externe().ID(0).getText());
+
 			} else {
-				appel.tn = ct.appel().ID();
+				appel = new Appel(ct.appel().ID().getText(), null);
 			}
+
+			this.appels.put(appel, ct.appel());
 			appel.params = new ArrayList<Code>();
 			for (TmpCodeContext cc : ct.appel().tmpCode()) {
 				appel.params.add(this.transformer(cc));
@@ -362,13 +372,15 @@ public class Generateur {
 		Code tmp = r;
 		for (OperationOuAccesContext oc : ct.operationOuAcces()) {
 			if (oc.operation() != null) {
-				Appel appel = new Appel();
+				Appel appel = new Appel(oc.operation().operateur().getText(),null);
 				appel.isOp = true;
-				appel.pr = oc.operation().operateur();
+			
 				appel.params = new ArrayList<>();
 				appel.params.add(tmp);
 				appel.params.add(transformer(oc.operation().tmpCode()));
 				tmp = appel;
+				this.operations.put(appel, oc.operation());
+				
 			}
 			if (oc.acces() != null) {
 				Acces acces = new Acces();
@@ -422,12 +434,12 @@ public class Generateur {
 			return this.transformer(tmpCode.si());
 		}
 		if (tmpCode.appel() != null) {
-			Appel appel = new Appel();
+			Appel appel ;
 			if (tmpCode.appel().id_externe() != null) {
-				appel.mn = tmpCode.appel().id_externe().ID(0);
-				appel.tn = tmpCode.appel().id_externe().ID(1);
+
+				appel = new Appel(tmpCode.appel().id_externe().ID(0).getText(),tmpCode.appel().id_externe().ID(1).getText());
 			} else {
-				appel.tn = tmpCode.appel().ID();
+				appel=  new Appel(tmpCode.appel().ID().getText(),null);
 			}
 			appel.params = new ArrayList<Code>();
 			for (TmpCodeContext cc : tmpCode.appel().tmpCode()) {

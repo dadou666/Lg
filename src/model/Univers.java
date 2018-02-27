@@ -22,21 +22,21 @@ public class Univers {
 		return sb.toString();
 
 	}
-	
-	public void ajouterType(String nom,TypeDef td) {
+
+	public void ajouterType(String nom, TypeDef td) {
 		types.put(nom, td);
 	}
 
 	public TypeDef donnerType(String nom) {
 		int idxModule = nom.indexOf("$");
-		if (idxModule< 0) {
+		if (idxModule < 0) {
 			return types.get(nom);
 		}
-		String module = nom.substring(0,idxModule);	
-		return imports.get(module).donnerType(nom.substring(idxModule+1));
+		String module = nom.substring(0, idxModule);
+		return imports.get(module).donnerType(nom.substring(idxModule + 1));
 	}
 
-	public void verifierSemantique()   {
+	public void verifierSemantique() {
 		fonctions = new HashMap<>();
 		types = new HashMap<>();
 		constantes = new HashMap<>();
@@ -90,17 +90,42 @@ public class Univers {
 
 	public TypeLiteral typeChamp(String nomType, String nomChamp) {
 		TypeDef td = this.types.get(nomType);
-		for (Champ c : td.champs) {
-			if (c.nom().equals(nomChamp)) {
-				return c.type;
+		return td.map.get(nomChamp);
+
+	}
+
+	public Map<String, TypeLiteral> champs(String type) {
+		TypeDef td = this.donnerType(type);
+		if (td == null) {
+			return null;
+		}
+		if (td.map != null) {
+			return td.map;
+		}
+		td.map = new HashMap<String, TypeLiteral>();
+		if (td.multiple) {
+			td.map.put("next", new TypeSimple(td.superType));
+
+		}
+		TypeDef tmp = td;
+		while (tmp != null) {
+			
+			for (Champ champ : tmp.champs) {
+				if (td.map.get(champ.nom()) != null) {
+					erreurs.add(new DoublonDeNomParam(champ));
+
+				} else {
+					td.map.put(champ.nom(), champ.type);
+				}
+			}
+			if (tmp.superType == null) {
+				tmp = null;
+			} else {
+				tmp = this.donnerType(td.superType);
 			}
 
 		}
-		if (td.superType == null) {
-			return null;
-		}
-
-		return typeChamp(td.superType, nomChamp);
+		return td.map;
 
 	}
 }

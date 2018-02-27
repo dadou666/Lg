@@ -84,7 +84,27 @@ public class TestSemantique {
 		
 		
 	}
-
+	
+	@Test
+	public void testTypeMultipleOk() {
+		test(" type *t { } function u t:a | a "
+				+ " function m | u(*t { next= t {}} ) ",null);
+		test(" type *t { } function u t:a | a "
+				+ " function m | u(t {} ) ",null);
+		
+		
+	}
+	
+	@Test
+	public void testEntierOk() {
+		test(" type *t { } function u t:a | a "
+				+ " function m | u(458t ) ",null);
+	}
+	@Test
+	public void testFonctionLocalOk() {
+		test(" type *t { } function u [t]->t:f t:a | f(a) "
+				+ " function m | u(#{ t:a | a } t {}) ",null);
+	}
 	@Test
 	public void testNomFonctionInconnu() {
 		ObjetInconnu es = test("type m {}  function f m:x | u(x)",
@@ -105,6 +125,12 @@ public class TestSemantique {
 				+ "  function m u:x | x "
 				+ " function  t |  m(u { } ) ",null);
 		
+	}
+	
+	@Test 
+	public void testChampNextOk() {
+		
+		test(" type *u  {}  function u *u:a | a.next" ,null);
 	}
 	
 	@Test 

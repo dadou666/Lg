@@ -6,14 +6,14 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class Var extends Code implements Reference {
 	private String nom;
-	public TerminalNode tn;
+	public Var(String nom) {
+		this.nom = nom;
+	}
 	public String toString() {
 		return nom();
 	}
 	public String nom() {
-		if (nom == null) {
-			 nom = tn.getText();
-		}
+	
 		return nom;
 	}
 

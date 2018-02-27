@@ -1,23 +1,18 @@
 package model;
 
-import org.antlr.v4.runtime.tree.TerminalNode;
-
 public class TypeMultipleExterne extends TypeMultiple {
-	public TerminalNode mn;
+	public String module;
 
-	public TypeMultipleExterne(TerminalNode tn,TerminalNode mn) {
-		super(tn);
-		this.mn = mn;
-		
+	public TypeMultipleExterne(String nom, String module) {
+		super(nom);
+		this.module = module;
+
 	}
+
 	@Override
 	public String nom() {
-		if (nom == null) {
-			nom ="*"+ mn.getText() + "$" + tn.getText();
 
-		}
-
-		return nom;
+		return "*" + module + "$" + nom;
 	}
 
 }

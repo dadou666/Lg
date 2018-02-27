@@ -48,6 +48,7 @@ import javax.swing.text.StyleContext;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import model.ErreurSemantique;
 import model.Univers;
 
 import org.xml.sax.SAXException;
@@ -65,6 +66,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 	 */
 	TextAreaOutputStream streamOutput;
 	JList<String> list;
+	JList<ErreurSemantique> listErreurSemantique;
 	JButton nouveau;
 
 	public Terminal() {
@@ -82,6 +84,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		list = new JList<String>();
+		listErreurSemantique = new JList<ErreurSemantique>();
 		this.chargerList();
 		JScrollPane listScrollPane = new JScrollPane(list);
 		nouveau = new JButton("Nouveau");
@@ -89,11 +92,17 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 		sb.beginX();
 		sb.beginY();
-		sb.setSize(1024, 700);
+		sb.setSize(1020, 700);
 		sb.add(inputScrollPane);
-		sb.setSize(1024, 200);
-		sb.add(outputScrollPane);
+			sb.beginX();
+			sb.setSize(600, 200);
+			sb.add(outputScrollPane);
+			sb.space(4);
+			sb.setSize(416, 200);
+			sb.add(listErreurSemantique);
+			sb.end();
 		sb.end();
+		sb.space(4);
 		sb.beginY();
 		sb.setSize(300, 30);
 		sb.add(nouveau);

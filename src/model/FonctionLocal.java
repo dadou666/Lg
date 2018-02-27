@@ -10,12 +10,14 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class FonctionLocal extends Element {
 	private String nom;
-	public TerminalNode tn;
-	public ParserRuleContext pr;
+
 	public List<Champ> params = new ArrayList<>();
 	public Code code;
 	private TypeLiteral tl;
 	public boolean defType = false;
+	public FonctionLocal(String nom) {
+		this.nom= nom;
+	}
 
 	public TypeLiteral tl(Univers u, Map<String, FonctionLocal> locals) {
 		if (tl != null) {
@@ -36,13 +38,6 @@ public class FonctionLocal extends Element {
 	}
 
 	public String nom() {
-		if (nom == null) {
-			if (tn != null) {
-				nom = tn.getText();
-			} else {
-				nom = pr.getText();
-			}
-		}
 		return nom;
 	}
 

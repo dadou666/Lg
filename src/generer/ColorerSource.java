@@ -371,7 +371,7 @@ public class ColorerSource {
 		for (AttributsContext asc : clc.attributs()) {
 
 			for (AttributContext ac : asc.attribut()) {
-				Attribut a = new Attribut();
+			
 				this.colorerAttribut(ac.ID());
 				this.transformer(ac.tmpCode());
 

@@ -3,21 +3,20 @@ package model;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class TypeMultiple extends TypeBasic {
-	public TerminalNode tn;
-	String nom;
 
-	public TypeMultiple(TerminalNode tn) {
-		this.tn = tn;
+	String nom;
+	public TypeMultiple(String nom) {
+		this.nom=nom;
 	}
+
+
 
 	public void nom(String nom) {
 		this.nom = nom;
 	}
 
 	public String nom() {
-		if (nom == null) {
-			nom = tn.getText();
-		}
+	
 		return nom;
 	}
 

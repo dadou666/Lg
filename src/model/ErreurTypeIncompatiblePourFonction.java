@@ -10,5 +10,9 @@ public class ErreurTypeIncompatiblePourFonction extends ErreurSemantique {
 	public ErreurTypeIncompatiblePourFonction(Code code) {
 		this.code = code;
 	}
+	public String toString() {
+		return "ErreurTypeIncompatiblePourFonction "+code;
+		
+	}
 
 }

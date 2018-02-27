@@ -2,19 +2,20 @@ package model;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-public class TypeSimpleExterne extends TypeBasic {
-	public TerminalNode mn;
-	public TerminalNode tn;
-	private String nom;
+public class TypeSimpleExterne extends TypeSimple {
+	public TypeSimpleExterne(String nom,String module) {
+		super(nom);
+		this.module =module;
+	}
+
+
+	private String module;
 
 	@Override
 	public String nom() {
-		if (nom == null) {
-			nom = mn.getText() + "$" + tn.getText();
 
-		}
 
-		return nom;
+		return module+"$"+super.nom();
 	}
 
 	@Override

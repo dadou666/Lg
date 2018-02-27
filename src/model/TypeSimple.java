@@ -6,11 +6,11 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class TypeSimple extends TypeBasic {
-	public ParserRuleContext tn;
+
 	private String nom;
 
-	public TypeSimple(ParserRuleContext tn) {
-		this.tn = tn;
+	public TypeSimple(String nom) {
+		this.nom = nom;
 	}
 
 	public void nom(String nom) {
@@ -22,9 +22,7 @@ public class TypeSimple extends TypeBasic {
 	}
 
 	public String nom() {
-		if (nom == null) {
-			nom = tn.getText();
-		}
+
 		return nom;
 	}
 

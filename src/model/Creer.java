@@ -31,7 +31,7 @@ public class Creer extends Code {
 			} else {
 				noms.add(a.nom());
 				TypeLiteral tl = a.code.typeRetour(u, variables, null);
-				TypeLiteral tlChamp = u.donnerType(type.toString()).map.get(a
+				TypeLiteral tlChamp = u.champs(type.toString()).get(a
 						.nom());
 				if (tlChamp == null) {
 					u.erreurs.add(new ObjetInconnu(a));
@@ -47,7 +47,12 @@ public class Creer extends Code {
 
 			}
 		}
-		for (String nom : u.donnerType(this.type.toString()).map.keySet()) {
+		TypeDef td = u.donnerType(this.type.toString());
+		if (td == null) {
+			u.erreurs.add(new ObjetInconnu(type));
+			return;
+		}
+		for (String nom : u.champs(this.type.toString()).keySet()) {
 			if (!noms.contains(nom)) {
 				ErreurAttributAbsentDansCreer erreur = new ErreurAttributAbsentDansCreer();
 				erreur.nom = nom;

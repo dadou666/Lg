@@ -4,12 +4,13 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class Attribut  implements Reference{
 	private String nom;
-	public TerminalNode tn;
+    public Attribut(String nom,Code code) {
+    	this.nom = nom;
+    	this.code =code;
+    }
 
 	public String nom() {
-		if (nom == null) {
-			nom = tn.getText();
-		}
+	
 		return nom;
 	}
 

@@ -31,12 +31,11 @@ public class CreerEntier extends Code implements Reference {
 			Map<String, TypeLiteral> variables,
 			Map<String, FonctionLocal> locals) {
 		if (valeur > 0) {
-			TypeMultiple tm = new TypeMultiple(null);
-			tm.nom("*" + type);
+			TypeMultiple tm = new TypeMultiple(type);
+
 			return tm;
 		}
-		TypeSimple ts = new TypeSimple(null);
-		ts.nom(type);
+		TypeSimple ts = new TypeSimple(type);
 
 		return ts;
 
