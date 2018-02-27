@@ -25,10 +25,9 @@ public class Appel extends Code implements Reference {
 			}
 			if (mn != null) {
 				module = mn.getText();
-				nom=module+"$"+nom;
+				nom = module + "$" + nom;
 			}
-			
-			
+
 		}
 		return nom;
 	}
@@ -45,11 +44,38 @@ public class Appel extends Code implements Reference {
 		return sb.toString();
 	}
 
-	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables)
-			throws ErreurSemantique {
+	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables) {
+		TypeLiteral tl = variables.get(nom());
+		if (tl != null) {
+			if ((tl instanceof TypeFunction)) {
+				TypeFunction tf = (TypeFunction) tl;
+				if (tf.params.size() != params.size()) {
+					u.erreurs.add(new NombreParametreIncorrecte(this));
+					return;
+					
+				}
+				int i = 0;
+				for (Code code : params) {
+					code.verifierSemantique(u, variables);
+					 tl = code.typeRetour(u, variables, null);
+					TypeLiteral tyFct = tf.params.get(i);
+					if (!tyFct.peutAccepter(u, tl)) {
+						u.erreurs.add(new ErreurTypeIncompatiblePourFonction(code));
+
+					}
+					i++;
+				}
+				return;
+			}
+			
+			
+		}
+		
 		FonctionLocal fl = u.fonctions.get(nom());
 		if (fl == null) {
+			
 			u.erreurs.add(new ObjetInconnu(this));
+			return;
 		}
 		if (fl.params.size() != params.size()) {
 			u.erreurs.add(new NombreParametreIncorrecte(this));
@@ -58,7 +84,7 @@ public class Appel extends Code implements Reference {
 		int i = 0;
 		for (Code code : params) {
 			code.verifierSemantique(u, variables);
-			TypeLiteral tl = code.typeRetour(u, variables, null);
+			 tl = code.typeRetour(u, variables, null);
 			TypeLiteral tyFct = fl.params.get(i).type;
 			if (!tyFct.peutAccepter(u, tl)) {
 				u.erreurs.add(new ErreurTypeIncompatiblePourFonction(code));
@@ -70,9 +96,20 @@ public class Appel extends Code implements Reference {
 
 	}
 
-	public TypeLiteral typeRetour(Univers u, Map<String, TypeLiteral> variables, Map<String, FonctionLocal> locals) {
+	public TypeLiteral typeRetour(Univers u,
+			Map<String, TypeLiteral> variables,
+			Map<String, FonctionLocal> locals) {
 		FonctionLocal fl = u.fonctions.get(nom());
-		return fl.tl(u,locals);
+		if (fl == null) {
+			return null;
+		}
+		return fl.tl(u, locals);
+	}
+
+	@Override
+	public String nomRef() {
+		// TODO Auto-generated method stub
+		return nom();
 	}
 
 }

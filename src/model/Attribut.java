@@ -27,4 +27,10 @@ public class Attribut  implements Reference{
 		return sb.toString();
 	}
 
+	@Override
+	public String nomRef() {
+		// TODO Auto-generated method stub
+		return nom();
+	}
+
 }

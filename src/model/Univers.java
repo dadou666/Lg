@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 public class Univers {
+	public Map<String, Univers> imports = new HashMap<String, Univers>();
 	public List<Element> elements;
 	public Map<String, FonctionLocal> fonctions;
-	public Map<String, TypeDef> types;
+	private Map<String, TypeDef> types;
 	public Map<String, Const> constantes;
 	public List<ErreurSemantique> erreurs = new ArrayList<>();
 
@@ -21,8 +22,21 @@ public class Univers {
 		return sb.toString();
 
 	}
+	
+	public void ajouterType(String nom,TypeDef td) {
+		types.put(nom, td);
+	}
 
-	public void verifierSemantique() throws ErreurSemantique {
+	public TypeDef donnerType(String nom) {
+		int idxModule = nom.indexOf("$");
+		if (idxModule< 0) {
+			return types.get(nom);
+		}
+		String module = nom.substring(0,idxModule);	
+		return imports.get(module).donnerType(nom.substring(idxModule+1));
+	}
+
+	public void verifierSemantique()   {
 		fonctions = new HashMap<>();
 		types = new HashMap<>();
 		constantes = new HashMap<>();
@@ -53,7 +67,7 @@ public class Univers {
 		}
 		TypeDef td0 = this.types.get(t0);
 		TypeDef td1 = this.types.get(t1);
-		return typeUnion(td0.superType,td1.superType);
+		return typeUnion(td0.superType, td1.superType);
 
 	}
 
@@ -73,22 +87,20 @@ public class Univers {
 		}
 
 	}
-	
-	public TypeLiteral typeChamp( String nomType,String nomChamp) {
-		TypeDef td =this.types.get(nomType);
-		for(Champ c:td.champs) {
+
+	public TypeLiteral typeChamp(String nomType, String nomChamp) {
+		TypeDef td = this.types.get(nomType);
+		for (Champ c : td.champs) {
 			if (c.nom().equals(nomChamp)) {
 				return c.type;
 			}
-			
+
 		}
-		if (td.superType == null )
-		{
+		if (td.superType == null) {
 			return null;
 		}
-		
-		return typeChamp(td.superType,nomChamp);
-		
-		
+
+		return typeChamp(td.superType, nomChamp);
+
 	}
 }

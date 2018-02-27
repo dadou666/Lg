@@ -46,6 +46,7 @@ import model.Champ;
 import model.Code;
 import model.Const;
 import model.Creer;
+import model.CreerEntier;
 import model.Element;
 import model.FonctionDef;
 import model.FonctionLocal;
@@ -165,7 +166,7 @@ public class Generateur {
 			for (ChampContext cc : fc.champs().champ()) {
 				Champ champ = new Champ();
 				champ.tn = cc.ID();
-
+				
 				champ.type = this.transformer(cc.defType());
 				f.params.add(champ);
 
@@ -309,9 +310,19 @@ public class Generateur {
 		if (ct.code() != null) {
 			r = transformer(ct.code());
 		}
+		if (ct.entier() != null) {
+
+			CreerEntier creer = new CreerEntier(ct.entier().ENTIER());
+			r = creer;
+			if (ret) {
+				return creer;
+			}
+
+		}
 		if (ct.var() != null) {
 			Var v = new Var();
-			v.nom = ct.var().getText();
+
+			v.tn = ct.var().ID();
 			r = v;
 			if (ret) {
 				return r;
@@ -329,6 +340,7 @@ public class Generateur {
 			r = this.transformer(ct.creerListe());
 
 		}
+
 		if (ct.appel() != null) {
 			Appel appel = new Appel();
 			if (ct.appel().id_externe() != null) {
@@ -401,6 +413,7 @@ public class Generateur {
 	}
 
 	public Code transformer(TmpCodeContext tmpCode) {
+
 		if (tmpCode.functionDef() != null) {
 			return this.transformer(tmpCode.functionDef());
 
@@ -435,9 +448,8 @@ public class Generateur {
 		if (tbc.multiple() != null) {
 			return this.transformer(tbc.multiple());
 
-			
 		}
-	//	TypeSimple ts = new TypeSimple(tbc);
+		// TypeSimple ts = new TypeSimple(tbc);
 		if (tbc.simple() != null) {
 			return this.transformer(tbc.simple());
 		}

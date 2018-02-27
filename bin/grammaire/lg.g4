@@ -17,8 +17,9 @@ defTypeFunction : '[' defTypes ']' '->' defType;
 defTypes :defType *;
 defType :  typeBase  | defTypeFunction ; 
 attributs : attribut * ;
-code :(  ('(' code ')' ) |  (appel|creerListe| creer | var | ('(' (  si) ')' ) ) ) operationOuAcces *    ;
+code :(  ('(' code ')' ) |  (appel|creerListe| creer | var  |entier| ('(' (  si) ')' ) ) ) operationOuAcces *    ;
 var : ID ;
+entier : ENTIER;
 appel :  (ID | id_externe ) '(' tmpCode * ')' ;
 creer : (simple | multiple ) '{' attributs  '}';
 creerListe : ID '[' (  (('{' attributs  '}' ) + )      ) ']' ;
@@ -48,7 +49,7 @@ defPredicat : 'predicat' ID  champs '|'  ( exist | all  );
 
 
     // match keyword hello followed by an identifier
-V : [0-9]+;  
-ID : [a-zA-Z0-9_]+  ;             // match lower-case identifiers
+ENTIER : [1-9][0-9]*ID;  
+ID : [a-zA-Z][a-zA-Z0-9_]*  ;             // match lower-case identifiers
 
 WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines

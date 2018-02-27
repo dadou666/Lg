@@ -13,5 +13,8 @@ public class DoublonDeNom extends ErreurSemantique {
 		this.nom = nom;
 		
 	}
+	public String toString() {
+		return " doublons "+nom;
+	}
 
 }

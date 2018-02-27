@@ -78,6 +78,7 @@ public class ColorerSource {
 	public Color colorParam = Color.BLUE;
 	public Color colorFonction = Color.ORANGE;
 	public Color colorModule = Color.magenta;
+	public Color colorEntier =Color.PINK;
 
 	public List<MotAvecCouleur> ls = new ArrayList<>();
 
@@ -387,6 +388,13 @@ public class ColorerSource {
 
 		if (ct.code() != null) {
 			transformer(ct.code());
+		}
+		if (ct.entier() != null) {
+			this.colorer(ct.entier().ENTIER(), colorEntier);
+			if (ret) {
+				return;
+			}
+			
 		}
 		if (ct.var() != null) {
 			this.colorerParam(ct.var().ID());

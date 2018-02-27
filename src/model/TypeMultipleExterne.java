@@ -13,7 +13,7 @@ public class TypeMultipleExterne extends TypeMultiple {
 	@Override
 	public String nom() {
 		if (nom == null) {
-			nom = mn.getText() + "$" + tn.getText();
+			nom ="*"+ mn.getText() + "$" + tn.getText();
 
 		}
 

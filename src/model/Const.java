@@ -31,15 +31,16 @@ public class Const extends Element {
 	public String toString() {
 		return " const "+nom() +" "+value;
 	}
-	public void init(Univers u) throws ErreurSemantique{
+	public void init(Univers u)  {
 		if (u.constantes.get(nom()) != null) {
-			throw new DoublonDeNom(nom(), this);
+			u.erreurs.add( new DoublonDeNom(nom(), this));
+			return;
 		}
 		u.constantes.put(nom(),this);
 		
 		
 	}
-	public void verifierSemantique(Univers u) throws ErreurSemantique {
+	public void verifierSemantique(Univers u)   {
 		
 		Map<String,TypeLiteral> map = new HashMap<>();
 		value.verifierSemantique(u, map);

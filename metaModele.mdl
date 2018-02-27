@@ -19,7 +19,12 @@ type tpMultiple:tp { }
 type *champs {nom:nom tp:tp }
 type typeDef:element {tp:tp typeBase:super champs:champs  }
 type acces :code {  code:code nom:var }
-type expression  { types:types functions:functions code:code }
+type expression  { elements:elements code:code }
+abstract type _predicat:element  { _predicat:val}
+type quantification : _predicat { *champ:champs }
+type _all : quantification { }
+type _exist : quantification { } 
+type prop : _predicat {  code:code  tp:tp }
 
 
 

@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,7 @@ public class FonctionLocal extends Element {
 	private String nom;
 	public TerminalNode tn;
 	public ParserRuleContext pr;
-	public List<Champ> params;
+	public List<Champ> params = new ArrayList<>();
 	public Code code;
 	private TypeLiteral tl;
 	public boolean defType = false;
@@ -58,18 +59,18 @@ public class FonctionLocal extends Element {
 		return sb.toString();
 	}
 
-	public void init(Univers u) throws DoublonDeNom {
-		if (u.fonctions.get(nom) != null) {
-			u.erreurs.add(new DoublonDeNom(nom, this));
+	public void init(Univers u) {
+		if (u.fonctions.get(nom()) != null) {
+			u.erreurs.add(new DoublonDeNom(nom(), this));
 		}
 		u.fonctions.put(nom, this);
 	}
 
-	public void verifierSemantique(Univers u) throws ErreurSemantique {
+	public void verifierSemantique(Univers u){
 		Map<String, TypeLiteral> map = new HashMap<String, TypeLiteral>();
 		for (Champ c : params) {
 			if (map.get(c.nom()) != null) {
-				throw new DoublonDeNomParam(c);
+				u.erreurs.add(new DoublonDeNomParam(c));
 			}
 			c.type.verifierSemantique(u);
 			map.put(c.nom(), c.type);

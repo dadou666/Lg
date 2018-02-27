@@ -25,32 +25,47 @@ public class Si extends Code {
 		return sb.toString();
 
 	}
-	
-	public TypeLiteral typeRetour(Univers u, Map<String, TypeLiteral> variables, Map<String, FonctionLocal> locals) {
+
+	public TypeLiteral typeRetour(Univers u,
+			Map<String, TypeLiteral> variables,
+			Map<String, FonctionLocal> locals) {
+		TypeLiteral tl = null;
+		if (!negation) {
+			tl = test.ajouterPourSi(this, variables);
+		}
 		TypeLiteral tpAlors = alors.typeRetour(u, variables, locals);
-		TypeLiteral tpSinon =sinon.typeRetour(u, variables, locals);
+		test.supprimerPourSi(variables, tl);
+		tl = null;
+		if (negation) {
+			tl = test.ajouterPourSi(this, variables);
+		}
+		TypeLiteral tpSinon = sinon.typeRetour(u, variables, locals);
+		test.supprimerPourSi(variables, tl);
 		if (tpAlors == null && tpSinon == null) {
 			throw new ErreurTypeNonCalculable(this);
-			
+
 		}
-		
+
 		if (tpAlors == null) {
 			return tpSinon;
 		}
-		
+
 		if (tpSinon == null) {
 			return tpAlors;
 		}
-		
-		
-		return tpAlors.typeUnion(tpSinon,u);
+
+		TypeLiteral tr= tpAlors.typeUnion(tpSinon, u);
+		if (tr == null) {
+			throw new ErreurTypeNonCalculable(this);
+		}
+		return tr;
 	}
-	
-	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables) throws ErreurSemantique {
+
+	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables) {
 		test.verifierSemantique(u, variables);
 		TypeLiteral tl = null;
 		if (!negation) {
-			tl=test.ajouterPourSi(this, variables);
+			tl = test.ajouterPourSi(this, variables);
 		}
 		alors.verifierSemantique(u, variables);
 		test.supprimerPourSi(variables, tl);
@@ -59,7 +74,6 @@ public class Si extends Code {
 		}
 		sinon.verifierSemantique(u, variables);
 		test.supprimerPourSi(variables, tl);
-		
 
 	}
 

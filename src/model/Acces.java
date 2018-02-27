@@ -29,13 +29,19 @@ public class Acces extends Code implements Reference {
 			u.erreurs.add(erreur);
 			return null;
 		}
-		tl = u.typeChamp(tl.toString(), nom);
+		tl = u.typeChamp(tl.toString(), nom());
 		if (tl == null) {
 			ErreurAccesChampInexistant erreur = new ErreurAccesChampInexistant(this, tl);
 			u.erreurs.add(erreur);
 		}
 		return tl;
 		
+	}
+
+	@Override
+	public String nomRef() {
+		// TODO Auto-generated method stub
+		return nom();
 	}
 
 }

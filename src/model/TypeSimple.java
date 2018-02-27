@@ -28,9 +28,9 @@ public class TypeSimple extends TypeBasic {
 		return nom;
 	}
 
-	public void verifierSemantique(Univers u) throws ErreurSemantique {
-		if (u.types.get(nom()) != null) {
-			throw new ObjetInconnu(this);
+	public void verifierSemantique(Univers u)   {
+		if (u.donnerType(nom()) == null) {
+			u.erreurs.add( new ObjetInconnu(this));
 		}
 	}
 
@@ -43,7 +43,7 @@ public class TypeSimple extends TypeBasic {
 				return true;
 			}
 			do {
-				td = u.types.get(tp);
+				td = u.donnerType(tp);
 				if (td.superType == null) {
 					return false;
 				}
@@ -56,6 +56,12 @@ public class TypeSimple extends TypeBasic {
 		}
 		return false;
 
+	}
+
+	@Override
+	public String nomRef() {
+		// TODO Auto-generated method stub
+		return nom();
 	}
 
 }

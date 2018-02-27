@@ -1,7 +1,7 @@
 package model;
 
 public class TypeLiteral {
-	public void verifierSemantique(Univers u) throws ErreurSemantique {
+	public void verifierSemantique(Univers u)   {
 
 	}
 	

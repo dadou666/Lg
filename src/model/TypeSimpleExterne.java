@@ -27,4 +27,10 @@ public class TypeSimpleExterne extends TypeBasic {
 		return nom();
 	}
 
+	@Override
+	public String nomRef() {
+		// TODO Auto-generated method stub
+		return nom();
+	}
+
 }

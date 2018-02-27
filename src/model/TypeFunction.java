@@ -1,10 +1,12 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TypeFunction extends TypeLiteral {
 	public TypeLiteral retour;
-	public List<TypeLiteral> params;
+	public List<TypeLiteral> params= new ArrayList<>();
+	
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -19,7 +21,7 @@ public class TypeFunction extends TypeLiteral {
 
 	}
 
-	public void verifierSemantique(Univers u) throws ErreurSemantique {
+	public void verifierSemantique(Univers u)   {
 		retour.verifierSemantique(u);
 		for (TypeLiteral tl : params) {
 			tl.verifierSemantique(u);
@@ -35,7 +37,7 @@ public class TypeFunction extends TypeLiteral {
 
 			}
 			for (int i = 0; i < params.size(); i++) {
-				if (params.get(i).peutAccepter(u,tf.params.get(i))) {
+				if (!params.get(i).peutAccepter(u,tf.params.get(i))) {
 					return false;
 				}
 			}

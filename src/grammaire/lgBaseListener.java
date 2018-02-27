@@ -46,6 +46,9 @@ public class lgBaseListener implements lgListener {
 	@Override public void enterConstante(lgParser.ConstanteContext ctx) { }
 	@Override public void exitConstante(lgParser.ConstanteContext ctx) { }
 
+	@Override public void enterEntier(lgParser.EntierContext ctx) { }
+	@Override public void exitEntier(lgParser.EntierContext ctx) { }
+
 	@Override public void enterSi(lgParser.SiContext ctx) { }
 	@Override public void exitSi(lgParser.SiContext ctx) { }
 
