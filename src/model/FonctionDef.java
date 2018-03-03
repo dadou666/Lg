@@ -1,14 +1,26 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class FonctionDef extends Code {
-	public List<Champ> params;
+	public List<Champ> params = new ArrayList<Champ>();
 	public Code code;
 	public List<FonctionLocal> locals;
-	public TypeLiteral tp;
+	
+	public void assignerModule(String nom) {
+	
+		code.assignerModule(nom);
+		for(FonctionLocal fl:locals) {
+			fl.assignerModule(nom);
+		}
+		for(Champ c:params) {
+			c.assignerModule(nom);
+		}
+		
+	}
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

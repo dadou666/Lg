@@ -11,7 +11,7 @@ public class ErreurTypeIncompatiblePourFonction extends ErreurSemantique {
 		this.code = code;
 	}
 	public String toString() {
-		return "ErreurTypeIncompatiblePourFonction "+code;
+		return "ErreurTypeIncompatiblePourFonction dans "+element.afficher()+" "+code;
 		
 	}
 

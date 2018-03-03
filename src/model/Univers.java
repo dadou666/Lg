@@ -8,10 +8,23 @@ import java.util.Map;
 public class Univers {
 	public Map<String, Univers> imports = new HashMap<String, Univers>();
 	public List<Element> elements;
-	public Map<String, FonctionLocal> fonctions;
+	private  Map<String, FonctionLocal> fonctions;
 	private Map<String, TypeDef> types;
 	public Map<String, Const> constantes;
 	public List<ErreurSemantique> erreurs = new ArrayList<>();
+	
+	public void assignerModule(String nom) {
+		for(Element e:fonctions.values()) {
+			e.assignerModule(nom);
+		}
+		for(Element e:types.values()) {
+			e.assignerModule(nom);
+		}
+		for(Element e:constantes.values()) {
+			e.assignerModule(nom);
+		}
+		
+	}
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -22,7 +35,19 @@ public class Univers {
 		return sb.toString();
 
 	}
-
+	public FonctionLocal donnerFonction(String nom) {
+		int idxModule = nom.indexOf("$");
+		if (idxModule < 0) {
+			return fonctions.get(nom);
+		}
+		String module = nom.substring(0, idxModule);
+		return imports.get(module).donnerFonction(nom.substring(idxModule + 1));
+		
+	}
+	public void ajouterFonction(String nom,FonctionLocal fl) {
+		fonctions.put(nom, fl);
+		
+	}
 	public void ajouterType(String nom, TypeDef td) {
 		types.put(nom, td);
 	}
@@ -41,10 +66,35 @@ public class Univers {
 		types = new HashMap<>();
 		constantes = new HashMap<>();
 		for (Element elt : elements) {
-			elt.init(this);
+			if (elt != null) {
+				elt.init(this);
+			}
 		}
 		for (Element elt : elements) {
-			elt.verifierSemantique(this);
+			List<ErreurSemantique> tmpLs = new ArrayList<>();
+			
+			if (elt != null)
+				try {
+
+				
+					tmpLs.addAll(erreurs);
+					elt.verifierSemantique(this);
+					for (ErreurSemantique es : this.erreurs) {
+						if (!tmpLs.contains(es))
+							es.element = elt;
+
+					}
+				} catch (ErreurSemantique es) {
+					es.element = elt;
+					if (!erreurs.contains(es)) {
+						erreurs.add(es);
+					}
+					for (ErreurSemantique x : this.erreurs) {
+						if (!tmpLs.contains(x))
+							x.element = elt;
+
+					}
+				}
 		}
 
 	}
@@ -104,12 +154,12 @@ public class Univers {
 		}
 		td.map = new HashMap<String, TypeLiteral>();
 		if (td.multiple) {
-			td.map.put("next", new TypeSimple(td.superType));
+			td.map.put("next", new TypeSimple(td.superType,null));
 
 		}
 		TypeDef tmp = td;
 		while (tmp != null) {
-			
+
 			for (Champ champ : tmp.champs) {
 				if (td.map.get(champ.nom()) != null) {
 					erreurs.add(new DoublonDeNomParam(champ));

@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 public class CreerEntier extends Code implements Reference {
 	public TerminalNode tn;
 	public String type;
+
 	public int valeur;
 
 	public CreerEntier(TerminalNode tn) {
@@ -27,15 +28,22 @@ public class CreerEntier extends Code implements Reference {
 
 	}
 
+	public void assignerModule(String nom) {
+		if (type.indexOf("$") < 0) {
+			type = nom + "$" + type;
+		}
+
+	}
+
 	public TypeLiteral typeRetour(Univers u,
 			Map<String, TypeLiteral> variables,
 			Map<String, FonctionLocal> locals) {
 		if (valeur > 0) {
-			TypeMultiple tm = new TypeMultiple(type);
+			TypeMultiple tm = new TypeMultiple(type, null);
 
 			return tm;
 		}
-		TypeSimple ts = new TypeSimple(type);
+		TypeSimple ts = new TypeSimple(type, null);
 
 		return ts;
 

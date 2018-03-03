@@ -94,13 +94,13 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 		sb.beginY();
 		sb.setSize(1020, 700);
 		sb.add(inputScrollPane);
-			sb.beginX();
-			sb.setSize(600, 200);
-			sb.add(outputScrollPane);
-			sb.space(4);
-			sb.setSize(416, 200);
-			sb.add(listErreurSemantique);
-			sb.end();
+		sb.beginX();
+		sb.setSize(600, 200);
+		sb.add(outputScrollPane);
+		sb.space(4);
+		sb.setSize(416, 200);
+		sb.add(listErreurSemantique);
+		sb.end();
 		sb.end();
 		sb.space(4);
 		sb.beginY();
@@ -175,9 +175,17 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 		}
 
 		Generateur gen = new Generateur();
-		//Univers u = gen.generer(sc);
+		Univers u = gen.generer(sc);
+		if (u != null) {
+			u.verifierSemantique();
+		}
+		ErreurSemantique array[] = new ErreurSemantique[u.erreurs.size()];
+		for (int i = 0; i < array.length; i++) {
+			array[i] = u.erreurs.get(i);
+		}
+		this.listErreurSemantique.setListData(array);
 
-		//System.out.println(u);
+		// System.out.println(u);
 
 		// this.input.setCharacterAttributes(this.attributeSet(Color.black),
 		// true);
@@ -220,14 +228,14 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 		try {
 			String sel = list.getSelectedValue();
-			Files.write(Paths.get(".", sel), this.input.getText()
-					.getBytes(), StandardOpenOption.CREATE);
-		//	System.out.println(" "+sel);
+			Files.write(Paths.get(".", sel), this.input.getText().getBytes(),
+					StandardOpenOption.CREATE);
+			// System.out.println(" "+sel);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	this.streamOutput.flush();
+		this.streamOutput.flush();
 
 	}
 
@@ -235,7 +243,6 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 		// TODO Auto-generated method stub
 
 	}
-
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {

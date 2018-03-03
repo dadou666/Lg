@@ -14,18 +14,27 @@ public class Appel extends Code implements Reference {
 		this.nom = nom;
 		this.module = module;
 	}
-
+	public void assignerModule(String nom) {
+		if (module == null) {
+			module = nom;
+		}
+		for(Code code:this.params) {
+			code.assignerModule(nom);
+		}
+		
+	}
 
 	public List<Code> params;
 
 	public String nom() {
 
 		if (module != null) {
-			nom = module + "$" + nom;
+			return module + "$" + nom;
 		}
 
 		return nom;
 	}
+	
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -66,7 +75,7 @@ public class Appel extends Code implements Reference {
 
 		}
 
-		FonctionLocal fl = u.fonctions.get(nom());
+		FonctionLocal fl = u.donnerFonction(nom());
 		if (fl == null) {
 
 			u.erreurs.add(new ObjetInconnu(this));
@@ -81,6 +90,7 @@ public class Appel extends Code implements Reference {
 			code.verifierSemantique(u, variables);
 			tl = code.typeRetour(u, variables, null);
 			TypeLiteral tyFct = fl.params.get(i).type;
+			
 			if (!tyFct.peutAccepter(u, tl)) {
 				u.erreurs.add(new ErreurTypeIncompatiblePourFonction(code));
 
@@ -94,7 +104,7 @@ public class Appel extends Code implements Reference {
 	public TypeLiteral typeRetour(Univers u,
 			Map<String, TypeLiteral> variables,
 			Map<String, FonctionLocal> locals) {
-		FonctionLocal fl = u.fonctions.get(nom());
+		FonctionLocal fl = u.donnerFonction(nom());
 		if (fl == null) {
 			return null;
 		}

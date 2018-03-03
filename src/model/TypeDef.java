@@ -15,11 +15,24 @@ public class TypeDef extends Element implements Reference {
 	public String superType;
 	public List<Champ> champs = new ArrayList<>();
 	Map<String, TypeLiteral> map;
+public void assignerModule(String nom) {
+	if (superType != null) {
+		if (superType.indexOf("$")<0) {
+			superType = nom+"$"+superType;
+		}
+	}
+	for(Champ c:champs) {
+			c.assignerModule(nom);
+	}
+		
+	}
 
 	public TypeDef(String nom) {
 		this.nom = nom;
 	}
-
+	public String afficher() {
+		return "Type "+this.nom();
+	}
 	public String nom() {
 		if (multiple) {
 			return "*"+nom;

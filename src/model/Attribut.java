@@ -13,6 +13,10 @@ public class Attribut  implements Reference{
 	
 		return nom;
 	}
+public void assignerModule(String nom) {
+		code.assignerModule(nom);
+		
+	}
 
 	public void nom(String nom) {
 		this.nom = nom;

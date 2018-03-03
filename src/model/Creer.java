@@ -20,6 +20,10 @@ public class Creer extends Code {
 		sb.append("}");
 		return sb.toString();
 	}
+public void assignerModule(String nom) {
+		type.assignerModule(nom);
+		
+	}
 
 	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables)
 			  {

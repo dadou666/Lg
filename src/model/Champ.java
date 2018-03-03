@@ -10,6 +10,10 @@ public class Champ {
 		this.nom = nom;
 		this.type = type;
 	}
+public void assignerModule(String nom) {
+		type.assignerModule(nom);
+		
+	}
 
 	public String nom() {
 

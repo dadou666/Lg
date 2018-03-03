@@ -15,5 +15,8 @@ public class TypeLiteral {
 	public TypeLiteral typeUnion(TypeLiteral tl, Univers u) {
 		return null;
 	}
-
+public void assignerModule(String nom) {
+		
+		
+	}
 }

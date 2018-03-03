@@ -9,13 +9,13 @@ multiple : '*' ID ;
 simple : ID ;
 attribut : ID ':' (si | code );
 attributs : attribut * ;
-code :(  ('(' code ')' ) |  (creerNombre|creerListe| creer | var ) ) (appel |acces |operation ) *   ;
+code :(  ('(' code ')' ) |  (creerListe| creer | var ) ) (appel |acces |operation ) *   ;
 var : ID ;
 appel :  '.' ID '(' tmpCode * ')' ;
 creer : (simple | multiple ) '{' attributs  '}';
 creerListe : ID '[' (  (('{' attributs  '}' ) + )      ) ']' ;
 
-creerNombre :'$' ID  V;
+
 
 acces :  '@' ID ;
 operation : operateur tmpCode;

@@ -5,6 +5,8 @@ import model.ErreurAccesChampInexistant;
 import model.ErreurAttributAbsentDansCreer;
 import model.ErreurSemantique;
 import model.ErreurTypeNonCalculable;
+import model.FonctionDef;
+import model.FonctionLocal;
 import model.ObjetInconnu;
 import model.Univers;
 
@@ -58,13 +60,10 @@ public class TestSemantique {
 
 	@Test
 	public void testTypeRetourFonctionNonCalculable() {
-		try {
-			test("type t {} type m:n {t:o} type n {}  function f n:x | if x is m then x.o else x",
-					null);
-		} catch (ErreurTypeNonCalculable erreur) {
-			return;
-		}
-		fail("ErreurTypeNonCalculable attendu ");
+
+		test("type t {} type m:n {t:o} type n {}  function f n:x | if x is m then x.o else x",
+				ErreurTypeNonCalculable.class);
+
 
 	}
 
@@ -74,37 +73,46 @@ public class TestSemantique {
 		test("type t {} type m {t:o} type n:m {}  function f n:x | x.o", null);
 
 	}
+
+	@Test
+	public void testFunctionTypeArgsOk() {
+		test("type t {} " + " function m  [t]->t:f t:x |  f(x) "
+				+ " function z t:t | t  " + " function u t:t | m(z t)", null);
+
+	}
+
 	
 	@Test 
-	public void testFunctionTypeArgsOk() {
-		test("type t {} "
-				+ " function m  [t]->t:f t:x |  f(x) "
-				+ " function z t:t | t  "
-				+ " function u t:t | m(z t)",null);
-		
+	public void testAccesNextTypeMultiple() {
+		test(" type *t { } function u t:a | if a is *t then  a.next else a",null);
 		
 	}
-	
+	@Test 
+	public void testAccesNextTypeMultipleDansSi() {
+		test(" type *t { } function u t:a | if a is ! *t then  a else a.next",null);
+		
+	}
 	@Test
 	public void testTypeMultipleOk() {
 		test(" type *t { } function u t:a | a "
-				+ " function m | u(*t { next= t {}} ) ",null);
-		test(" type *t { } function u t:a | a "
-				+ " function m | u(t {} ) ",null);
-		
-		
+				+ " function m | u(*t { next= t {}} ) ", null);
+		test(" type *t { } function u t:a | a " + " function m | u(t {} ) ",
+				null);
+
 	}
-	
+
 	@Test
 	public void testEntierOk() {
-		test(" type *t { } function u t:a | a "
-				+ " function m | u(458t ) ",null);
+		test(" type *t { } function u t:a | a " + " function m | u(458t ) ",
+				null);
 	}
+
 	@Test
 	public void testFonctionLocalOk() {
 		test(" type *t { } function u [t]->t:f t:a | f(a) "
-				+ " function m | u(#{ t:a | a } t {}) ",null);
+				+ " function m | u(#{ t:a | a } t {}) ", null);
 	}
+
 	@Test
 	public void testNomFonctionInconnu() {
 		ObjetInconnu es = test("type m {}  function f m:x | u(x)",
@@ -117,44 +125,65 @@ public class TestSemantique {
 		test("type m {} function u m:x | x   function f m:x | u(x)", null);
 
 	}
-	
-	@Test 
+
+	@Test
 	public void testCreerArgOk() {
-		
-		test( "  type u {} "
-				+ "  function m u:x | x "
-				+ " function  t |  m(u { } ) ",null);
-		
+
+		test("  type u {} " + "  function m u:x | x "
+				+ " function  t |  m(u { } ) ", null);
+
 	}
-	
-	@Test 
+
+	@Test
 	public void testChampNextOk() {
-		
-		test(" type *u  {}  function u *u:a | a.next" ,null);
+
+		test(" type *u  {}  function u *u:a | a.next", null);
 	}
-	
-	@Test 
+
+	@Test
 	public void testCreerIncomplet() {
-		
-		ErreurAttributAbsentDansCreer e=	test( " type m {} "
+
+		ErreurAttributAbsentDansCreer e = test(" type m {} "
 				+ " type u { m:x } "
-			
-				+ " function  t |  u { }  ",ErreurAttributAbsentDansCreer.class);
+
+				+ " function  t |  u { }  ",
+				ErreurAttributAbsentDansCreer.class);
 		assertEquals(e.nom, "x");
-		
+
 	}
-	
-	@Test 
+
+	@Test
 	public void testCreerAvecAttributInexistant() {
-		
-		ObjetInconnu e=	test( " type m {} "
-				+ " type u { m:x } "
-			
-				+ " function  t |  u { x=m {} o= 45a }  ",ObjetInconnu.class);
-		
+
+		ObjetInconnu e = test(" type m {} " + " type u { m:x } "
+
+		+ " function  t |  u { x=m {} o= 45a }  ", ObjetInconnu.class);
+
 		assertEquals(e.ref.nomRef(), "o");
-		
+
 	}
+
+	@Test
+	public void testTypeUnionOk() {
+
+		Univers u = test("type bool {}  type true:bool {} type false:bool { }  "
+				+ "function not  bool:a | if a is true then false {} else true {} "
+				+ "function u | not(not(true {} ))   ");
+
+		FonctionLocal fd = u.donnerFonction("not");
+		assertEquals(fd.tlReturn.toString(), "bool");
+
+	}
+
+	@Test
+	public void testTypeUnionko() {
+
+		test("type bool {}  type true:bool {} type false:bool { }  type a {} type b{} "
+				+ "function f  bool:a | if a is true then a {} else b {} ",
+				ErreurTypeNonCalculable.class);
+
+	}
+
 	public <T extends ErreurSemantique> T test(String src, Class<T> erreur) {
 
 		Univers u = new Generateur().lireSource(src);
@@ -177,5 +206,18 @@ public class TestSemantique {
 		fail("Manque une erreur de type " + erreur);
 		return null;
 
+	}
+
+	public Univers test(String src) {
+
+		Univers u = new Generateur().lireSource(src);
+		u.verifierSemantique();
+
+		if (u.erreurs.isEmpty()) {
+			return u;
+		}
+
+		fail("  Aucune erreur attendu " + u.erreurs);
+		return null;
 	}
 }

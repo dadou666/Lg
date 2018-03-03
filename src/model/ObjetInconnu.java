@@ -7,7 +7,7 @@ public class ObjetInconnu extends ErreurSemantique {
 		this.ref=ref;
 	}
 	public String toString() {
-		return " objet "+ref+" "+ref.nomRef()+" inconnu ";
+		return " objet "+ref.nomRef()+" inconnu dans "+element.afficher();
 		
 	}
 

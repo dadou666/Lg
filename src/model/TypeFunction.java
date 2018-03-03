@@ -5,8 +5,7 @@ import java.util.List;
 
 public class TypeFunction extends TypeLiteral {
 	public TypeLiteral retour;
-	public List<TypeLiteral> params= new ArrayList<>();
-	
+	public List<TypeLiteral> params = new ArrayList<>();
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -21,7 +20,14 @@ public class TypeFunction extends TypeLiteral {
 
 	}
 
-	public void verifierSemantique(Univers u)   {
+	public void assignerModule(String nom) {
+		retour.assignerModule(nom);
+		for (TypeLiteral tl : params) {
+			tl.assignerModule(nom);
+		}
+	}
+
+	public void verifierSemantique(Univers u) {
 		retour.verifierSemantique(u);
 		for (TypeLiteral tl : params) {
 			tl.verifierSemantique(u);
@@ -29,7 +35,7 @@ public class TypeFunction extends TypeLiteral {
 
 	}
 
-	public boolean peutAccepter(Univers u,TypeLiteral type) {
+	public boolean peutAccepter(Univers u, TypeLiteral type) {
 		if (type instanceof TypeFunction) {
 			TypeFunction tf = (TypeFunction) type;
 			if (tf.params.size() != params.size()) {
@@ -37,11 +43,11 @@ public class TypeFunction extends TypeLiteral {
 
 			}
 			for (int i = 0; i < params.size(); i++) {
-				if (!params.get(i).peutAccepter(u,tf.params.get(i))) {
+				if (!params.get(i).peutAccepter(u, tf.params.get(i))) {
 					return false;
 				}
 			}
-			if (retour.peutAccepter(u,tf.retour)) {
+			if (retour.peutAccepter(u, tf.retour)) {
 				return true;
 			}
 
@@ -50,6 +56,7 @@ public class TypeFunction extends TypeLiteral {
 		return false;
 
 	}
+
 	public TypeLiteral typeUnion(TypeLiteral tl, Univers u) {
 		return null;
 	}

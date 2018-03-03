@@ -8,9 +8,11 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 public class TypeSimple extends TypeBasic {
 
 	private String nom;
+	private String module;
 
-	public TypeSimple(String nom) {
+	public TypeSimple(String nom,String module) {
 		this.nom = nom;
+		this.module=module;
 	}
 
 	public void nom(String nom) {
@@ -22,6 +24,9 @@ public class TypeSimple extends TypeBasic {
 	}
 
 	public String nom() {
+		if (module != null) {
+			return module+"$"+nom;
+		}
 
 		return nom;
 	}

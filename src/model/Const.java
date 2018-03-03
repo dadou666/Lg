@@ -6,9 +6,19 @@ import java.util.Map;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class Const extends Element {
-	private String nom;
+	public String nom;
 	public Code value;
-	public TerminalNode tn;
+	public Const(String nom,Code value) {
+		this.nom = nom;
+		this.value = value;
+	}
+	public void assignerModule(String nom) {
+		value.assignerModule(nom);
+		
+	}
+	public String afficher() {
+		return "Constante "+nom;
+	}
 	public TypeLiteral tl;
 	public boolean defType=false;
 	public TypeLiteral tl(Univers u) {
@@ -23,9 +33,6 @@ public class Const extends Element {
 		return tl;
 	}
 	public String nom() {
-		if (nom == null) {
-			nom= tn.getText();
-		}
 		return nom;
 	}
 	public String toString() {

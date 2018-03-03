@@ -10,5 +10,8 @@ public class ErreurAccesSurNonObjet extends ErreurSemantique {
 	public ErreurAccesSurNonObjet(Acces acces) {
 		this.acces =acces;
 	}
-
+	public String toString() {
+		return "ErreurAccesSurNonObjet "+acces.nom()+" dans "+element.afficher();
+		
+	}
 }

@@ -11,5 +11,9 @@ public class ErreurAccesChampInexistant extends ErreurSemantique {
 		this.acces=acces;
 		this.tl=tl;
 	}
+	public String toString() {
+		return "ErreurAccesChampInexistant "+acces+" dans "+element.afficher();
+		
+	}
 
 }

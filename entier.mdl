@@ -6,14 +6,9 @@ const false false {}
 type * naturel { }
 const zero naturel {}
 const  un *naturel {next=zero}
+const deux *naturel { next=un }
+
 type *suite { naturel:val }
-abstract type e { e:op e:val}
- type add :e { }
- type mul: e { }
- type id:e {}
- type s : e {}
- type k :e {}
-type val :e { naturel:a }
 
 
 function contient suite:a naturel:b |if a is ! *suite then false else if ( b = a.val ) is true then true else contient(a.next b)
@@ -29,7 +24,7 @@ function permutation suite:a naturel:b |
 	else 
 		b=a.val
 
-function polynome *suite:a naturel:x | if a is *suite  then x*a.val+x*polynome(a.next x) else zero
+function polynome suite:a naturel:x | if a is *suite  then x*a.val+x*polynome(a.next x) else zero
 
 
 
@@ -37,7 +32,7 @@ function + naturel:a naturel:b | if a is *naturel then *naturel { next=a.next+b 
 
 function * naturel:a naturel:b | if a is *naturel then   a.next*b + b else b
 
-function  red nature:a naturel:b naturel:ib naturel:c |  
+function  red naturel:a naturel:b naturel:ib naturel:c |  
 	if a is !   *naturel  then 
 		c  
 	else if b is *naturel then 
@@ -82,10 +77,11 @@ function testPremier naturel:x naturel:diviseur |
 	else
 		testPremier(x diviseur.next )
 
+
 predicat  commu  | All naturel:x naturel:y | ( x+y = y+x  ) is true
 
 
-function commu naturel:x naturel:y | ( x+y = y+x  ) 
+function commu naturel:x naturel:y | ( (x+y) = (y+x)  ) 
 
 
 
@@ -109,6 +105,78 @@ function commu naturel:x naturel:y | ( x+y = y+x  )
 	
 
 							 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

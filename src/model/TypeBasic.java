@@ -29,11 +29,11 @@ abstract public class TypeBasic extends TypeLiteral implements Reference {
 			return null;
 		}
 		if (typeUnion.charAt(0) =='*') {
-			TypeMultiple tp = new TypeMultiple(null);
+			TypeMultiple tp = new TypeMultiple(null,null);
 			tp.nom(typeUnion);
 			return tp;
 		}
-		TypeSimple ts = new TypeSimple(null);
+		TypeSimple ts = new TypeSimple(null,null);
 		ts.nom(typeUnion);
 		return ts;
 	}

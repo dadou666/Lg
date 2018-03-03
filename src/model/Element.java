@@ -8,4 +8,11 @@ public class Element {
 		
 		
 	}
+	public String afficher() {
+		return null;
+	}
+public void assignerModule(String nom) {
+		
+		
+	}
 }

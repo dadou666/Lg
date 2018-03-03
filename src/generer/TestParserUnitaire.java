@@ -27,7 +27,7 @@ public class TestParserUnitaire {
 //	test(" type f {[l]->u:i t:o }  function m #{ o:o | m(o)  tu= [a]->t: l|l } ");
 	//	test("   function m #{ o:o | tot [ { a= o } {a=p} {a = q} ] } ");
 	//	test("   function m  o:o | f(o).mol | o ");
-	test (" function m [u]->*m$oo:a|  58ert");
+	test (" function m [u]->*m$oo:a|  58err$ert");
 
 	}
 

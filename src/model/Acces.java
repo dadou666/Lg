@@ -14,6 +14,10 @@ public class Acces extends Code implements Reference {
 		}
 		return nom;
 	}
+public void assignerModule(String nom) {
+		objet.assignerModule(nom);
+		
+	}
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

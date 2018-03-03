@@ -13,15 +13,27 @@ public class FonctionLocal extends Element {
 
 	public List<Champ> params = new ArrayList<>();
 	public Code code;
-	private TypeLiteral tl;
+	public TypeLiteral tlReturn;
 	public boolean defType = false;
 	public FonctionLocal(String nom) {
 		this.nom= nom;
 	}
-
+	public String afficher() {
+		return "Fonction "+nom;
+	}
+public void assignerModule(String nom) {
+			for(Champ c:params) {
+				c.assignerModule(nom);
+			}
+			code.assignerModule(nom);
+			if (tlReturn != null) {
+			tlReturn.assignerModule(nom);
+			}
+		
+	}
 	public TypeLiteral tl(Univers u, Map<String, FonctionLocal> locals) {
-		if (tl != null) {
-			return tl;
+		if (tlReturn != null) {
+			return tlReturn;
 		}
 		if (defType) {
 			return null;
@@ -32,8 +44,8 @@ public class FonctionLocal extends Element {
 
 			map.put(c.nom(), c.type);
 		}
-		tl= code.typeRetour(u, map, locals);
-		return tl;
+		tlReturn= code.typeRetour(u, map, locals);
+		return tlReturn;
 
 	}
 
@@ -55,10 +67,10 @@ public class FonctionLocal extends Element {
 	}
 
 	public void init(Univers u) {
-		if (u.fonctions.get(nom()) != null) {
+		if (u.donnerFonction(nom()) != null) {
 			u.erreurs.add(new DoublonDeNom(nom(), this));
 		}
-		u.fonctions.put(nom, this);
+		u.ajouterFonction(nom, this);
 	}
 
 	public void verifierSemantique(Univers u){
@@ -72,7 +84,7 @@ public class FonctionLocal extends Element {
 		}
 
 		code.verifierSemantique(u, map);
-		tl = code.typeRetour(u, map, null);
+		tlReturn = code.typeRetour(u, map, null);
 	}
 
 }

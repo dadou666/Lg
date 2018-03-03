@@ -6,15 +6,29 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class Var extends Code implements Reference {
 	private String nom;
-	public Var(String nom) {
+	private String module;
+	private boolean estParam=true;
+	public Var(String nom,String module) {
 		this.nom = nom;
+		this.module = module;
 	}
 	public String toString() {
 		return nom();
 	}
 	public String nom() {
-	
+		if (module != null) {
+			return module+"$"+nom;
+		}
 		return nom;
+	}
+public void assignerModule(String nom) {
+		if (estParam) {
+			return;
+		}
+		if (module == null) {
+			module =nom;
+		}
+		
 	}
 
 	public TypeLiteral typeRetour(Univers u,
@@ -27,8 +41,9 @@ public class Var extends Code implements Reference {
 
 		Const c = u.constantes.get(nom());
 		if (c == null) {
-			FonctionLocal fl = u.fonctions.get(nom());
+			FonctionLocal fl = u.donnerFonction(nom());
 			if (fl != null) {
+				estParam =false;
 				TypeFunction tf = new TypeFunction();
 				tf.retour = fl.tl(u, null);
 				for(Champ champ:fl.params) {
@@ -39,6 +54,7 @@ public class Var extends Code implements Reference {
 			u.erreurs.add(new ObjetInconnu(this));
 			return null;
 		}
+		estParam = false;
 		return c.tl(u);
 
 	}

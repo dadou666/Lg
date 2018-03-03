@@ -58,9 +58,9 @@ import model.TypeDef;
 import model.TypeFunction;
 import model.TypeLiteral;
 import model.TypeMultiple;
-import model.TypeMultipleExterne;
+
 import model.TypeSimple;
-import model.TypeSimpleExterne;
+
 import model.Var;
 
 import org.antlr.v4.runtime.CommonTokenStream;

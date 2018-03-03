@@ -5,8 +5,10 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 public class TypeMultiple extends TypeBasic {
 
 	String nom;
-	public TypeMultiple(String nom) {
+	String module;
+	public TypeMultiple(String nom,String module) {
 		this.nom=nom;
+		this.module = module;
 	}
 
 
@@ -16,7 +18,9 @@ public class TypeMultiple extends TypeBasic {
 	}
 
 	public String nom() {
-	
+		if (module != null) {
+			return module+"$"+nom;
+		}
 		return nom;
 	}
 

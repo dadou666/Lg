@@ -8,7 +8,12 @@ public class Si extends Code {
 	public TypeBasic type;
 	public Code alors;
 	public Code sinon;
-
+public void assignerModule(String nom) {
+		test.assignerModule(nom);
+		type.assignerModule(nom);
+		alors.assignerModule(nom);
+		sinon.assignerModule(nom);
+	}
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("if ");
@@ -42,7 +47,9 @@ public class Si extends Code {
 		TypeLiteral tpSinon = sinon.typeRetour(u, variables, locals);
 		test.supprimerPourSi(variables, tl);
 		if (tpAlors == null && tpSinon == null) {
-			throw new ErreurTypeNonCalculable(this);
+			ErreurTypeNonCalculable e= new ErreurTypeNonCalculable(this);
+			u.erreurs.add(e);
+			throw e;
 
 		}
 

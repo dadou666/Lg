@@ -11,4 +11,7 @@ public class ErreurAttributSuperTypeRedefini extends ErreurSemantique {
 	{
 		this.champ = champ;
 	}
+	public String toString() {
+		return "ErreurAttributSuperTypeRedefini "+champ.nom()+" dans "+element.afficher();
+	}
 }

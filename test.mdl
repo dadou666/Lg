@@ -1,9 +1,35 @@
 
-function m [u]->u: a u:v |  m(m(v))
 
-const a m( #{ t:x |u(x) u=x:t |x} )
 
-const u 45n
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ |u(x) u=x:t |x} )
+
+const u 45n 
 
 
 
