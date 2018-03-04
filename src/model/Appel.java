@@ -2,6 +2,7 @@ package model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -23,7 +24,15 @@ public class Appel extends Code implements Reference {
 		}
 		
 	}
-
+public void donnerModules(Set<String> modules) {
+	if (module != null) {
+		modules.add(module);
+		
+	}
+	for(Code code:this.params) {
+		code.donnerModules(modules);
+	}
+	}
 	public List<Code> params;
 
 	public String nom() {

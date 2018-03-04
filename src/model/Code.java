@@ -1,12 +1,21 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Map;
+import java.util.Set;
 
-public class Code {
+public class Code implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6169982793520176313L;
+
 	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables) {
 
 	}
-
+	public void donnerModules(Set<String> modules) {
+		
+	}
 	public TypeLiteral typeRetour(Univers u,
 			Map<String, TypeLiteral> variables,
 			Map<String, FonctionLocal> locals) {

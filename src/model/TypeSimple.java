@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Set;
+
 import grammaire.lgParser.TypeBaseContext;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -10,9 +12,9 @@ public class TypeSimple extends TypeBasic {
 	private String nom;
 	private String module;
 
-	public TypeSimple(String nom,String module) {
+	public TypeSimple(String nom, String module) {
 		this.nom = nom;
-		this.module=module;
+		this.module = module;
 	}
 
 	public void nom(String nom) {
@@ -25,15 +27,15 @@ public class TypeSimple extends TypeBasic {
 
 	public String nom() {
 		if (module != null) {
-			return module+"$"+nom;
+			return module + "$" + nom;
 		}
 
 		return nom;
 	}
 
-	public void verifierSemantique(Univers u)   {
+	public void verifierSemantique(Univers u) {
 		if (u.donnerType(nom()) == null) {
-			u.erreurs.add( new ObjetInconnu(this));
+			u.erreurs.add(new ObjetInconnu(this));
 		}
 	}
 
@@ -65,6 +67,17 @@ public class TypeSimple extends TypeBasic {
 	public String nomRef() {
 		// TODO Auto-generated method stub
 		return nom();
+	}
+
+	public void assignerModule(String nom) {
+		if (this.module == null) {
+			this.module = nom;
+		}
+
+	}
+public void donnerModules(Set<String> modules) {
+	if (module != null) {
+	modules.add(module); }
 	}
 
 }

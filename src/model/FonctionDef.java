@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 public class FonctionDef extends Code {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3124708719741759950L;
 	public List<Champ> params = new ArrayList<Champ>();
 	public Code code;
 	public List<FonctionLocal> locals;

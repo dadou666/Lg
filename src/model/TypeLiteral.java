@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Set;
+
 public class TypeLiteral {
 	public void verifierSemantique(Univers u)   {
 
@@ -19,4 +21,7 @@ public void assignerModule(String nom) {
 		
 		
 	}
+public void donnerModules(Set<String> modules) {
+	
+}
 }

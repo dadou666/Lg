@@ -163,7 +163,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 	boolean colorer = false;
 
-	public void colorerSansThread() {
+	public void colorer() {
 
 		final ColorerSource cs = new ColorerSource();
 		System.out.println(" colorer ");
@@ -185,10 +185,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 		}
 		this.listErreurSemantique.setListData(array);
 
-		// System.out.println(u);
-
-		// this.input.setCharacterAttributes(this.attributeSet(Color.black),
-		// true);
+	
 
 	}
 
@@ -224,7 +221,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		this.output.setText("");
-		colorerSansThread();
+		colorer();
 
 		try {
 			String sel = list.getSelectedValue();
@@ -265,7 +262,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 			}
 		}
 
-		this.colorerSansThread();
+		this.colorer();
 
 	}
 
@@ -279,7 +276,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 			this.input.setText("");
 			String src = new String(Files.readAllBytes(Paths.get(".", sel)));
 			this.input.setText(src);
-			this.colorerSansThread();
+			this.colorer();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

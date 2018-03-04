@@ -9,6 +9,11 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class FonctionLocal extends Element {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8282379615738670283L;
+
 	private String nom;
 
 	public List<Champ> params = new ArrayList<>();

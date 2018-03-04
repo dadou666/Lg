@@ -24,6 +24,12 @@ public void assignerModule(String nom) {
 		type.assignerModule(nom);
 		
 	}
+public void donnerModules(Set<String> modules) {
+	type.donnerModules(modules);
+	for(Attribut a:attributs) {
+		a.donnerModules(modules);
+	}
+}
 
 	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables)
 			  {

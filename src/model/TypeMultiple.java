@@ -1,17 +1,18 @@
 package model;
 
+import java.util.Set;
+
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class TypeMultiple extends TypeBasic {
 
 	String nom;
 	String module;
-	public TypeMultiple(String nom,String module) {
-		this.nom=nom;
+
+	public TypeMultiple(String nom, String module) {
+		this.nom = nom;
 		this.module = module;
 	}
-
-
 
 	public void nom(String nom) {
 		this.nom = nom;
@@ -19,7 +20,7 @@ public class TypeMultiple extends TypeBasic {
 
 	public String nom() {
 		if (module != null) {
-			return module+"$"+nom;
+			return module + "$" + nom;
 		}
 		return nom;
 	}
@@ -32,8 +33,8 @@ public class TypeMultiple extends TypeBasic {
 		return true;
 	}
 
-	public void verifierSemantique(Univers u)   {
-		if (u.donnerType( nom()) == null) {
+	public void verifierSemantique(Univers u) {
+		if (u.donnerType(nom()) == null) {
 			u.erreurs.add(new ObjetInconnu(this));
 
 		}
@@ -70,4 +71,17 @@ public class TypeMultiple extends TypeBasic {
 		// TODO Auto-generated method stub
 		return nom();
 	}
+
+	public void assignerModule(String nom) {
+		if (this.module == null) {
+			this.module = nom;
+		}
+
+	}
+
+	public void donnerModules(Set<String> modules) {
+		if (module != null) {
+		modules.add(module); }
+	}
+
 }

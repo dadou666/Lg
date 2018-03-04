@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -21,6 +22,12 @@ public class Var extends Code implements Reference {
 		}
 		return nom;
 	}
+public void donnerModules(Set<String> modules) {
+	if (module != null) {
+		modules.add(module);
+	}
+	}
+
 public void assignerModule(String nom) {
 		if (estParam) {
 			return;

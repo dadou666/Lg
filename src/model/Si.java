@@ -1,13 +1,25 @@
 package model;
 
 import java.util.Map;
+import java.util.Set;
 
 public class Si extends Code {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3536489143298195965L;
 	public Code test;
 	public boolean negation = false;
 	public TypeBasic type;
 	public Code alors;
 	public Code sinon;
+	
+public void donnerModules(Set<String> modules) {
+	test.donnerModules(modules);
+	type.donnerModules(modules);
+	alors.donnerModules(modules);
+	sinon.donnerModules(modules);
+	}
 public void assignerModule(String nom) {
 		test.assignerModule(nom);
 		type.assignerModule(nom);

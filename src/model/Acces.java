@@ -1,17 +1,18 @@
 package model;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class Acces extends Code implements Reference {
 	public Code objet;
 	private String nom;
-	public TerminalNode tn;
+public Acces(Code objet,String nom) {
+	
+}
 	public String nom() {
-		if (nom == null) {
-			nom= tn.getText();
-		}
+	
 		return nom;
 	}
 public void assignerModule(String nom) {
@@ -19,6 +20,9 @@ public void assignerModule(String nom) {
 		
 	}
 
+public void donnerModules(Set<String> modules) {
+	objet.donnerModules(modules);
+}
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(objet);

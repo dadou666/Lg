@@ -1,8 +1,14 @@
 package model;
 
-import org.antlr.v4.runtime.tree.TerminalNode;
+import java.io.Serializable;
+import java.util.Set;
 
-public class Champ {
+
+public class Champ implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8424984076157072140L;
 	public TypeLiteral type;
 	private String nom;
 
@@ -14,7 +20,9 @@ public void assignerModule(String nom) {
 		type.assignerModule(nom);
 		
 	}
-
+public void donnerModules(Set<String> modules) {
+	type.donnerModules(modules);
+}
 	public String nom() {
 
 		return nom;

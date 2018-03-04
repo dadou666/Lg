@@ -2,6 +2,7 @@ package model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -15,6 +16,9 @@ public class Const extends Element {
 	public void assignerModule(String nom) {
 		value.assignerModule(nom);
 		
+	}
+public void donnerModules(Set<String> modules) {
+		value.donnerModules(modules);
 	}
 	public String afficher() {
 		return "Constante "+nom;

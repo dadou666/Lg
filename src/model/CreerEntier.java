@@ -1,17 +1,25 @@
 package model;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class CreerEntier extends Code implements Reference {
-	public TerminalNode tn;
-	public String type;
 
+	public String type;
+	public String module;
 	public int valeur;
 
+	public String type() {
+		if (module != null) {
+			return module + "$" + type;
+		}
+		return type;
+	}
+
 	public CreerEntier(TerminalNode tn) {
-		this.tn = tn;
+
 		String txt = tn.getText();
 
 		int idx = 0;
@@ -20,17 +28,31 @@ public class CreerEntier extends Code implements Reference {
 		}
 
 		type = txt.substring(idx);
+		int idxModule = type.indexOf("$");
+		if (idxModule >= 0) {
+			module = type.substring(0, idxModule);
+			type = type.substring(idxModule + 1);
+		}
 		valeur = Integer.parseInt(txt.substring(0, idx - 1));
 	}
 
 	public String toString() {
+		if (module != null) {
+			return valeur + module + "$" + type;
+		}
 		return valeur + type;
 
 	}
 
+	public void donnerModules(Set<String> modules) {
+		if (module != null) {
+			modules.add(module);
+		}
+	}
+
 	public void assignerModule(String nom) {
-		if (type.indexOf("$") < 0) {
-			type = nom + "$" + type;
+		if (module == null) {
+			module = nom;
 		}
 
 	}
@@ -39,22 +61,22 @@ public class CreerEntier extends Code implements Reference {
 			Map<String, TypeLiteral> variables,
 			Map<String, FonctionLocal> locals) {
 		if (valeur > 0) {
-			TypeMultiple tm = new TypeMultiple(type, null);
+			TypeMultiple tm = new TypeMultiple(type(), null);
 
 			return tm;
 		}
-		TypeSimple ts = new TypeSimple(type, null);
+		TypeSimple ts = new TypeSimple(type(), null);
 
 		return ts;
 
 	}
 
 	public void verifierSemantique(Univers u) {
-		if (u.donnerType("*" + type) != null) {
+		if (u.donnerType("*" + type()) != null) {
 			u.erreurs.add(new ObjetInconnu(this));
 
 		}
-		if (u.donnerType(type) != null) {
+		if (u.donnerType(type()) != null) {
 			u.erreurs.add(new ObjetInconnu(this));
 
 		}
@@ -64,7 +86,7 @@ public class CreerEntier extends Code implements Reference {
 	@Override
 	public String nomRef() {
 		// TODO Auto-generated method stub
-		return type;
+		return type();
 	}
 
 }

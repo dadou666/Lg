@@ -2,8 +2,10 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Univers {
 	public Map<String, Univers> imports = new HashMap<String, Univers>();
@@ -177,5 +179,14 @@ public class Univers {
 		}
 		return td.map;
 
+	}
+	
+	public Set<String>  modules() {
+		HashSet<String> modules = new HashSet<>();
+		
+		
+		
+		return modules;
+		
 	}
 }

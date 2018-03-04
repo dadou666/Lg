@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class TypeFunction extends TypeLiteral {
 	public TypeLiteral retour;
@@ -26,7 +27,12 @@ public class TypeFunction extends TypeLiteral {
 			tl.assignerModule(nom);
 		}
 	}
-
+public void donnerModules(Set<String> modules) {
+	retour.donnerModules(modules);
+	for(TypeLiteral tl:params) {
+		tl.donnerModules(modules);
+	}
+	}
 	public void verifierSemantique(Univers u) {
 		retour.verifierSemantique(u);
 		for (TypeLiteral tl : params) {

@@ -22,6 +22,7 @@ public class TestSemantiqueImport {
 			fail("Module erreur");
 			return null;
 		}
+		umodule.assignerModule("mod");
 		u.imports.put("mod", umodule);
 		u.verifierSemantique();
 

@@ -405,9 +405,8 @@ public class Generateur {
 
 			}
 			if (oc.acces() != null) {
-				Acces acces = new Acces();
-				acces.tn = oc.acces().ID();
-				acces.objet = tmp;
+				Acces acces = new Acces(tmp,oc.acces().ID().getText());
+				
 				tmp = acces;
 
 			}
