@@ -84,32 +84,60 @@ public class TestSemantique {
 	
 	@Test 
 	public void testAccesNextTypeMultiple() {
-		test(" type *t { } function u t:a | if a is *t then  a.next else a",null);
+		test(" type @t { } function u t:a | if a is @t then  a.next else a",null);
 		
 	}
 	@Test 
 	public void testAccesNextTypeMultipleDansSi() {
-		test(" type *t { } function u t:a | if a is ! *t then  a else a.next",null);
+		test(" type @t { } function u t:a | if a is ! @t then  a else a.next",null);
 		
 	}
 	@Test
 	public void testTypeMultipleOk() {
-		test(" type *t { } function u t:a | a "
-				+ " function m | u(*t { next= t {}} ) ", null);
-		test(" type *t { } function u t:a | a " + " function m | u(t {} ) ",
+		test(" type @t { } function u t:a | a "
+				+ " function m | u(@t { next= t {}} ) ", null);
+		test(" type @t { } function u t:a | a " + " function m | u(t {} ) ",
 				null);
 
 	}
+	
+	@Test 
+	public void testCalculTypeRetour() {
+		
+		String src="type @naturel {} function  red naturel:a naturel:b naturel:ib naturel:c |" +
+		"	if a is !   @naturel  then " +
+		"		c " +
+		"	else if b is @naturel then" +
+		" 	red(a.next b.next ib c)" +
+		"		else" +
+		"	red(a ib ib   @naturel { next=naturel {} } )" ; 
+		Univers u=test(src);
+		FonctionLocal fl = u.donnerFonction("red");
+		assertTrue(fl.tlReturn.toString().equals("naturel"));
+		 
+
+	}
+	@Test 
+	public void testNextKo() {
+		test("type @f {} function f  f:c| c.next",ErreurAccesChampInexistant.class);
+		
+	}
+	@Test 
+	public void testNextOk() {
+		test("type @f {} function f  @f:c| c.next",null);
+		
+	}
+
 
 	@Test
 	public void testEntierOk() {
-		test(" type *t { } function u t:a | a " + " function m | u(458t ) ",
+		test(" type @t { } function u t:a | a " + " function m | u(458t ) ",
 				null);
 	}
 
 	@Test
 	public void testFonctionLocalOk() {
-		test(" type *t { } function u [t]->t:f t:a | f(a) "
+		test(" type @t { } function u [t]->t:f t:a | f(a) "
 				+ " function m | u(#{ t:a | a } t {}) ", null);
 	}
 
@@ -137,7 +165,7 @@ public class TestSemantique {
 	@Test
 	public void testChampNextOk() {
 
-		test(" type *u  {}  function u *u:a | a.next", null);
+		test(" type @u  {}  function u @u:a | a.next", null);
 	}
 
 	@Test

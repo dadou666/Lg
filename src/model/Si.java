@@ -59,9 +59,7 @@ public void assignerModule(String nom) {
 		TypeLiteral tpSinon = sinon.typeRetour(u, variables, locals);
 		test.supprimerPourSi(variables, tl);
 		if (tpAlors == null && tpSinon == null) {
-			ErreurTypeNonCalculable e= new ErreurTypeNonCalculable(this);
-			u.erreurs.add(e);
-			throw e;
+			return null;
 
 		}
 

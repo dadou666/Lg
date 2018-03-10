@@ -96,6 +96,7 @@ public class ColorerSource {
 		for (ElementContext ec : sys.element()) {
 			transformer(ec);
 		}
+		
 		return sys;
 
 	}
@@ -318,18 +319,14 @@ public class ColorerSource {
 	}
 
 	public void transformer(CreerContext cc) {
-
-		if (cc.multiple() != null) {
-
-			this.transformer(cc.multiple());
-
+		
+		if (cc.id_externe() != null) {
+			this.colorerModule(cc.id_externe() .ID(0));
+			this.colorerType(cc.id_externe() .ID(1));
 		}
-		if (cc.simple() != null) {
-
-			this.transformer(cc.simple());
-
+		if (cc.ID() != null) {
+			this.colorerType(cc.ID());
 		}
-
 		for (AttributContext ac : cc.attributs().attribut()) {
 
 			this.colorerAttribut(ac.ID());

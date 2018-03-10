@@ -17,6 +17,10 @@ public class TestSemantiquePerf {
 	public void test() throws IOException {
 		testFile("entier.mdl");
 	}
+	@Test
+	public void testMetaModele() throws IOException {
+		testFile("metaModele.mdl");
+	}
 	 public void testFile(String file) throws IOException {
 
 		Univers u = new Generateur().lireFichier(file);

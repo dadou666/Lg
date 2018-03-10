@@ -55,10 +55,10 @@ public class TypeMultiple extends TypeBasic {
 				if (td.superType == null) {
 					return false;
 				}
-				if (td.superType.equals(nom())) {
+				if (td.superType().equals(nom())) {
 					return true;
 				}
-				tp = td.superType;
+				tp = td.superType();
 			} while (true);
 
 		}

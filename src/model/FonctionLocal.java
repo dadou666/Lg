@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -25,6 +26,14 @@ public class FonctionLocal extends Element {
 	}
 	public String afficher() {
 		return "Fonction "+nom;
+	}
+	public void donnerModules(Set<String> modules) {
+		for(Champ c:params) {
+			c.donnerModules(modules);
+		}
+		code.donnerModules(modules);
+		
+		
 	}
 public void assignerModule(String nom) {
 			for(Champ c:params) {

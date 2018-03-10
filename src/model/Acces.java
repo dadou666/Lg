@@ -9,7 +9,8 @@ public class Acces extends Code implements Reference {
 	public Code objet;
 	private String nom;
 public Acces(Code objet,String nom) {
-	
+	this.objet = objet;
+	this.nom = nom;
 }
 	public String nom() {
 	

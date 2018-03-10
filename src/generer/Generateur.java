@@ -38,6 +38,7 @@ import grammaire.lgParser.VarContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,8 +66,16 @@ import model.TypeSimple;
 import model.Univers;
 import model.Var;
 
+import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+import org.antlr.v4.runtime.atn.ATNConfigSet;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.misc.NotNull;
+import org.antlr.v4.runtime.misc.Nullable;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -75,7 +84,7 @@ import com.sun.xml.internal.bind.v2.schemagen.xmlschema.SimpleContent;
 
 import components.Terminal;
 
-public class Generateur {
+public class Generateur implements ANTLRErrorListener {
 
 	public Map<Appel, AppelContext> appels = new HashMap<>();
 	public Map<Appel, OperationContext> operations = new HashMap<>();
@@ -89,6 +98,7 @@ public class Generateur {
 	public Map<FonctionLocal, FunctionLocalContext> fonctionLocals = new HashMap<>();
 	public Map<TypeDef, TypeContext> types = new HashMap<>();
 	public Map<Const, ConstanteContext> constantes = new HashMap<>();
+	public boolean error = false;
 
 	public Univers lireFichier(String file) throws IOException {
 		lgLexer lgLexer = new lgLexer(
@@ -106,7 +116,11 @@ public class Generateur {
 				org.antlr.v4.runtime.CharStreams.fromString(src));
 		CommonTokenStream tokens = new CommonTokenStream(lgLexer);
 		lgParser parser = new lgParser(tokens);
-
+		parser.addErrorListener(this);
+		if (error) {
+			return null;
+		}
+	
 		return this.generer(parser.system());
 
 	}
@@ -146,7 +160,13 @@ public class Generateur {
 
 		td.multiple = tc.multipleFlag() != null;
 		if (tc.superType() != null) {
-			td.superType = tc.superType().ID().getText();
+			if (tc.superType().ID() != null) {
+				td.superType = tc.superType().ID().getText();
+			} else {
+				td.superModule = tc.superType().id_externe().ID(0).getText();
+				td.superType = tc.superType().id_externe().ID(1).getText();
+
+			}
 		}
 		td.champs = new ArrayList<Champ>();
 		this.types.put(td, tc);
@@ -268,12 +288,24 @@ public class Generateur {
 
 	public Creer transformer(CreerContext cc) {
 		Creer r = new Creer();
-		if (cc.multiple() != null) {
-			r.type = this.transformer(cc.multiple());
+		boolean multiple = cc.flagMultiple() != null;
+		if (cc.id_externe() != null) {
+			TerminalNode mn = cc.id_externe().ID(0);
+			TerminalNode tn = cc.id_externe().ID(1);
+			if (multiple) {
+				r.type = new TypeMultiple(tn.getText(), mn.getText());
+			} else {
+				r.type = new TypeSimple(tn.getText(), mn.getText());
+			}
 		}
-		if (cc.simple() != null) {
-			r.type = this.transformer(cc.simple());
+		if (cc.ID() != null) {
+			if (multiple) {
+				r.type = new TypeMultiple(cc.ID().getText(), null);
+			} else {
+				r.type = new TypeSimple(cc.ID().getText(), null);
+			}
 		}
+
 		r.attributs = new ArrayList<>();
 		for (AttributContext ac : cc.attributs().attribut()) {
 			Attribut a = new Attribut(ac.ID().getText(), this.transformer(ac
@@ -328,12 +360,14 @@ public class Generateur {
 
 			CreerEntier creer = null;
 			if (ct.entier().ENTIER() != null) {
-				creer=new CreerEntier(ct.entier().ENTIER());
+				creer = new CreerEntier(ct.entier().ENTIER());
 			}
-			
-			/*if (ct.entier().ENTIER_EXTERNE() != null) {
-				
-			}*/
+
+			/*
+			 * if (ct.entier().ENTIER_EXTERNE() != null) {
+			 * 
+			 * }
+			 */
 			r = creer;
 			if (ret) {
 				return creer;
@@ -405,8 +439,9 @@ public class Generateur {
 
 			}
 			if (oc.acces() != null) {
-				Acces acces = new Acces(tmp,oc.acces().ID().getText());
-				
+
+				Acces acces = new Acces(tmp, oc.acces().ID().getText());
+
 				tmp = acces;
 
 			}
@@ -514,6 +549,34 @@ public class Generateur {
 
 		return r;
 
+	}
+
+	@Override
+	public void reportAmbiguity(@NotNull Parser arg0, DFA arg1, int arg2,
+			int arg3, @NotNull BitSet arg4, @NotNull ATNConfigSet arg5) {
+	//	error=true;
+		
+	}
+
+	@Override
+	public void reportAttemptingFullContext(@NotNull Parser arg0,
+			@NotNull DFA arg1, int arg2, int arg3, @NotNull ATNConfigSet arg4) {
+		//error=true;
+		
+	}
+
+	@Override
+	public void reportContextSensitivity(@NotNull Parser arg0,
+			@NotNull DFA arg1, int arg2, int arg3, @NotNull ATNConfigSet arg4) {
+		//error=true;
+		
+	}
+
+	@Override
+	public void syntaxError(Recognizer<?, ?> arg0, @Nullable Object arg1,
+			int arg2, int arg3, String arg4, @Nullable RecognitionException arg5) {
+		error=true;
+		
 	}
 
 }

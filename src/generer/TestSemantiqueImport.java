@@ -1,6 +1,9 @@
 package generer;
 
 import static org.junit.Assert.*;
+
+import java.util.Set;
+
 import model.ErreurSemantique;
 import model.Univers;
 
@@ -13,6 +16,24 @@ public class TestSemantiqueImport {
 		test(" function m mod$t:a | mod$u(a) "," type t {} function u t:a | a");
 
 	}
+	
+	
+	@Test
+	public void testModules() {
+		Univers u = new Generateur().lireSource("const o m6$r { }  type t { m3$a:a }  function h m1$a:a [m4$a]->t:a | m2$a { u= m5$f(a)  } ");
+		Set<String> modules = u.modules();
+		assertTrue(modules.contains("m6"));
+		assertTrue(modules.contains("m5"));
+		assertTrue(modules.contains("m4"));
+		assertTrue(modules.contains("m3"));
+		assertTrue(modules.contains("m2"));
+		assertTrue(modules.contains("m1"));
+		
+		
+		
+		
+		
+	}
 	public <T extends ErreurSemantique> T test(String src,String module, Class<T> erreur) {
 
 		Univers u = new Generateur().lireSource(src);
@@ -22,8 +43,9 @@ public class TestSemantiqueImport {
 			fail("Module erreur");
 			return null;
 		}
-		umodule.assignerModule("mod");
-		u.imports.put("mod", umodule);
+		
+		
+		u.ajouterImportModule("mod", umodule);
 		u.verifierSemantique();
 
 		if (erreur == null) {

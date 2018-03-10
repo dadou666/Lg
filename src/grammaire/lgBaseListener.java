@@ -88,6 +88,9 @@ public class lgBaseListener implements lgListener {
 	@Override public void enterAttributs(lgParser.AttributsContext ctx) { }
 	@Override public void exitAttributs(lgParser.AttributsContext ctx) { }
 
+	@Override public void enterFlagMultiple(lgParser.FlagMultipleContext ctx) { }
+	@Override public void exitFlagMultiple(lgParser.FlagMultipleContext ctx) { }
+
 	@Override public void enterExist(lgParser.ExistContext ctx) { }
 	@Override public void exitExist(lgParser.ExistContext ctx) { }
 

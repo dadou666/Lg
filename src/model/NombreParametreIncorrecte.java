@@ -9,5 +9,8 @@ public class NombreParametreIncorrecte extends ErreurSemantique {
 	public NombreParametreIncorrecte(Appel appel) {
 		this.appel =appel;
 	}
-
+	public String toString() {
+		return "NombreParametreIncorrecte "+appel+" dans "+element.afficher();
+		
+	}
 }

@@ -23,8 +23,10 @@ import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -48,6 +50,7 @@ import javax.swing.text.StyleContext;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import model.ErreurModule;
 import model.ErreurSemantique;
 import model.Univers;
 
@@ -58,6 +61,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 	JTextPane input;
 
 	JTextPane output;
+	public static String chemin = "F:\\workspaces\\Lg";
 
 	Map<Color, AttributeSet> asets = new HashMap<>();
 
@@ -152,6 +156,10 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 			SQLException, SAXException, IOException,
 			ParserConfigurationException {
 		// TODO Auto-generated method stub
+		if (args.length >= 1) {
+			chemin = args[0];
+
+		}
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -162,30 +170,103 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 	}
 
 	boolean colorer = false;
+	public Set<String> modulesEnCours = new HashSet<String>();
+	public List<ErreurSemantique> erreurs = new ArrayList<>();
 
-	public void colorer() {
+	Univers donnerUnivers(String nom, Univers courant) {
+		if (modulesEnCours.contains(nom)) {
+			ErreurModule erreur = new ErreurModule(nom,courant.nom,
+					ErreurModule.TypeErreur.Cycle);
+			erreurs.add(erreur);
+			return null;
+			
+		}
+		modulesEnCours.add(nom);
+		try {
+			String src = new String(Files.readAllBytes(Paths.get(chemin, nom+".mdl")));
+			Univers u= this.donnerUniversPourSource(nom,src, courant);
+			if (!u.erreurs.isEmpty()) {
+				ErreurModule erreur = new ErreurModule(nom,courant.nom,ErreurModule.TypeErreur.Semantique);
+				erreurs.add(erreur);
+				return null;
+			}
+			return u;
+		} catch (IOException e) {
+			ErreurModule erreur = new ErreurModule(nom,courant.nom,
+					ErreurModule.TypeErreur.Inconnu);
+			erreurs.add(erreur);
 
+		}
+		return null;
+
+	}
+
+	Univers donnerUniversPourSource(String nom,String src, Univers courant) {
+		Generateur gen = new Generateur();
+		try {
+			Univers u = gen.lireSource(src);
+		
+			if (gen.error) {
+				ErreurModule erreur = new ErreurModule(nom,courant.nom,ErreurModule.TypeErreur.Syntaxe);
+				erreurs.add(erreur);
+				
+				return null;
+			}
+			u.nom = nom;
+			Set<String> modules = u.modules();
+			
+			for(String module:modules) {
+				Univers um = this.donnerUnivers(module, u);
+				if (um != null) {
+					u.ajouterImportModule(module, um);
+					
+				}
+			
+			}
+			if (!erreurs.isEmpty()) {
+				return null;
+			}
+		
+			if (u != null) {
+
+				u.verifierSemantique();
+				
+			}
+			return u;
+		
+		} catch (Throwable e) {
+			return null;
+		}
+
+	
+
+	}
+
+	public void compiler() {
+
+		erreurs  = new ArrayList<>();
+		modulesEnCours = new HashSet<String>();
+		Univers u = this.donnerUniversPourSource("courant",input.getText(), null);
+		if (u != null) {
+			erreurs = u.erreurs;
+			
+		}
+		ErreurSemantique array[] = new ErreurSemantique[erreurs.size()];
+		for (int i = 0; i < array.length; i++) {
+			array[i] = erreurs.get(i);
+		}
+		this.listErreurSemantique.setListData(array);
+		if (u == null) {
+			return;
+		}
 		final ColorerSource cs = new ColorerSource();
-		System.out.println(" colorer ");
-		SystemContext sc = cs.lireSource(input.getText());
+		System.out.println(" compilation ok ");
+		cs.lireSource(input.getText());
 		this.clearColor(Color.black);
 		for (MotAvecCouleur m : cs.ls) {
 
 			setColor(m.color, m.debut, m.taille);
 		}
-
-		Generateur gen = new Generateur();
-		Univers u = gen.generer(sc);
-		if (u != null) {
-			u.verifierSemantique();
-		}
-		ErreurSemantique array[] = new ErreurSemantique[u.erreurs.size()];
-		for (int i = 0; i < array.length; i++) {
-			array[i] = u.erreurs.get(i);
-		}
-		this.listErreurSemantique.setListData(array);
-
-	
 
 	}
 
@@ -218,13 +299,19 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 	}
 
+	boolean selection = false;
+
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
+		if (selection) {
+			return;
+		}
 		this.output.setText("");
-		colorer();
+		compiler();
 
 		try {
 			String sel = list.getSelectedValue();
+			Files.delete(Paths.get(".", sel));
 			Files.write(Paths.get(".", sel), this.input.getText().getBytes(),
 					StandardOpenOption.CREATE);
 			// System.out.println(" "+sel);
@@ -253,7 +340,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 				}
 			}
 			try {
-				Files.write(Paths.get(".", nom), this.input.getText()
+				Files.write(Paths.get(chemin, nom), this.input.getText()
 						.getBytes(), StandardOpenOption.CREATE_NEW);
 				this.chargerList();
 			} catch (IOException e) {
@@ -262,7 +349,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 			}
 		}
 
-		this.colorer();
+		this.compiler();
 
 	}
 
@@ -273,10 +360,13 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 			return;
 		}
 		try {
+			selection = true;
 			this.input.setText("");
-			String src = new String(Files.readAllBytes(Paths.get(".", sel)));
+			String src = new String(Files.readAllBytes(Paths.get(chemin, sel)));
 			this.input.setText(src);
-			this.colorer();
+			this.compiler();
+			this.input.setCaretPosition(0);
+			selection = false;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

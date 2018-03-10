@@ -4,12 +4,12 @@ system : ( element   )*;
 element : type | function | defPredicat | constante;
 constante :'const' ID tmpCode;
 type  :  abstractFlag 'type' (multipleFlag | ) ID  ( superType | )  '{' champs  '}' ;
-multipleFlag :'*';
+multipleFlag :'@';
 abstractFlag :'abstract'  | ;
 superType :      (':' (ID | id_externe ) )  ;
 champs : champ *;
 champ : defType ':' ID ;
-multiple : '*' ( ID| id_externe ) ;
+multiple :  '@' ( ID| id_externe ) ;
 simple : (ID |id_externe );
 typeBase :  multiple | simple ;
 attribut : ID '='  tmpCode ;
@@ -21,7 +21,8 @@ code :(  ('(' code ')' ) |  (appel|creerListe| creer | var  |entier| ('(' (  si)
 var : ID |id_externe;
 entier : ENTIER | ENTIER_EXTERNE;
 appel :  (ID | id_externe ) '(' tmpCode * ')' ;
-creer : (simple | multiple ) '{' attributs  '}';
+flagMultiple : '@' ;
+creer : ( flagMultiple | )  ( ID| id_externe ) '{' attributs  '}';
 creerListe : ID '[' (  (('{' attributs  '}' ) + )      ) ']' ;
 
 
@@ -51,6 +52,6 @@ defPredicat : 'predicat' ID  champs '|'  ( exist | all  );
     // match keyword hello followed by an identifier
 ENTIER : [1-9][0-9]*ID('$'ID|);
 ENTIER_EXTERNE : [1-9][0-9]*ID('$'ID|);
-ID : [a-zA-Z][a-zA-Z0-9_]*  ;             // match lower-case identifiers
+ID : [a-zA-Z_][a-zA-Z0-9_]*  ;             // match lower-case identifiers
 
 WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines

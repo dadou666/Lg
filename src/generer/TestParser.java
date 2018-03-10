@@ -22,14 +22,14 @@ public class TestParser {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		test("type *hello { *a:o *m:m } ");
+		test("type @hello { @a:o @m:m } ");
 		test("function  nono  t:o  | chose  { t=m() u=s h=m.nono}  ");
 		test("function nono   t:o | if o is nono then a() else (nunu {})  ");
 		test("function nono  t:o | if o is nono then m(o) else nunu {} ");
-		test("function nono  t:o | *alloc { m= if x is t then u  else h  } ");
+		test("function nono  t:o | @alloc { m= if x is t then u  else h  } ");
 
 		test("function nono  t:o | (if o is nono then m(o) else nunu {} ).take ");
-		test(" type *a { te:a} type b {} ");
+		test(" type @a { te:a} type b {} ");
 		test("function s    | m5[ {m=g } { m=j } ] ");
 		test("function +   m:x |  x+this");
 		test("function +  m:x | ( x+this )+f(this)");

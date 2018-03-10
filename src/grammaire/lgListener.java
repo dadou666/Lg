@@ -85,6 +85,9 @@ public interface lgListener extends ParseTreeListener {
 	void enterAttributs(lgParser.AttributsContext ctx);
 	void exitAttributs(lgParser.AttributsContext ctx);
 
+	void enterFlagMultiple(lgParser.FlagMultipleContext ctx);
+	void exitFlagMultiple(lgParser.FlagMultipleContext ctx);
+
 	void enterExist(lgParser.ExistContext ctx);
 	void exitExist(lgParser.ExistContext ctx);
 

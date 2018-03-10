@@ -3,61 +3,61 @@ type true:boolean { }
 type false:boolean {}
 const true true {}
 const false false {}
-type * naturel { }
+type @ naturel { }
 const zero naturel {}
-const  un *naturel {next=zero}
-const deux *naturel { next=un }
+const  un @naturel {next=zero}
+const deux @naturel { next=un }
 
-type *suite { naturel:val }
+type @suite { naturel:val } 
 
 
-function contient suite:a naturel:b |if a is ! *suite then false else if ( b = a.val ) is true then true else contient(a.next b)
-function retirer suite:a naturel:b | if a is  !*suite then a else if (b = a.val ) is true then a.next else  *suite { val=a.val next=retirer(a.next b) }
+function contient suite:a naturel:b |if a is ! @suite then false else if ( b = a.val ) is true then true else contient(a.next b)
+function retirer suite:a naturel:b | if a is  !@suite then a else if (b = a.val ) is true then a.next else  @suite { val=a.val next=retirer(a.next b) }
 
 function permutation suite:a naturel:b | 
-	if a is ! *suite then 
+	if a is ! @suite then 
 		false 
-	else if b is *naturel then 
+	else if b is @naturel then 
 		permutation(retirer(a b) b.next ) 
-	else if a.next is *suite then 
+	else if a.next is @suite then 
 		false 
 	else 
 		b=a.val
 
-function polynome suite:a naturel:x | if a is *suite  then x*a.val+x*polynome(a.next x) else zero
+function polynome suite:a naturel:x | if a is @suite  then x*a.val+x*polynome(a.next x) else zero
 
 
 
-function + naturel:a naturel:b | if a is *naturel then *naturel { next=a.next+b } else b
+function + naturel:a naturel:b | if a is @naturel then @naturel { next=a.next+b } else b 
 
-function * naturel:a naturel:b | if a is *naturel then   a.next*b + b else b
+function * naturel:a naturel:b | if a is @naturel then   a.next*b + b else b
 
 function  red naturel:a naturel:b naturel:ib naturel:c |  
-	if a is !   *naturel  then 
+	if a is !   @naturel  then 
 		c  
-	else if b is *naturel then 
+	else if b is @naturel then 
 		red(a.next b.next ib c)
 	else 
-		red(a ib ib c.next) 
+		red(a ib ib   @naturel { next=naturel {} } ) 
 
 
  
 function / naturel:a naturel:b | red(a b b naturel {} )
 function & boolean:a boolean:b | if a is true then b else false
-function positif naturel:a | if a is *naturel then true else false 
+function positif naturel:a | if a is @naturel then true else false 
 
 function = naturel:a naturel:b |	
-	if a is *naturel  then 
-		(if b is *naturel then a.next=b.next  else false)
-	else if b is *naturel then 
+	if a is @naturel  then 
+		(if b is @naturel then a.next=b.next  else false)
+	else if b is @naturel then 
 		false 
 	else 
 		true
 
-function produit suite:suite | if suite is *suite then suite.val*produit(suite.next) else un
+function produit suite:suite | if suite is @suite then suite.val*produit(suite.next) else un
 
 function estSuitePremier suite:suite | 
-	if suite is *suite then 
+	if suite is @suite then 
 		(if estPremier(suite.val) is 
 			true 
 		then 
@@ -68,11 +68,11 @@ function estSuitePremier suite:suite |
 		true
 
 
-function estPremier naturel:x | if x is ! *naturel then false else  testPremier(x x.next)
+function estPremier naturel:x | if x is ! @naturel then false else  testPremier(x x.next)
 function testPremier naturel:x naturel:diviseur | 
-	if diviseur is ! *naturel then 
+	if diviseur is ! @naturel then 
 		true 
-	else if ( diviseur*(x/diviseur)=x ) is true  then  
+	else if ( (diviseur*(x/diviseur))=x ) is true  then  
 		false 
 	else
 		testPremier(x diviseur.next )
@@ -105,6 +105,15 @@ function commu naturel:x naturel:y | ( (x+y) = (y+x)  )
 	
 
 							 
+
+
+
+
+
+
+
+
+
 
 
 

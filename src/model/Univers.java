@@ -8,24 +8,30 @@ import java.util.Map;
 import java.util.Set;
 
 public class Univers {
+	public String nom;
 	public Map<String, Univers> imports = new HashMap<String, Univers>();
 	public List<Element> elements;
-	private  Map<String, FonctionLocal> fonctions;
+	private Map<String, FonctionLocal> fonctions;
 	private Map<String, TypeDef> types;
 	public Map<String, Const> constantes;
 	public List<ErreurSemantique> erreurs = new ArrayList<>();
-	
+
+	public void ajouterImportModule(String nom, Univers u) {
+		imports.put(nom, u);
+		u.assignerModule(nom);
+	}
+
 	public void assignerModule(String nom) {
-		for(Element e:fonctions.values()) {
+		for (Element e : fonctions.values()) {
 			e.assignerModule(nom);
 		}
-		for(Element e:types.values()) {
+		for (Element e : types.values()) {
 			e.assignerModule(nom);
 		}
-		for(Element e:constantes.values()) {
+		for (Element e : constantes.values()) {
 			e.assignerModule(nom);
 		}
-		
+
 	}
 
 	public String toString() {
@@ -37,6 +43,7 @@ public class Univers {
 		return sb.toString();
 
 	}
+
 	public FonctionLocal donnerFonction(String nom) {
 		int idxModule = nom.indexOf("$");
 		if (idxModule < 0) {
@@ -44,12 +51,14 @@ public class Univers {
 		}
 		String module = nom.substring(0, idxModule);
 		return imports.get(module).donnerFonction(nom.substring(idxModule + 1));
-		
+
 	}
-	public void ajouterFonction(String nom,FonctionLocal fl) {
+
+	public void ajouterFonction(String nom, FonctionLocal fl) {
 		fonctions.put(nom, fl);
-		
+
 	}
+
 	public void ajouterType(String nom, TypeDef td) {
 		types.put(nom, td);
 	}
@@ -60,7 +69,15 @@ public class Univers {
 			return types.get(nom);
 		}
 		String module = nom.substring(0, idxModule);
-		return imports.get(module).donnerType(nom.substring(idxModule + 1));
+		return donnerType(module, nom.substring(idxModule + 1));
+	}
+
+	public TypeDef donnerType(String module, String nom) {
+		if (module == null) {
+			return types.get(nom);
+		}
+
+		return imports.get(module).donnerType(null, nom);
 	}
 
 	public void verifierSemantique() {
@@ -74,12 +91,12 @@ public class Univers {
 		}
 		for (Element elt : elements) {
 			List<ErreurSemantique> tmpLs = new ArrayList<>();
-			
+
 			if (elt != null)
 				try {
 
-				
 					tmpLs.addAll(erreurs);
+				//	System.out.println(" verif "+elt);
 					elt.verifierSemantique(this);
 					for (ErreurSemantique es : this.erreurs) {
 						if (!tmpLs.contains(es))
@@ -117,9 +134,9 @@ public class Univers {
 		if (this.heriteDe(t1, t0)) {
 			return t0;
 		}
-		TypeDef td0 = this.types.get(t0);
-		TypeDef td1 = this.types.get(t1);
-		return typeUnion(td0.superType, td1.superType);
+		TypeDef td0 = this.donnerType(t0);
+		TypeDef td1 = this.donnerType(t1);
+		return typeUnion(td0.superType(), td1.superType());
 
 	}
 
@@ -132,17 +149,16 @@ public class Univers {
 			if (current.superType == null) {
 				return false;
 			}
-			if (current.superType.equals(tpNom)) {
+			if (current.superType().equals(tpNom)) {
 				return true;
 			}
-			current = types.get(current.superType);
+			current = this.donnerType(current.superModule, current.superType);
 		}
 
 	}
 
 	public TypeLiteral typeChamp(String nomType, String nomChamp) {
-		TypeDef td = this.types.get(nomType);
-		return td.map.get(nomChamp);
+		return champs(nomType).get(nomChamp);
 
 	}
 
@@ -156,7 +172,7 @@ public class Univers {
 		}
 		td.map = new HashMap<String, TypeLiteral>();
 		if (td.multiple) {
-			td.map.put("next", new TypeSimple(td.superType,null));
+			td.map.put("next", new TypeSimple(td.superType, null));
 
 		}
 		TypeDef tmp = td;
@@ -173,20 +189,23 @@ public class Univers {
 			if (tmp.superType == null) {
 				tmp = null;
 			} else {
-				tmp = this.donnerType(td.superType);
+				tmp = this.donnerType(tmp.superType);
 			}
 
 		}
 		return td.map;
 
 	}
-	
-	public Set<String>  modules() {
+
+	public Set<String> modules() {
 		HashSet<String> modules = new HashSet<>();
-		
-		
-		
+		for (Element e : this.elements) {
+			if (e != null) {
+				e.donnerModules(modules);
+			}
+		}
+
 		return modules;
-		
+
 	}
 }

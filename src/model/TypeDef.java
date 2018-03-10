@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -12,30 +13,47 @@ public class TypeDef extends Element implements Reference {
 
 	private String nom;
 	public boolean multiple;
+	public String superModule;
 	public String superType;
 	public List<Champ> champs = new ArrayList<>();
 	Map<String, TypeLiteral> map;
-public void assignerModule(String nom) {
-	if (superType != null) {
-		if (superType.indexOf("$")<0) {
-			superType = nom+"$"+superType;
+	
+	public String superType() {
+		if (superModule != null) {
+			return superModule+"$"+superType;
 		}
+		return superType;
 	}
-	for(Champ c:champs) {
+
+	public void donnerModules(Set<String> modules) {
+		for (Champ c : champs) {
+			c.donnerModules(modules);
+		}
+
+	}
+
+	public void assignerModule(String nom) {
+		if (superModule == null) {
+			superModule = nom;
+		}
+		for (Champ c : champs) {
 			c.assignerModule(nom);
-	}
-		
+		}
+
 	}
 
 	public TypeDef(String nom) {
 		this.nom = nom;
 	}
+
 	public String afficher() {
-		return "Type "+this.nom();
+		return "Type " + this.nom();
 	}
+
 	public String nom() {
 		if (multiple) {
-			return "*"+nom;
+
+			return "*" + nom;
 		}
 		return nom;
 
@@ -51,6 +69,10 @@ public void assignerModule(String nom) {
 		sb.append(nom());
 		if (superType != null) {
 			sb.append(":");
+			if (superModule != null) {
+				sb.append(superModule);
+				sb.append("$");
+			}
 			sb.append(superType);
 		}
 		sb.append("{ ");
@@ -76,6 +98,7 @@ public void assignerModule(String nom) {
 			TypeDef vide = new TypeDef(nom);
 			vide.nom = nom;
 			vide.multiple = false;
+			vide.superModule = superModule;
 			vide.superType = superType;
 			superType = nom;
 			if (u.donnerType(vide.nom) != null) {
@@ -93,13 +116,13 @@ public void assignerModule(String nom) {
 
 		TypeDef superTypeDef = null;
 		if (superType != null) {
-			superTypeDef = u.donnerType(superType);
+			superTypeDef = u.donnerType(superModule,superType);
 
 			if (superTypeDef == null) {
 				u.erreurs.add(new ObjetInconnu(this));
 			}
 		}
-		
+
 		for (Champ c : champs) {
 
 			if (superTypeDef != null
@@ -115,8 +138,7 @@ public void assignerModule(String nom) {
 
 	@Override
 	public String nomRef() {
-		// TODO Auto-generated method stub
-		return superType;
+		return this.superType();
 	}
 
 }
