@@ -79,5 +79,14 @@ public void donnerModules(Set<String> modules) {
 	if (module != null) {
 	modules.add(module); }
 	}
+public Code creer(GestionNom gestionNom) {
+	Objet r = new Objet();
+	r.type = new TypeSimple("tp","metaModele");
+	r.attributs.add(new Attribut("nom",gestionNom.donnerNom(this.nom())));
+	
+	return r;
+
+}
+
 
 }

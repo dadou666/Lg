@@ -109,6 +109,9 @@ public class lgBaseListener implements lgListener {
 	@Override public void enterTmpCode(lgParser.TmpCodeContext ctx) { }
 	@Override public void exitTmpCode(lgParser.TmpCodeContext ctx) { }
 
+	@Override public void enterMetaModele(lgParser.MetaModeleContext ctx) { }
+	@Override public void exitMetaModele(lgParser.MetaModeleContext ctx) { }
+
 	@Override public void enterOperateur(lgParser.OperateurContext ctx) { }
 	@Override public void exitOperateur(lgParser.OperateurContext ctx) { }
 

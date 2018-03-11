@@ -106,6 +106,9 @@ public interface lgListener extends ParseTreeListener {
 	void enterTmpCode(lgParser.TmpCodeContext ctx);
 	void exitTmpCode(lgParser.TmpCodeContext ctx);
 
+	void enterMetaModele(lgParser.MetaModeleContext ctx);
+	void exitMetaModele(lgParser.MetaModeleContext ctx);
+
 	void enterOperateur(lgParser.OperateurContext ctx);
 	void exitOperateur(lgParser.OperateurContext ctx);
 

@@ -49,8 +49,8 @@ import model.Attribut;
 import model.Champ;
 import model.Code;
 import model.Const;
-import model.CreerObjet;
-import model.CreerEntier;
+import model.Objet;
+import model.Entier;
 import model.Element;
 import model.FonctionDef;
 import model.FonctionLocal;
@@ -89,7 +89,7 @@ public class Generateur implements ANTLRErrorListener {
 	public Map<Appel, AppelContext> appels = new HashMap<>();
 	public Map<Appel, OperationContext> operations = new HashMap<>();
 	public Map<TypeMultiple, MultipleContext> typeMultiples = new HashMap<>();
-	public Map<CreerObjet, CreerListeContext> listeCreer = new HashMap<>();
+	public Map<Objet, CreerListeContext> listeCreer = new HashMap<>();
 	public Map<Var, VarContext> vars = new HashMap<>();
 	public Map<TypeSimple, SimpleContext> typeSimples = new HashMap<>();
 	public Map<Champ, ChampContext> champs = new HashMap<>();
@@ -99,7 +99,16 @@ public class Generateur implements ANTLRErrorListener {
 	public Map<TypeDef, TypeContext> types = new HashMap<>();
 	public Map<Const, ConstanteContext> constantes = new HashMap<>();
 	public boolean error = false;
-
+	public static Univers metaModele() throws IOException {
+		lgLexer lgLexer = new lgLexer(
+				org.antlr.v4.runtime.CharStreams.fromStream(Univers.class.getResourceAsStream("/generer/metaModele.mdl")));
+		CommonTokenStream tokens = new CommonTokenStream(lgLexer);
+		lgParser parser = new lgParser(tokens);
+		Univers u= new Generateur().generer(parser.system());
+		u.init();
+		return u;
+		
+	}
 	public Univers lireFichier(String file) throws IOException {
 		lgLexer lgLexer = new lgLexer(
 				org.antlr.v4.runtime.CharStreams.fromFileName(file));
@@ -286,8 +295,8 @@ public class Generateur implements ANTLRErrorListener {
 
 	}
 
-	public CreerObjet transformer(CreerContext cc) {
-		CreerObjet r = new CreerObjet();
+	public Objet transformer(CreerContext cc) {
+		Objet r = new Objet();
 		boolean multiple = cc.flagMultiple() != null;
 		if (cc.id_externe() != null) {
 			TerminalNode mn = cc.id_externe().ID(0);
@@ -318,13 +327,13 @@ public class Generateur implements ANTLRErrorListener {
 
 	}
 
-	public CreerObjet transformer(CreerListeContext clc) {
-		CreerObjet creer = null;
-		CreerObjet creerRacine = null;
+	public Objet transformer(CreerListeContext clc) {
+		Objet creer = null;
+		Objet creerRacine = null;
 		TypeMultiple tp = new TypeMultiple(clc.ID().getText(), null);
 
 		for (AttributsContext asc : clc.attributs()) {
-			CreerObjet creerTmp = new CreerObjet();
+			Objet creerTmp = new Objet();
 			creerTmp.type = tp;
 			creerTmp.attributs = new ArrayList<>();
 
@@ -358,9 +367,9 @@ public class Generateur implements ANTLRErrorListener {
 		}
 		if (ct.entier() != null) {
 
-			CreerEntier creer = null;
+			Entier creer = null;
 			if (ct.entier().ENTIER() != null) {
-				creer = new CreerEntier(ct.entier().ENTIER());
+				creer = new Entier(ct.entier().ENTIER());
 			}
 
 			/*
@@ -384,6 +393,7 @@ public class Generateur implements ANTLRErrorListener {
 						.id_externe().ID(0).getText());
 
 			}
+			v.metaModele = ct.var().metaModele() != null;
 			this.vars.put(v, ct.var());
 			r = v;
 			if (ret) {

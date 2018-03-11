@@ -66,5 +66,19 @@ public void donnerModules(Set<String> modules) {
 	public TypeLiteral typeUnion(TypeLiteral tl, Univers u) {
 		return null;
 	}
+	public Code creer(GestionNom gestionNom) {
+		Objet obj = new Objet("metaModele","tpFunction");
+		obj.ajouterAttribut("tpReturn", this.retour.creer(gestionNom));
+		List<Code> ls = new ArrayList<Code>();
+		for(TypeLiteral tl:this.params) {
+			ls.add(tl.creer(gestionNom));
+		}
+		Objet tmp = new Objet("metaModele","lsTp","tp",ls,0);
+		obj.ajouterAttribut("lsTp", tmp);
+		
+		
+		
+		return obj;
 
+	}
 }

@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 public class Var extends Code implements Reference {
 	private String nom;
 	private String module;
+	public boolean metaModele = false;
 	private boolean estParam=true;
 	public Var(String nom,String module) {
 		this.nom = nom;
@@ -41,6 +42,10 @@ public void assignerModule(String nom) {
 	public TypeLiteral typeRetour(Univers u,
 			Map<String, TypeLiteral> variables,
 			Map<String, FonctionLocal> locals) {
+		if (metaModele) {
+			
+			
+		}
 		TypeLiteral tl = variables.get(nom());
 		if (tl != null) {
 			return tl;
@@ -81,5 +86,15 @@ public void assignerModule(String nom) {
 	public String nomRef() {
 		// TODO Auto-generated method stub
 		return nom();
+	}
+	@Override
+	public Code creer(GestionNom gestionNom) {
+		Objet r = new Objet("metaModele","var");
+		r.ajouterAttribut("nom", gestionNom.donnerNom(nom()));
+		
+		return r;
+		
+		
+		
 	}
 }

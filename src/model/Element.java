@@ -30,8 +30,8 @@ public class Element implements Serializable {
 
 	}
 
-	public Code creer(GestionNom gestionNom) {
-		return null;
+	public Code creer(GestionNom gestionNom, String module,Map<String,Code> map) {
+	return null;
 
 	}
 }

@@ -63,7 +63,7 @@ public class Acces extends Code implements Reference {
 
 	public Code creer(GestionNom gestionNom) {
 		Code tmp = this.objet.creer(gestionNom);
-		CreerObjet co = new CreerObjet();
+		Objet co = new Objet();
 		co.type = new TypeSimple("acces", "metaModele");
 		co.attributs.add(new Attribut("code", tmp));
 		co.attributs.add(new Attribut("nom", gestionNom.donnerNom(nom)));

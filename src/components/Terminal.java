@@ -231,7 +231,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 			}
 
 			if (u != null) {
-
+				u.init();
 				u.verifierSemantique();
 
 			}

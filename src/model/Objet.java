@@ -6,16 +6,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class CreerObjet extends Code {
+public class Objet extends Code {
 
 	public TypeBasic type;
 	public List<Attribut> attributs = new ArrayList<>();
 
-	public CreerObjet() {
+	public Objet() {
 
 	}
-
-	public CreerObjet(String module, String nom, String champ,
+	public Objet(String module, String nom) {
+		type = new TypeSimple(nom, module);
+	}
+	
+	public void ajouterAttribut(String nom,Code code) {
+		this.attributs.add(new Attribut(nom,code));
+	}
+	public Objet(String module, String nom, String champ,
 			List<Code> codes, int idx) {
 		if (codes.size() == idx) {
 			type = new TypeSimple(nom, module);
@@ -24,12 +30,12 @@ public class CreerObjet extends Code {
 		}
 		type = new TypeMultiple(nom, module);
 		attributs.add(new Attribut(champ, codes.get(idx)));
-		attributs.add(new Attribut("next", new CreerObjet(module, nom, champ,
+		attributs.add(new Attribut("next", new Objet(module, nom, champ,
 				codes, idx + 1)));
 
 	}
 
-	public CreerObjet(String module, String nom, List<List<Attribut>> codes,
+	public Objet(String module, String nom, List<List<Attribut>> codes,
 			int idx) {
 		if (codes.size() == idx) {
 			type = new TypeSimple(nom, module);
@@ -40,7 +46,7 @@ public class CreerObjet extends Code {
 		for (Attribut a : codes.get(idx)) {
 			attributs.add(a);
 		}
-		attributs.add(new Attribut("next", new CreerObjet(module, nom, 
+		attributs.add(new Attribut("next", new Objet(module, nom, 
 				codes, idx + 1)));
 
 	}
@@ -117,8 +123,8 @@ public class CreerObjet extends Code {
 	}
 
 	public Code creer(GestionNom gestionNom) {
-		CreerObjet r = new CreerObjet();
-		r.type = new TypeSimple("creerObjet", "metaModele");
+		Objet r = new Objet();
+		r.type = new TypeSimple("objet", "metaModele");
 		r.attributs.add(new Attribut("tp", this.type.creer(gestionNom)));
 		List<List<Attribut>> attributs = new ArrayList<List<Attribut>>();
 		for(Attribut a:this.attributs) {
@@ -128,7 +134,7 @@ public class CreerObjet extends Code {
 			attributs.add(ls);
 			
 		}
-		r.attributs.add(new Attribut("champsCreer", new CreerObjet("metaModele","champsCreer",attributs,0)));
+		r.attributs.add(new Attribut("champsCreer", new Objet("metaModele","champsCreer",attributs,0)));
 
 		return r;
 

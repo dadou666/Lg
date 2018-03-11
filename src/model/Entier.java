@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-public class CreerEntier extends Code implements Reference {
+public class Entier extends Code implements Reference {
 
 	/**
 	 * 
@@ -21,12 +21,12 @@ public class CreerEntier extends Code implements Reference {
 		}
 		return type;
 	}
-	public CreerEntier(String type,String module,int valeur) {
+	public Entier(String type,String module,int valeur) {
 		this.type = type;
 		this.module = module;
 		this.valeur =valeur;
 	}
-	public CreerEntier(TerminalNode tn) {
+	public Entier(TerminalNode tn) {
 
 		String txt = tn.getText();
 
@@ -100,6 +100,22 @@ public class CreerEntier extends Code implements Reference {
 	public String nomRef() {
 		// TODO Auto-generated method stub
 		return type();
+	}
+	
+	@Override
+	public Code creer(GestionNom gestionNom) {
+		Objet r = new Objet("metaModele","entier");
+		
+		Entier entier = new Entier("nom","metaModele",this.valeur);
+		
+		r.ajouterAttribut("nom", entier);
+		r.ajouterAttribut("tp", gestionNom.donnerNom(type()));
+		
+		
+		return r;
+		
+		
+		
 	}
 
 }

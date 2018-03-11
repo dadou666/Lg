@@ -1,5 +1,8 @@
 package model;
 
+import generer.Generateur;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -79,8 +82,7 @@ public class Univers {
 
 		return imports.get(module).donnerType(null, nom);
 	}
-
-	public void verifierSemantique() {
+	public void init() {
 		fonctions = new HashMap<>();
 		types = new HashMap<>();
 		constantes = new HashMap<>();
@@ -89,6 +91,9 @@ public class Univers {
 				elt.init(this);
 			}
 		}
+	}
+	public void verifierSemantique() {
+	
 		for (Element elt : elements) {
 			List<ErreurSemantique> tmpLs = new ArrayList<>();
 
@@ -96,7 +101,7 @@ public class Univers {
 				try {
 
 					tmpLs.addAll(erreurs);
-				//	System.out.println(" verif "+elt);
+					// System.out.println(" verif "+elt);
 					elt.verifierSemantique(this);
 					for (ErreurSemantique es : this.erreurs) {
 						if (!tmpLs.contains(es))
@@ -138,6 +143,36 @@ public class Univers {
 		TypeDef td1 = this.donnerType(t1);
 		return typeUnion(td0.superType(), td1.superType());
 
+	}
+	
+	public TypeSimple donnerTypeElement(String var,String module) {
+		if (module == null) {
+			if (var.equals(this.nom) || imports.get(var) != null) {
+				return new TypeSimple("elements","metaModele");
+			}
+			return null;
+			
+		}
+		if (nom.equals(module)) {
+			
+			if (fonctions.get(var) != null) {
+				return new TypeSimple("functionDef","metaModele");
+			}
+			if (types.get(var) != null) {
+				
+				return new TypeSimple("typeDef","metaModele");
+			}
+			if (constantes.get(var) != null) {
+				return new TypeSimple("constante","metaModele");
+			}
+			return null;
+		}
+		Univers u = imports.get(module);
+		if (u == null) {
+			return null;
+		}
+		return u.donnerTypeElement(var, module);
+		
 	}
 
 	public boolean heriteDe(String a, String b) {
@@ -207,5 +242,44 @@ public class Univers {
 
 		return modules;
 
+	}
+
+	public Map<String, Code> creerObjet(String module) {
+		Map<String,Code> map = new HashMap<>();
+		GestionNom gestionNom = new GestionNom();
+		this.creerObjet(gestionNom, module, map);
+		for(Map.Entry<String, Univers> e:this.imports.entrySet()) {
+			e.getValue().creerObjet(gestionNom, e.getKey(), map);
+			
+		}
+		return map;
+
+	}
+	
+	public void creerMetaModele(String module) throws IOException {
+		Map<String,Code> map = creerObjet(module);
+		for(Map.Entry<String, Code> e:map.entrySet()) {
+			Const cst = new Const("%"+e.getKey(),e.getValue());
+			this.constantes.put(cst.nom, cst);
+		}
+		
+		this.ajouterImportModule("metaModele", Generateur.metaModele());
+	}
+
+	public void creerObjet(GestionNom gestionNom, String module,
+			Map<String, Code> map) {
+		List<Code>  objets = new ArrayList<>();
+		for (Element elt : this.fonctions.values()) {
+			objets.add(elt.creer(gestionNom, module, map));
+		}
+		for (Element elt : this.types.values()) {
+			objets.add(elt.creer(gestionNom, module, map));
+		}
+		for (Element elt : this.constantes.values()) {
+			objets.add(elt.creer(gestionNom, module, map));
+		}
+		Objet tmp = new Objet("metaModele","elements","val",objets,0);
+		map.put(module, tmp);
+		
 	}
 }

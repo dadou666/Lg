@@ -18,7 +18,8 @@ defTypes :defType *;
 defType :  typeBase  | defTypeFunction ; 
 attributs : attribut * ;
 code :(  ('(' code ')' ) |  (appel|creerListe| creer | var  |entier| ('(' (  si) ')' ) ) ) operationOuAcces *    ;
-var : ID |id_externe;
+var : metaModele (ID |id_externe);
+metaModele : '%' | ;
 entier : ENTIER | ENTIER_EXTERNE;
 appel :  (ID | id_externe ) '(' tmpCode * ')' ;
 flagMultiple : '@' ;
@@ -30,7 +31,7 @@ id_externe : ID '$' ID;
 acces :  '.' ID ;
 operation : operateur tmpCode;
 operationOuAcces :  (acces |operation )  ;
-operateur : '->' |'=>' | '+' | '-' |'*' |'/'|'>' | '<'  | '%'|'&' |'|' |'=' ;
+operateur : '->' |'=>' | '+' | '-' |'*' |'/'|'>' | '<'  | '&' |'|' |'=' ;
 
 si :  'if' code 'is' negation (simple | multiple ) 'then' code 'else' ( si |code );
 negation : '!' | ;  

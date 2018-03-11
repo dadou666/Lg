@@ -80,6 +80,22 @@ public class TestSemantique {
 				+ " function z t:t | t  " + " function u t:t | m(z t)", null);
 
 	}
+	
+	@Test 
+	public void testFonctionAnonymeOk() {
+		test("type t {} "+ " function m [t]->t:a t:r | a(r)  function u  t:a | m( #{ t:o | o } t {} ) ");
+				
+				
+		
+	}
+	
+	@Test 
+	public void testFonctionAnonymeOk2() {
+		test("type o:t {} type t {} "+ " function m [t]->t:a t:r | a(r)  function u  t:a | m( #{ o:o | o } o {} ) ");
+				
+				
+		
+	}
 
 	
 	@Test 
@@ -215,6 +231,7 @@ public class TestSemantique {
 	public <T extends ErreurSemantique> T test(String src, Class<T> erreur) {
 
 		Univers u = new Generateur().lireSource(src);
+		u.init();
 		u.verifierSemantique();
 
 		if (erreur == null) {
@@ -239,6 +256,7 @@ public class TestSemantique {
 	public Univers test(String src) {
 
 		Univers u = new Generateur().lireSource(src);
+		u.init();
 		u.verifierSemantique();
 
 		if (u.erreurs.isEmpty()) {

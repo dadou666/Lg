@@ -93,5 +93,22 @@ public void assignerModule(String nom) {
 		test.supprimerPourSi(variables, tl);
 
 	}
+	
+	public Code creer(GestionNom gestionNom) {
+		Objet r = new Objet("metaModele","si");
+		r.ajouterAttribut("test", test.creer(gestionNom));
+		r.ajouterAttribut("tp", type.creer(gestionNom));
+		if (this.negation) {
+			r.ajouterAttribut("sinon", alors.creer(gestionNom));
+			r.ajouterAttribut("alors", sinon.creer(gestionNom));
+			return r;
+			
+		}
+		r.ajouterAttribut("alors", alors.creer(gestionNom));
+		r.ajouterAttribut("sinon", sinon.creer(gestionNom));
+		return r;
+		
+		
+	}
 
 }

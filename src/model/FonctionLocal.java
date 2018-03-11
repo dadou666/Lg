@@ -100,5 +100,31 @@ public void assignerModule(String nom) {
 		code.verifierSemantique(u, map);
 		tlReturn = code.typeRetour(u, map, null);
 	}
+	public Code creer(GestionNom gestionNom, String module,Map<String,Code> map) {
+		Objet r = new Objet("metaModele","functionDef");
+		String nom = this.nom;
+		if (module != null) {
+			nom = module+"$"+nom;
+		}
+		r.ajouterAttribut(nom, gestionNom.donnerNom(nom));
+		List<List<Attribut>> ls = new ArrayList<List<Attribut>>();
+		for(Champ c:this.params) {
+			List<Attribut> tmp = new ArrayList<>();
+			tmp.add(new Attribut("nom",gestionNom.donnerNom(c.nom())));
+			tmp.add(new Attribut("tp",c.type.creer(gestionNom)));
+			
+			
+		}
+		Objet coChamps = new Objet("metaModele","champs",ls,0);
+	
+		r.ajouterAttribut("champs",coChamps);
+		r.ajouterAttribut("code", code.creer(gestionNom));
+		
+		
+		
+		map.put(nom, r);
+		return r;
+
+	}
 
 }

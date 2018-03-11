@@ -131,16 +131,16 @@ public class Appel extends Code implements Reference {
 	}
 
 	public Code creer(GestionNom gestionNom) {
-		CreerObjet r = new CreerObjet();
+		Objet r = new Objet();
 		r.type = new TypeSimple("appel", "metaModele");
-		CreerEntier ce = gestionNom.donnerNom(nom());
+		Entier ce = gestionNom.donnerNom(nom());
 		r.attributs.add(new Attribut("nom", ce));
 		List<Code> codes = new ArrayList<>();
 		for (Code code : params) {
 
 			codes.add(code.creer(gestionNom));
 		}
-		r.attributs.add(new Attribut("codes", new CreerObjet("metaModele",
+		r.attributs.add(new Attribut("codes", new Objet("metaModele",
 				"codes", "code", codes, 0)));
 		return r;
 
