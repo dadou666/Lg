@@ -7,6 +7,10 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class CreerEntier extends Code implements Reference {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6492955326184315539L;
 	public String type;
 	public String module;
 	public int valeur;
@@ -17,7 +21,11 @@ public class CreerEntier extends Code implements Reference {
 		}
 		return type;
 	}
-
+	public CreerEntier(String type,String module,int valeur) {
+		this.type = type;
+		this.module = module;
+		this.valeur =valeur;
+	}
 	public CreerEntier(TerminalNode tn) {
 
 		String txt = tn.getText();
@@ -72,7 +80,7 @@ public class CreerEntier extends Code implements Reference {
 	}
 
 	public void verifierSemantique(Univers u) {
-		if (u.donnerType("*" + type()) != null) {
+		if (u.donnerType("@" + type()) != null) {
 			u.erreurs.add(new ObjetInconnu(this));
 
 		}
@@ -80,6 +88,11 @@ public class CreerEntier extends Code implements Reference {
 			u.erreurs.add(new ObjetInconnu(this));
 
 		}
+
+		if (u.champs("@"+type()).isEmpty()) {
+			return ;
+		}
+		
 
 	}
 

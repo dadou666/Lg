@@ -49,7 +49,7 @@ import model.Attribut;
 import model.Champ;
 import model.Code;
 import model.Const;
-import model.Creer;
+import model.CreerObjet;
 import model.CreerEntier;
 import model.Element;
 import model.FonctionDef;
@@ -89,7 +89,7 @@ public class Generateur implements ANTLRErrorListener {
 	public Map<Appel, AppelContext> appels = new HashMap<>();
 	public Map<Appel, OperationContext> operations = new HashMap<>();
 	public Map<TypeMultiple, MultipleContext> typeMultiples = new HashMap<>();
-	public Map<Creer, CreerListeContext> listeCreer = new HashMap<>();
+	public Map<CreerObjet, CreerListeContext> listeCreer = new HashMap<>();
 	public Map<Var, VarContext> vars = new HashMap<>();
 	public Map<TypeSimple, SimpleContext> typeSimples = new HashMap<>();
 	public Map<Champ, ChampContext> champs = new HashMap<>();
@@ -286,8 +286,8 @@ public class Generateur implements ANTLRErrorListener {
 
 	}
 
-	public Creer transformer(CreerContext cc) {
-		Creer r = new Creer();
+	public CreerObjet transformer(CreerContext cc) {
+		CreerObjet r = new CreerObjet();
 		boolean multiple = cc.flagMultiple() != null;
 		if (cc.id_externe() != null) {
 			TerminalNode mn = cc.id_externe().ID(0);
@@ -318,13 +318,13 @@ public class Generateur implements ANTLRErrorListener {
 
 	}
 
-	public Creer transformer(CreerListeContext clc) {
-		Creer creer = null;
-		Creer creerRacine = null;
+	public CreerObjet transformer(CreerListeContext clc) {
+		CreerObjet creer = null;
+		CreerObjet creerRacine = null;
 		TypeMultiple tp = new TypeMultiple(clc.ID().getText(), null);
 
 		for (AttributsContext asc : clc.attributs()) {
-			Creer creerTmp = new Creer();
+			CreerObjet creerTmp = new CreerObjet();
 			creerTmp.type = tp;
 			creerTmp.attributs = new ArrayList<>();
 

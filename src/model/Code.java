@@ -36,4 +36,7 @@ public class Code implements Serializable{
 	public void assignerModule(String nom) {
 
 	}
+	public Code creer(GestionNom gestionNom) {
+		return null;
+	}
 }

@@ -8,22 +8,26 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 public class Acces extends Code implements Reference {
 	public Code objet;
 	private String nom;
-public Acces(Code objet,String nom) {
-	this.objet = objet;
-	this.nom = nom;
-}
-	public String nom() {
-	
-		return nom;
-	}
-public void assignerModule(String nom) {
-		objet.assignerModule(nom);
-		
+
+	public Acces(Code objet, String nom) {
+		this.objet = objet;
+		this.nom = nom;
 	}
 
-public void donnerModules(Set<String> modules) {
-	objet.donnerModules(modules);
-}
+	public String nom() {
+
+		return nom;
+	}
+
+	public void assignerModule(String nom) {
+		objet.assignerModule(nom);
+
+	}
+
+	public void donnerModules(Set<String> modules) {
+		objet.donnerModules(modules);
+	}
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(objet);
@@ -31,7 +35,10 @@ public void donnerModules(Set<String> modules) {
 		sb.append(nom());
 		return sb.toString();
 	}
-	public TypeLiteral typeRetour(Univers u, Map<String, TypeLiteral> variables, Map<String, FonctionLocal> locals) {
+
+	public TypeLiteral typeRetour(Univers u,
+			Map<String, TypeLiteral> variables,
+			Map<String, FonctionLocal> locals) {
 		TypeLiteral tl = objet.typeRetour(u, variables, locals);
 		if (!(tl instanceof TypeBasic)) {
 			ErreurAccesSurNonObjet erreur = new ErreurAccesSurNonObjet(this);
@@ -40,17 +47,28 @@ public void donnerModules(Set<String> modules) {
 		}
 		tl = u.typeChamp(tl.toString(), nom());
 		if (tl == null) {
-			ErreurAccesChampInexistant erreur = new ErreurAccesChampInexistant(this, tl);
+			ErreurAccesChampInexistant erreur = new ErreurAccesChampInexistant(
+					this, tl);
 			u.erreurs.add(erreur);
 		}
 		return tl;
-		
+
 	}
 
 	@Override
 	public String nomRef() {
 		// TODO Auto-generated method stub
 		return nom();
+	}
+
+	public Code creer(GestionNom gestionNom) {
+		Code tmp = this.objet.creer(gestionNom);
+		CreerObjet co = new CreerObjet();
+		co.type = new TypeSimple("acces", "metaModele");
+		co.attributs.add(new Attribut("code", tmp));
+		co.attributs.add(new Attribut("nom", gestionNom.donnerNom(nom)));
+		return co;
+
 	}
 
 }

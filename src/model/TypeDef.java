@@ -53,7 +53,7 @@ public class TypeDef extends Element implements Reference {
 	public String nom() {
 		if (multiple) {
 
-			return "*" + nom;
+			return "@" + nom;
 		}
 		return nom;
 

@@ -48,7 +48,7 @@ import model.Appel;
 import model.Attribut;
 import model.Champ;
 import model.Code;
-import model.Creer;
+import model.CreerObjet;
 import model.Element;
 import model.FonctionDef;
 import model.FonctionLocal;

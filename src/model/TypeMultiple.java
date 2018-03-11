@@ -26,7 +26,7 @@ public class TypeMultiple extends TypeBasic {
 	}
 
 	public String toString() {
-		return "*" + nom();
+		return "@" + nom();
 	}
 
 	public boolean estMultiple() {

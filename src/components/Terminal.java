@@ -61,8 +61,8 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 	JTextPane input;
 
 	JTextPane output;
-	public static String chemin = "F:\\workspaces\\Lg";
-
+	// public static String chemin = "F:\\workspaces\\Lg";
+	public static String chemin = "I:\\workspaces\\Lg";
 	Map<Color, AttributeSet> asets = new HashMap<>();
 
 	/**
@@ -79,7 +79,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 		output = new JTextPane();
 		streamOutput = new TextAreaOutputStream(output);
 		System.setOut(new PrintStream(streamOutput));
-		System.setErr(new PrintStream(streamOutput));
+		//System.setErr(new PrintStream(streamOutput));
 		JScrollPane outputScrollPane = new JScrollPane(output);
 		input = new JTextPane();
 
@@ -175,24 +175,26 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 	Univers donnerUnivers(String nom, Univers courant) {
 		if (modulesEnCours.contains(nom)) {
-			ErreurModule erreur = new ErreurModule(nom,courant.nom,
+			ErreurModule erreur = new ErreurModule(nom, courant.nom,
 					ErreurModule.TypeErreur.Cycle);
 			erreurs.add(erreur);
 			return null;
-			
+
 		}
 		modulesEnCours.add(nom);
 		try {
-			String src = new String(Files.readAllBytes(Paths.get(chemin, nom+".mdl")));
-			Univers u= this.donnerUniversPourSource(nom,src, courant);
+			String src = new String(Files.readAllBytes(Paths.get(chemin, nom
+					+ ".mdl")));
+			Univers u = this.donnerUniversPourSource(nom, src, courant);
 			if (!u.erreurs.isEmpty()) {
-				ErreurModule erreur = new ErreurModule(nom,courant.nom,ErreurModule.TypeErreur.Semantique);
+				ErreurModule erreur = new ErreurModule(nom, courant.nom,
+						ErreurModule.TypeErreur.Semantique);
 				erreurs.add(erreur);
 				return null;
 			}
 			return u;
 		} catch (IOException e) {
-			ErreurModule erreur = new ErreurModule(nom,courant.nom,
+			ErreurModule erreur = new ErreurModule(nom, courant.nom,
 					ErreurModule.TypeErreur.Inconnu);
 			erreurs.add(erreur);
 
@@ -201,55 +203,55 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 	}
 
-	Univers donnerUniversPourSource(String nom,String src, Univers courant) {
+	Univers donnerUniversPourSource(String nom, String src, Univers courant) {
 		Generateur gen = new Generateur();
 		try {
 			Univers u = gen.lireSource(src);
-		
+
 			if (gen.error) {
-				ErreurModule erreur = new ErreurModule(nom,courant.nom,ErreurModule.TypeErreur.Syntaxe);
+				ErreurModule erreur = new ErreurModule(nom, courant.nom,
+						ErreurModule.TypeErreur.Syntaxe);
 				erreurs.add(erreur);
-				
+
 				return null;
 			}
 			u.nom = nom;
 			Set<String> modules = u.modules();
-			
-			for(String module:modules) {
+
+			for (String module : modules) {
 				Univers um = this.donnerUnivers(module, u);
 				if (um != null) {
 					u.ajouterImportModule(module, um);
-					
+
 				}
-			
+
 			}
 			if (!erreurs.isEmpty()) {
 				return null;
 			}
-		
+
 			if (u != null) {
 
 				u.verifierSemantique();
-				
+
 			}
 			return u;
-		
+
 		} catch (Throwable e) {
 			return null;
 		}
-
-	
 
 	}
 
 	public void compiler() {
 
-		erreurs  = new ArrayList<>();
+		erreurs = new ArrayList<>();
 		modulesEnCours = new HashSet<String>();
-		Univers u = this.donnerUniversPourSource("courant",input.getText(), null);
+		Univers u = this.donnerUniversPourSource("courant", input.getText(),
+				null);
 		if (u != null) {
 			erreurs = u.erreurs;
-			
+
 		}
 		ErreurSemantique array[] = new ErreurSemantique[erreurs.size()];
 		for (int i = 0; i < array.length; i++) {

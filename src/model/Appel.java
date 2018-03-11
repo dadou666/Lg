@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,28 +12,32 @@ public class Appel extends Code implements Reference {
 	public boolean isOp = false;
 	private String nom;
 	private String module;
-	public Appel(String nom,String module) {
+
+	public Appel(String nom, String module) {
 		this.nom = nom;
 		this.module = module;
 	}
+
 	public void assignerModule(String nom) {
 		if (module == null) {
 			module = nom;
 		}
-		for(Code code:this.params) {
+		for (Code code : this.params) {
 			code.assignerModule(nom);
 		}
-		
+
 	}
-public void donnerModules(Set<String> modules) {
-	if (module != null) {
-		modules.add(module);
-		
+
+	public void donnerModules(Set<String> modules) {
+		if (module != null) {
+			modules.add(module);
+
+		}
+		for (Code code : this.params) {
+			code.donnerModules(modules);
+		}
 	}
-	for(Code code:this.params) {
-		code.donnerModules(modules);
-	}
-	}
+
 	public List<Code> params;
 
 	public String nom() {
@@ -43,7 +48,6 @@ public void donnerModules(Set<String> modules) {
 
 		return nom;
 	}
-	
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -99,7 +103,7 @@ public void donnerModules(Set<String> modules) {
 			code.verifierSemantique(u, variables);
 			tl = code.typeRetour(u, variables, null);
 			TypeLiteral tyFct = fl.params.get(i).type;
-			
+
 			if (!tyFct.peutAccepter(u, tl)) {
 				u.erreurs.add(new ErreurTypeIncompatiblePourFonction(code));
 
@@ -124,6 +128,22 @@ public void donnerModules(Set<String> modules) {
 	public String nomRef() {
 		// TODO Auto-generated method stub
 		return nom();
+	}
+
+	public Code creer(GestionNom gestionNom) {
+		CreerObjet r = new CreerObjet();
+		r.type = new TypeSimple("appel", "metaModele");
+		CreerEntier ce = gestionNom.donnerNom(nom());
+		r.attributs.add(new Attribut("nom", ce));
+		List<Code> codes = new ArrayList<>();
+		for (Code code : params) {
+
+			codes.add(code.creer(gestionNom));
+		}
+		r.attributs.add(new Attribut("codes", new CreerObjet("metaModele",
+				"codes", "code", codes, 0)));
+		return r;
+
 	}
 
 }

@@ -9,7 +9,8 @@ type @codes {code:code}
 type @champsCreer { nom:nom code:code }
 type appel:code {  nom:nom  codes:codes }
 type var:code { nom:nom }
-type creer:code { tp:tp champsCreer:champs  } 
+type creerEntier:code { tp:tp nom:nom}
+type creerObjet:code { tp:tp champsCreer:champs  } 
 type si:code { code:code tp:tp code:alors code:sinon }
 type typeBase {}
 type tp:typeBase { nom:nom }
