@@ -1,0 +1,43 @@
+type @nom { }
+type element {}
+type @elements { element:val }
+type functionDef:element {nom:nom champs:champs code:code } 
+type @functions { functionDef:val }
+type functionLiteral :code {  functionDef:main functions:interne }
+type code {}
+type @codes {code:code}
+type @champsCreer { nom:nom code:code }
+type appel:code {  nom:nom  codes:codes }
+type var:code { nom:nom }
+type entier:code { nom:tp nom:nom}
+type objet:code { tp:tp champsCreer:champs  } 
+type si:code { code:test tp:tp code:alors code:sinon }
+type constante:element { nom:nom code:code}
+type typeBase {}
+type tp:typeBase { nom:nom }
+type @lsTp { tp:tp }
+type tpFunction:typeBase  { tp:tpReturn lsTp:lsTp } 
+type tpMultiple:tp { }
+type @champs {nom:nom tp:tp }
+type vide {}
+type superType : vide  { nom:nom}
+type typeDef:element {tp:tp superType:super champs:champs  }
+type acces :code {  code:code nom:var }
+type expression  { elements:elements code:code }
+abstract type _predicat:element  { _predicat:val}
+type quantification : _predicat { @champs:champs }
+type _all : quantification { }
+type _exist : quantification { } 
+type prop : _predicat {  code:code  tp:tp }
+
+
+
+
+ 
+
+
+ 
+
+	
+
+

@@ -160,14 +160,14 @@ public class TypeDef extends Element implements Reference {
 
 		type.ajouterAttribut("nom", gestionNom.donnerNom(nomComplet));
 		if (superType == null) {
-			type.ajouterAttribut("superType", new Objet("vide",
+			r.ajouterAttribut("superType", new Objet("vide",
 					"metaModele"));
 
 		} else {
 			Objet st = new Objet("superType", "metaModele");
 			st.ajouterAttribut("nom", gestionNom
 					.donnerNom(superType()));
-			type.attributs.add(new Attribut("superType",st));
+			r.ajouterAttribut("superType",st);
 
 		}
 		List<List<Attribut>> ls = new ArrayList<List<Attribut>>();

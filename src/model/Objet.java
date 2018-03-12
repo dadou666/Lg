@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -9,33 +10,27 @@ import java.util.Set;
 public class Objet extends Code {
 
 	public TypeBasic type;
-	public List<Attribut> attributs = new ArrayList<>();
+	private Map<String, Attribut> attributs = new HashMap<>();
 
 	public Objet() {
 
 	}
+
 	public Objet(String module, String nom) {
 		type = new TypeSimple(nom, module);
 	}
-	
-	public void ajouterAttribut(String nom,Code code) {
-		this.attributs.add(new Attribut(nom,code));
-	}
-	public Objet(String module, String nom, String champ,
-			List<Code> codes, int idx) {
-		if (codes.size() == idx) {
-			type = new TypeSimple(nom, module);
-			return;
 
-		}
-		type = new TypeMultiple(nom, module);
-		attributs.add(new Attribut(champ, codes.get(idx)));
-		attributs.add(new Attribut("next", new Objet(module, nom, champ,
-				codes, idx + 1)));
-
+	public Attribut ajouterAttribut(String nom, Code code) {
+		Attribut a = new Attribut(nom, code);
+		this.attributs.put(nom, a);
+		return a;
 	}
 
-	public Objet(String module, String nom, List<List<Attribut>> codes,
+	public Attribut donnerAttribut(String nom) {
+		return attributs.get(nom);
+	}
+
+	public Objet(String module, String nom, String champ, List<Code> codes,
 			int idx) {
 		if (codes.size() == idx) {
 			type = new TypeSimple(nom, module);
@@ -43,11 +38,22 @@ public class Objet extends Code {
 
 		}
 		type = new TypeMultiple(nom, module);
-		for (Attribut a : codes.get(idx)) {
-			attributs.add(a);
+		ajouterAttribut(champ, codes.get(idx));
+		ajouterAttribut("next", new Objet(module, nom, champ, codes, idx + 1));
+
+	}
+
+	public Objet(String module, String nom, List<List<Attribut>> codes, int idx) {
+		if (codes.size() == idx) {
+			type = new TypeSimple(nom, module);
+			return;
+
 		}
-		attributs.add(new Attribut("next", new Objet(module, nom, 
-				codes, idx + 1)));
+		type = new TypeMultiple(nom, module);
+		for (Attribut a : codes.get(idx)) {
+			attributs.put(a.nom(), a);
+		}
+		ajouterAttribut("next", new Objet(module, nom, codes, idx + 1));
 
 	}
 
@@ -55,7 +61,7 @@ public class Objet extends Code {
 		StringBuilder sb = new StringBuilder();
 		sb.append(type);
 		sb.append("{ ");
-		for (Attribut a : attributs) {
+		for (Attribut a : attributs.values()) {
 			sb.append(a);
 			sb.append(" ");
 		}
@@ -70,7 +76,7 @@ public class Objet extends Code {
 
 	public void donnerModules(Set<String> modules) {
 		type.donnerModules(modules);
-		for (Attribut a : attributs) {
+		for (Attribut a : attributs.values()) {
 			a.donnerModules(modules);
 		}
 	}
@@ -78,7 +84,7 @@ public class Objet extends Code {
 	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables) {
 		type.verifierSemantique(u);
 		Set<String> noms = new HashSet<String>();
-		for (Attribut a : attributs) {
+		for (Attribut a : attributs.values()) {
 			if (noms.contains(a.nom())) {
 				u.erreurs.add(new DoublonDeNomCreer(a));
 			} else {
@@ -125,16 +131,17 @@ public class Objet extends Code {
 	public Code creer(GestionNom gestionNom) {
 		Objet r = new Objet();
 		r.type = new TypeSimple("objet", "metaModele");
-		r.attributs.add(new Attribut("tp", this.type.creer(gestionNom)));
+		r.ajouterAttribut("tp", this.type.creer(gestionNom));
 		List<List<Attribut>> attributs = new ArrayList<List<Attribut>>();
-		for(Attribut a:this.attributs) {
+		for (Attribut a : this.attributs.values()) {
 			List<Attribut> ls = new ArrayList<Attribut>();
-			ls.add(new Attribut("nom",gestionNom.donnerNom(a.nom())));
-			ls.add(new Attribut("code",a.code.creer(gestionNom)));
+			ls.add(new Attribut("nom", gestionNom.donnerNom(a.nom())));
+			ls.add(new Attribut("code", a.code.creer(gestionNom)));
 			attributs.add(ls);
-			
+
 		}
-		r.attributs.add(new Attribut("champsCreer", new Objet("metaModele","champsCreer",attributs,0)));
+		r.ajouterAttribut("champsCreer", new Objet("metaModele", "champsCreer",
+				attributs, 0));
 
 		return r;
 

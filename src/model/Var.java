@@ -43,6 +43,16 @@ public void assignerModule(String nom) {
 			Map<String, TypeLiteral> variables,
 			Map<String, FonctionLocal> locals) {
 		if (metaModele) {
+			String nomObjet = this.nom;
+			if (module != null) {
+				nomObjet = module+"$"+this.nom;
+			}
+			Const c = u.constantes.get("%"+nomObjet);
+			if (c == null) {
+				u.erreurs.add(new ObjetInconnu(this));
+				return null;
+			}
+			return c.value.typeRetour(u, variables, locals);
 			
 			
 		}

@@ -315,12 +315,12 @@ public class Generateur implements ANTLRErrorListener {
 			}
 		}
 
-		r.attributs = new ArrayList<>();
+
 		for (AttributContext ac : cc.attributs().attribut()) {
-			Attribut a = new Attribut(ac.ID().getText(), this.transformer(ac
+			Attribut a = 	r.ajouterAttribut(ac.ID().getText(), this.transformer(ac
 					.tmpCode()));
 			this.attributs.put(a, ac);
-			r.attributs.add(a);
+		
 
 		}
 		return r;
@@ -335,18 +335,18 @@ public class Generateur implements ANTLRErrorListener {
 		for (AttributsContext asc : clc.attributs()) {
 			Objet creerTmp = new Objet();
 			creerTmp.type = tp;
-			creerTmp.attributs = new ArrayList<>();
+			
 
 			for (AttributContext ac : asc.attribut()) {
-				Attribut a = new Attribut(ac.ID().getText(),
+				Attribut a = creerTmp.ajouterAttribut(ac.ID().getText(),
 						this.transformer(ac.tmpCode()));
 				this.attributs.put(a, ac);
-				creerTmp.attributs.add(a);
+				;
 
 			}
 			if (creer != null) {
-				Attribut a = new Attribut("next", creerTmp);
-				creer.attributs.add(a);
+				
+				creer.ajouterAttribut("next", creerTmp);
 
 			} else {
 				creerRacine = creerTmp;
@@ -393,7 +393,7 @@ public class Generateur implements ANTLRErrorListener {
 						.id_externe().ID(0).getText());
 
 			}
-			v.metaModele = ct.var().metaModele() != null;
+			v.metaModele = !ct.var().metaModele().getText().isEmpty();
 			this.vars.put(v, ct.var());
 			r = v;
 			if (ret) {
