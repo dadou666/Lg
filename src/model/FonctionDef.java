@@ -70,4 +70,24 @@ public class FonctionDef extends Code {
 		return tf;
 		
 	}
+	public Code reduire(Univers u,Map<String,Code> variables,Map<String,FonctionLocal> locals) {
+		return this;
+	}
+	public Code reduire(Univers u,List<Code> args,Map<String,Code> variablesParent,Map<String,FonctionLocal> localsParent) {
+		Map<String,Code> variables = new HashMap<>();
+		Map<String,FonctionLocal> mapLocals = new HashMap<>();
+		for(int i=0;i< args.size();i++) {
+			Champ champ = this.params.get(i);
+			variables.put(champ.nom(), args.get(i).reduire(u, variablesParent,localsParent));
+			
+		}
+		for(FonctionLocal fl:locals) {
+			mapLocals.put(fl.nom(), fl);
+		}
+				
+				
+		return code.reduire(u, variables,mapLocals);
+		
+		
+	}
 }

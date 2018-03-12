@@ -39,4 +39,9 @@ public class Code implements Serializable{
 	public Code creer(GestionNom gestionNom) {
 		return null;
 	}
+	public Code reduire(Univers u,Map<String,Code> variables,Map<String,FonctionLocal> locals) {
+		return null;
+		
+		
+	}
 }

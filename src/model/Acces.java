@@ -70,5 +70,11 @@ public class Acces extends Code implements Reference {
 		return co;
 
 	}
+	public Code reduire(Univers u,Map<String,Code> variables,Map<String,FonctionLocal> locals) {
+		Objet o = (Objet)this.objet.reduire(u, variables,locals);
+		return o.donnerAttribut(this.nom).code;
+		
+		
+	}
 
 }

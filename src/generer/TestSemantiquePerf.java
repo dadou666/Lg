@@ -24,6 +24,7 @@ public class TestSemantiquePerf {
 	 public void testFile(String file) throws IOException {
 
 		Univers u = new Generateur().lireFichier(file);
+		u.init();
 		u.verifierSemantique();
 		System.out.println(" "+u.erreurs);
 	}

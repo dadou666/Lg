@@ -71,13 +71,14 @@ public class TestSemantiqueImport {
 
 		Univers u = new Generateur().lireSource(src);
 		Univers umodule = new Generateur().lireSource(module);
+		umodule.init();
 		umodule.verifierSemantique();
 		if (!umodule.erreurs.isEmpty()) {
 			fail("Module erreur");
 			return null;
 		}
-		u.imports.put("mod", umodule);
-		umodule.assignerModule("mod");
+		u.ajouterImportModule("mod", umodule);
+		u.init();
 		u.verifierSemantique();
 
 		if (u.erreurs.isEmpty()) {

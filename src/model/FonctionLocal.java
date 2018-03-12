@@ -126,5 +126,12 @@ public void assignerModule(String nom) {
 		return r;
 
 	}
+	public Code reduire(Univers u,List<Code> args,Map<String,Code> variablesParent,Map<String,FonctionLocal> localsParent) {
+		
+		
+		return null;
+		
+		
+	}
 
 }

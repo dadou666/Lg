@@ -1,5 +1,7 @@
 package model;
 
+import grammaire.lgParser.FunctionLocalContext;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +121,19 @@ public class Appel extends Code implements Reference {
 			Map<String, FonctionLocal> locals) {
 		FonctionLocal fl = u.donnerFonction(nom());
 		if (fl == null) {
-			return null;
+			TypeLiteral tl = variables.get(nom());
+			if (tl != null) {
+				TypeFunction tf =(TypeFunction) tl;
+				return tf.retour;
+			}
+			if (locals == null) {
+				return null;
+			}
+			fl = locals.get(nom());
+			if (fl == null) {
+				return null;
+			}
+			return fl.tl(u, locals);
 		}
 		return fl.tl(u, locals);
 	}
@@ -140,9 +154,29 @@ public class Appel extends Code implements Reference {
 
 			codes.add(code.creer(gestionNom));
 		}
-		r.ajouterAttribut("codes", new Objet("metaModele",
-				"codes", "code", codes, 0));
+		r.ajouterAttribut("codes", new Objet("metaModele", "codes", "code",
+				codes, 0));
 		return r;
+
+	}
+
+	public Code reduire(Univers u, List<Code> args,
+			Map<String, Code> variables, Map<String, FonctionLocal> locals) {
+		Code code = variables.get(nom());
+		if (code != null && code instanceof FonctionDef) {
+			FonctionDef fd = (FonctionDef) code;
+			return fd.reduire(u, args, variables, locals);
+
+		}
+
+		FonctionLocal fl = locals.get(nom());
+		if (fl == null) {
+
+			fl = u.donnerFonction(nom());
+
+		}
+
+		return fl.reduire(u, params, variables, locals);
 
 	}
 

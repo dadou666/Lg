@@ -143,14 +143,17 @@ public class TestSemantique {
 		test("type @f {} function f  @f:c| c.next",null);
 		
 	}
-
+	@Test
+	public void testFonctionArgsOk() {
+		test(" type @t { } function u [t]->t:f t:a | f(f(a)) ");
+	}
 
 	@Test
 	public void testEntierOk() {
 		test(" type @t { } function u t:a | a " + " function m | u(458t ) ",
 				null);
 	}
-
+   
 	@Test
 	public void testFonctionLocalOk() {
 		test(" type @t { } function u [t]->t:f t:a | f(a) "
