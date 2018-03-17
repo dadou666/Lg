@@ -44,7 +44,7 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 
 import model.Acces;
-import model.Appel;
+
 import model.Attribut;
 import model.Champ;
 import model.Code;

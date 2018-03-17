@@ -1,4 +1,4 @@
-package model;
+package model.erreur;
 
 public class ErreurModule extends ErreurSemantique {
 

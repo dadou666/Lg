@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import model.erreur.DoublonDeNom;
+import model.erreur.ErreurAttributSuperTypeRedefini;
+
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class TypeDef extends Element implements Reference {

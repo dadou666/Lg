@@ -1,5 +1,7 @@
 package model;
 
+import model.erreur.ErreurSemantique;
+
 public class ObjetInconnu extends ErreurSemantique {
 
 	public Reference ref;

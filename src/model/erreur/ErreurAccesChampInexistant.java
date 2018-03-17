@@ -1,4 +1,7 @@
-package model;
+package model.erreur;
+
+import model.Acces;
+import model.TypeLiteral;
 
 public class ErreurAccesChampInexistant extends ErreurSemantique {
 	/**

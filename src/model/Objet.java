@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import model.erreur.DoublonDeNomCreer;
+import model.erreur.ErreurAttributAbsentDansCreer;
+import model.erreur.ErreurTypeIncompatibleAttribut;
+
 public class Objet extends Code {
 
 	public TypeBasic type;
@@ -81,7 +85,7 @@ public class Objet extends Code {
 		}
 	}
 
-	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables) {
+	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables, Map<String, FonctionLocal> locals) {
 		type.verifierSemantique(u);
 		Set<String> noms = new HashSet<String>();
 		for (Attribut a : attributs.values()) {
@@ -89,7 +93,8 @@ public class Objet extends Code {
 				u.erreurs.add(new DoublonDeNomCreer(a));
 			} else {
 				noms.add(a.nom());
-				TypeLiteral tl = a.code.typeRetour(u, variables, null);
+				a.code.verifierSemantique(u, variables, locals);
+				TypeLiteral tl = a.code.typeRetour(u, variables, locals);
 				TypeLiteral tlChamp = u.champs(type.toString()).get(a.nom());
 				if (tlChamp == null) {
 					u.erreurs.add(new ObjetInconnu(a));

@@ -10,7 +10,7 @@ public class Code implements Serializable{
 	 */
 	private static final long serialVersionUID = 6169982793520176313L;
 
-	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables) {
+	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables, Map<String, FonctionLocal> locals) {
 
 	}
 	public void donnerModules(Set<String> modules) {

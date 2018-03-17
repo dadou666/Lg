@@ -3,6 +3,9 @@ package model;
 import java.util.Map;
 import java.util.Set;
 
+import model.erreur.ErreurAccesChampInexistant;
+import model.erreur.ErreurAccesSurNonObjet;
+
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class Acces extends Code implements Reference {
@@ -34,6 +37,10 @@ public class Acces extends Code implements Reference {
 		sb.append(".");
 		sb.append(nom());
 		return sb.toString();
+	}
+	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables, Map<String, FonctionLocal> locals) {
+		objet.verifierSemantique(u, variables, locals);
+		this.typeRetour(u, variables, locals);
 	}
 
 	public TypeLiteral typeRetour(Univers u,

@@ -44,7 +44,10 @@ import java.util.List;
 import java.util.Map;
 
 import model.Acces;
-import model.Appel;
+
+import model.AppelBase;
+import model.AppelDebut;
+import model.AppelRec;
 import model.Attribut;
 import model.Champ;
 import model.Code;
@@ -86,8 +89,9 @@ import components.Terminal;
 
 public class Generateur implements ANTLRErrorListener {
 
-	public Map<Appel, AppelContext> appels = new HashMap<>();
-	public Map<Appel, OperationContext> operations = new HashMap<>();
+	public Map<AppelBase, AppelContext> appels = new HashMap<>();
+	public Map<AppelBase, OperationContext> operations = new HashMap<>();
+
 	public Map<TypeMultiple, MultipleContext> typeMultiples = new HashMap<>();
 	public Map<Objet, CreerListeContext> listeCreer = new HashMap<>();
 	public Map<Var, VarContext> vars = new HashMap<>();
@@ -99,16 +103,19 @@ public class Generateur implements ANTLRErrorListener {
 	public Map<TypeDef, TypeContext> types = new HashMap<>();
 	public Map<Const, ConstanteContext> constantes = new HashMap<>();
 	public boolean error = false;
+
 	public static Univers metaModele() throws IOException {
 		lgLexer lgLexer = new lgLexer(
-				org.antlr.v4.runtime.CharStreams.fromStream(Univers.class.getResourceAsStream("/generer/metaModele.mdl")));
+				org.antlr.v4.runtime.CharStreams.fromStream(Univers.class
+						.getResourceAsStream("/generer/metaModele.mdl")));
 		CommonTokenStream tokens = new CommonTokenStream(lgLexer);
 		lgParser parser = new lgParser(tokens);
-		Univers u= new Generateur().generer(parser.system());
+		Univers u = new Generateur().generer(parser.system());
 		u.init();
 		return u;
-		
+
 	}
+
 	public Univers lireFichier(String file) throws IOException {
 		lgLexer lgLexer = new lgLexer(
 				org.antlr.v4.runtime.CharStreams.fromFileName(file));
@@ -129,7 +136,7 @@ public class Generateur implements ANTLRErrorListener {
 		if (error) {
 			return null;
 		}
-	
+
 		return this.generer(parser.system());
 
 	}
@@ -315,12 +322,10 @@ public class Generateur implements ANTLRErrorListener {
 			}
 		}
 
-
 		for (AttributContext ac : cc.attributs().attribut()) {
-			Attribut a = 	r.ajouterAttribut(ac.ID().getText(), this.transformer(ac
-					.tmpCode()));
+			Attribut a = r.ajouterAttribut(ac.ID().getText(),
+					this.transformer(ac.tmpCode()));
 			this.attributs.put(a, ac);
-		
 
 		}
 		return r;
@@ -335,7 +340,6 @@ public class Generateur implements ANTLRErrorListener {
 		for (AttributsContext asc : clc.attributs()) {
 			Objet creerTmp = new Objet();
 			creerTmp.type = tp;
-			
 
 			for (AttributContext ac : asc.attribut()) {
 				Attribut a = creerTmp.ajouterAttribut(ac.ID().getText(),
@@ -345,7 +349,7 @@ public class Generateur implements ANTLRErrorListener {
 
 			}
 			if (creer != null) {
-				
+
 				creer.ajouterAttribut("next", creerTmp);
 
 			} else {
@@ -414,20 +418,22 @@ public class Generateur implements ANTLRErrorListener {
 		}
 
 		if (ct.appel() != null) {
-			Appel appel = null;
+			AppelDebut appel = null;
+			ArrayList<Code> params = new ArrayList<Code>();
+			for (TmpCodeContext cc : ct.appel().tmpCode()) {
+				params.add(this.transformer(cc));
+			}
 			if (ct.appel().id_externe() != null) {
-				appel = new Appel(ct.appel().id_externe().ID(1).getText(), ct
-						.appel().id_externe().ID(0).getText());
+				appel = new AppelDebut(ct.appel().id_externe().ID(1).getText(), ct
+						.appel().id_externe().ID(0).getText(),params.get(0));
 
 			} else {
-				appel = new Appel(ct.appel().ID().getText(), null);
+				appel = new AppelDebut(ct.appel().ID().getText(), null,params.get(0));
 			}
+			AppelBase ab = this.appelBase(appel, params, params.size()-1);
 
-			this.appels.put(appel, ct.appel());
-			appel.params = new ArrayList<Code>();
-			for (TmpCodeContext cc : ct.appel().tmpCode()) {
-				appel.params.add(this.transformer(cc));
-			}
+			this.appels.put(ab, ct.appel());
+		
 			r = appel;
 			if (ret) {
 				return appel;
@@ -437,15 +443,15 @@ public class Generateur implements ANTLRErrorListener {
 		Code tmp = r;
 		for (OperationOuAccesContext oc : ct.operationOuAcces()) {
 			if (oc.operation() != null) {
-				Appel appel = new Appel(oc.operation().operateur().getText(),
-						null);
+				AppelDebut appel = new AppelDebut(oc.operation().operateur().getText(),
+						null,tmp);
 				appel.isOp = true;
-
-				appel.params = new ArrayList<>();
-				appel.params.add(tmp);
-				appel.params.add(transformer(oc.operation().tmpCode()));
+				AppelRec appelRec = new AppelRec();
+				appelRec.appel=appel;
+				appelRec.param = transformer(oc.operation().tmpCode());
+				
 				tmp = appel;
-				this.operations.put(appel, oc.operation());
+				this.operations.put(appelRec, oc.operation());
 
 			}
 			if (oc.acces() != null) {
@@ -490,6 +496,17 @@ public class Generateur implements ANTLRErrorListener {
 		return si;
 	}
 
+	public AppelBase appelBase(AppelDebut ad, List<Code> codes, int idx) {
+		if (idx == 0) {
+			return ad;
+		}
+		AppelRec ar = new AppelRec();
+		ar.appel = appelBase(ad, codes, idx - 1);
+		ar.param = codes.get(idx);
+		return ar;
+
+	}
+
 	public Code transformer(TmpCodeContext tmpCode) {
 
 		if (tmpCode.functionDef() != null) {
@@ -500,20 +517,21 @@ public class Generateur implements ANTLRErrorListener {
 			return this.transformer(tmpCode.si());
 		}
 		if (tmpCode.appel() != null) {
-			Appel appel;
+			AppelDebut appel;
+			ArrayList<Code> params = new ArrayList<Code>();
+			for (TmpCodeContext cc : tmpCode.appel().tmpCode()) {
+				params.add(this.transformer(cc));
+			}
+
 			if (tmpCode.appel().id_externe() != null) {
 
-				appel = new Appel(tmpCode.appel().id_externe().ID(1).getText(),
-						tmpCode.appel().id_externe().ID(0).getText());
+				appel = new AppelDebut(tmpCode.appel().id_externe().ID(1).getText(),
+						tmpCode.appel().id_externe().ID(0).getText(),params.get(0));
 			} else {
-				appel = new Appel(tmpCode.appel().ID().getText(), null);
+				appel = new AppelDebut(tmpCode.appel().ID().getText(), null,params.get(0));
 			}
-			appel.params = new ArrayList<Code>();
-			for (TmpCodeContext cc : tmpCode.appel().tmpCode()) {
-				appel.params.add(this.transformer(cc));
-			}
-
-			return appel;
+		
+			return appelBase(appel,params,params.size()-1);
 
 		}
 		CodeContext ct = tmpCode.code();
@@ -549,44 +567,53 @@ public class Generateur implements ANTLRErrorListener {
 	}
 
 	public TypeFunction transformer(DefTypeFunctionContext dtf) {
-		TypeFunction r = new TypeFunction();
-		r.retour = this.transformer(dtf.defType());
-		r.params = new ArrayList<TypeLiteral>();
-		for (DefTypeContext dtc : dtf.defTypes().defType()) {
-			r.params.add(this.transformer(dtc));
 
+		return this.typeFunction(this.transformer(dtf.defType()), dtf
+				.defTypes().defType(), 0);
+
+	}
+
+	public TypeFunction typeFunction(TypeLiteral retour,
+			List<DefTypeContext> ls, int idx) {
+		TypeFunction tf = new TypeFunction();
+		tf.param = this.transformer(ls.get(idx));
+		if (ls.size() - 1 == idx) {
+
+			tf.retour = retour;
+
+		} else {
+			tf.retour = typeFunction(retour, ls, idx + 1);
 		}
-
-		return r;
+		return tf;
 
 	}
 
 	@Override
 	public void reportAmbiguity(@NotNull Parser arg0, DFA arg1, int arg2,
 			int arg3, @NotNull BitSet arg4, @NotNull ATNConfigSet arg5) {
-	//	error=true;
-		
+		// error=true;
+
 	}
 
 	@Override
 	public void reportAttemptingFullContext(@NotNull Parser arg0,
 			@NotNull DFA arg1, int arg2, int arg3, @NotNull ATNConfigSet arg4) {
-		//error=true;
-		
+		// error=true;
+
 	}
 
 	@Override
 	public void reportContextSensitivity(@NotNull Parser arg0,
 			@NotNull DFA arg1, int arg2, int arg3, @NotNull ATNConfigSet arg4) {
-		//error=true;
-		
+		// error=true;
+
 	}
 
 	@Override
 	public void syntaxError(Recognizer<?, ?> arg0, @Nullable Object arg1,
 			int arg2, int arg3, String arg4, @Nullable RecognitionException arg5) {
-		error=true;
-		
+		error = true;
+
 	}
 
 }

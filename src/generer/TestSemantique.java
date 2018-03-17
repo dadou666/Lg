@@ -1,14 +1,14 @@
 package generer;
 
 import static org.junit.Assert.*;
-import model.ErreurAccesChampInexistant;
-import model.ErreurAttributAbsentDansCreer;
-import model.ErreurSemantique;
-import model.ErreurTypeNonCalculable;
 import model.FonctionDef;
 import model.FonctionLocal;
 import model.ObjetInconnu;
 import model.Univers;
+import model.erreur.ErreurAccesChampInexistant;
+import model.erreur.ErreurAttributAbsentDansCreer;
+import model.erreur.ErreurSemantique;
+import model.erreur.ErreurTypeNonCalculable;
 
 import org.junit.Test;
 

@@ -50,9 +50,9 @@ import javax.swing.text.StyleContext;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
-import model.ErreurModule;
-import model.ErreurSemantique;
 import model.Univers;
+import model.erreur.ErreurModule;
+import model.erreur.ErreurSemantique;
 
 import org.xml.sax.SAXException;
 

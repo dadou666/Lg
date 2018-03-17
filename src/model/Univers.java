@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import model.erreur.DoublonDeNomParam;
+import model.erreur.ErreurSemantique;
+
 public class Univers {
 	public String nom;
 	public Map<String, Univers> imports = new HashMap<String, Univers>();

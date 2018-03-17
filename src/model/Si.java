@@ -3,6 +3,8 @@ package model;
 import java.util.Map;
 import java.util.Set;
 
+import model.erreur.ErreurTypeNonCalculable;
+
 public class Si extends Code {
 	/**
 	 * 
@@ -78,18 +80,18 @@ public void assignerModule(String nom) {
 		return tr;
 	}
 
-	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables) {
-		test.verifierSemantique(u, variables);
+	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables, Map<String, FonctionLocal> locals) {
+		test.verifierSemantique(u, variables, null);
 		TypeLiteral tl = null;
 		if (!negation) {
 			tl = test.ajouterPourSi(this, variables);
 		}
-		alors.verifierSemantique(u, variables);
+		alors.verifierSemantique(u, variables, null);
 		test.supprimerPourSi(variables, tl);
 		if (negation) {
 			tl = test.ajouterPourSi(this, variables);
 		}
-		sinon.verifierSemantique(u, variables);
+		sinon.verifierSemantique(u, variables, null);
 		test.supprimerPourSi(variables, tl);
 
 	}

@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.Set;
 
-import model.ErreurSemantique;
 import model.Univers;
+import model.erreur.ErreurSemantique;
 
 import org.junit.Test;
 

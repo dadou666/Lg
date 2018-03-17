@@ -1,4 +1,4 @@
-package model;
+package model.erreur;
 
 public class ErreurAttributAbsentDansCreer extends ErreurSemantique {
 	public String nom;

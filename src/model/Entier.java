@@ -21,11 +21,13 @@ public class Entier extends Code implements Reference {
 		}
 		return type;
 	}
-	public Entier(String type,String module,int valeur) {
+
+	public Entier(String type, String module, int valeur) {
 		this.type = type;
 		this.module = module;
-		this.valeur =valeur;
+		this.valeur = valeur;
 	}
+
 	public Entier(TerminalNode tn) {
 
 		String txt = tn.getText();
@@ -79,7 +81,9 @@ public class Entier extends Code implements Reference {
 
 	}
 
-	public void verifierSemantique(Univers u) {
+	public void verifierSemantique(Univers u,
+			Map<String, TypeLiteral> variables,
+			Map<String, FonctionLocal> locals) {
 		if (u.donnerType("@" + type()) != null) {
 			u.erreurs.add(new ObjetInconnu(this));
 
@@ -89,10 +93,9 @@ public class Entier extends Code implements Reference {
 
 		}
 
-		if (u.champs("@"+type()).isEmpty()) {
-			return ;
+		if (u.champs("@" + type()).isEmpty()) {
+			return;
 		}
-		
 
 	}
 
@@ -101,21 +104,18 @@ public class Entier extends Code implements Reference {
 		// TODO Auto-generated method stub
 		return type();
 	}
-	
+
 	@Override
 	public Code creer(GestionNom gestionNom) {
-		Objet r = new Objet("metaModele","entier");
-		
-		Entier entier = new Entier("nom","metaModele",this.valeur);
-		
+		Objet r = new Objet("metaModele", "entier");
+
+		Entier entier = new Entier("nom", "metaModele", this.valeur);
+
 		r.ajouterAttribut("nom", entier);
 		r.ajouterAttribut("tp", gestionNom.donnerNom(type()));
-		
-		
+
 		return r;
-		
-		
-		
+
 	}
 
 }

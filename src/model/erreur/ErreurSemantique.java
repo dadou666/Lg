@@ -1,4 +1,6 @@
-package model;
+package model.erreur;
+
+import model.Element;
 
 public class ErreurSemantique extends Error {
 	public Element element;

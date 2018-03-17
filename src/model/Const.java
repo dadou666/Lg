@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import model.erreur.DoublonDeNom;
+
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class Const extends Element {
@@ -54,7 +56,8 @@ public void donnerModules(Set<String> modules) {
 	public void verifierSemantique(Univers u)   {
 		
 		Map<String,TypeLiteral> map = new HashMap<>();
-		value.verifierSemantique(u, map);
+		Map<String,FonctionLocal> locals = new HashMap<>();
+		value.verifierSemantique(u, map, locals);
 
 	}
 	

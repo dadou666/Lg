@@ -1,4 +1,7 @@
-package model;
+package model.erreur;
+
+import model.Attribut;
+import model.TypeLiteral;
 
 public class ErreurTypeIncompatibleAttribut extends ErreurSemantique {
 	/**

@@ -1,4 +1,6 @@
-package model;
+package model.erreur;
+
+import model.Code;
 
 public class ErreurTypeIncompatiblePourFonction extends ErreurSemantique {
 
