@@ -112,7 +112,11 @@ public class Generateur implements ANTLRErrorListener {
 		lgParser parser = new lgParser(tokens);
 		Univers u = new Generateur().generer(parser.system());
 		u.init();
-		return u;
+		u.verifierSemantique();
+		if (u.erreurs.isEmpty()) {
+			return u;
+		}
+		throw new Error("metaModele incorrecte");
 
 	}
 
@@ -424,16 +428,17 @@ public class Generateur implements ANTLRErrorListener {
 				params.add(this.transformer(cc));
 			}
 			if (ct.appel().id_externe() != null) {
-				appel = new AppelDebut(ct.appel().id_externe().ID(1).getText(), ct
-						.appel().id_externe().ID(0).getText(),params.get(0));
+				appel = new AppelDebut(ct.appel().id_externe().ID(1).getText(),
+						ct.appel().id_externe().ID(0).getText(), params.get(0));
 
 			} else {
-				appel = new AppelDebut(ct.appel().ID().getText(), null,params.get(0));
+				appel = new AppelDebut(ct.appel().ID().getText(), null,
+						params.get(0));
 			}
-			AppelBase ab = this.appelBase(appel, params, params.size()-1);
+			AppelBase ab = this.appelBase(appel, params, params.size() - 1);
 
 			this.appels.put(ab, ct.appel());
-		
+
 			r = ab;
 			if (ret) {
 				return ab;
@@ -443,13 +448,13 @@ public class Generateur implements ANTLRErrorListener {
 		Code tmp = r;
 		for (OperationOuAccesContext oc : ct.operationOuAcces()) {
 			if (oc.operation() != null) {
-				AppelDebut appel = new AppelDebut(oc.operation().operateur().getText(),
-						null,tmp);
+				AppelDebut appel = new AppelDebut(oc.operation().operateur()
+						.getText(), null, tmp);
 				appel.isOp = true;
 				AppelRec appelRec = new AppelRec();
-				appelRec.appel=appel;
+				appelRec.appel = appel;
 				appelRec.param = transformer(oc.operation().tmpCode());
-				
+
 				tmp = appel;
 				this.operations.put(appelRec, oc.operation());
 
@@ -525,13 +530,15 @@ public class Generateur implements ANTLRErrorListener {
 
 			if (tmpCode.appel().id_externe() != null) {
 
-				appel = new AppelDebut(tmpCode.appel().id_externe().ID(1).getText(),
-						tmpCode.appel().id_externe().ID(0).getText(),params.get(0));
+				appel = new AppelDebut(tmpCode.appel().id_externe().ID(1)
+						.getText(), tmpCode.appel().id_externe().ID(0)
+						.getText(), params.get(0));
 			} else {
-				appel = new AppelDebut(tmpCode.appel().ID().getText(), null,params.get(0));
+				appel = new AppelDebut(tmpCode.appel().ID().getText(), null,
+						params.get(0));
 			}
-		
-			return appelBase(appel,params,params.size()-1);
+
+			return appelBase(appel, params, params.size() - 1);
 
 		}
 		CodeContext ct = tmpCode.code();

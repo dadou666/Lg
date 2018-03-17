@@ -5,9 +5,10 @@ type functionDef:element {nom:nom champs:champs code:code }
 type @functions { functionDef:val }
 type functionLiteral :code {  functionDef:main functions:interne }
 type code {}
-type @codes {code:code}
 type @champsCreer { nom:nom code:code }
-type appel:code {  nom:nom  codes:codes }
+type appel:code {  code:param }
+type appelDebut:appel { nom:nom }
+type appelRec:appel { appel:appel  }
 type var:code { nom:nom }
 type entier:code { nom:tp nom:nom}
 type objet:code { tp:tp champsCreer:champs  } 
@@ -15,8 +16,7 @@ type si:code { code:test tp:tp code:alors code:sinon }
 type constante:element { nom:nom code:code}
 type typeBase {}
 type tp:typeBase { nom:nom }
-type @lsTp { tp:tp }
-type tpFunction:typeBase  { tp:tpReturn lsTp:lsTp } 
+type tpFunction:typeBase  { tp:param tp:tpReturn  } 
 type tpMultiple:tp { }
 type @champs {nom:nom tp:tp }
 type vide {}

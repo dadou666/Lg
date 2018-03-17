@@ -68,4 +68,13 @@ public class AppelRec extends AppelBase {
 		return null;
 
 	}
+	public Code creer(GestionNom gestionNom) {
+
+		Objet co = new Objet();
+		co.type = new TypeSimple("appelDebut", "metaModele");
+		co.ajouterAttribut("param", param.creer(gestionNom));
+		co.ajouterAttribut("appel", appel.creer(gestionNom));
+		return co;
+
+	}
 }

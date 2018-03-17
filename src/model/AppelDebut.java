@@ -107,5 +107,15 @@ public class AppelDebut extends AppelBase implements Reference {
 		// TODO Auto-generated method stub
 		return nom();
 	}
+	
+	public Code creer(GestionNom gestionNom) {
+
+		Objet co = new Objet();
+		co.type = new TypeSimple("appelDebut", "metaModele");
+		co.ajouterAttribut("param", param.creer(gestionNom));
+		co.ajouterAttribut("nom", gestionNom.donnerNom(nom));
+		return co;
+
+	}
 
 }
