@@ -84,12 +84,14 @@ public class Entier extends Code implements Reference {
 	public void verifierSemantique(Univers u,
 			Map<String, TypeLiteral> variables,
 			Map<String, FonctionLocal> locals) {
-		if (u.donnerType("@" + type()) != null) {
+		if (u.donnerType("@" + type()) == null) {
 			u.erreurs.add(new ObjetInconnu(this));
+			return;
 
 		}
-		if (u.donnerType(type()) != null) {
+		if (u.donnerType(type()) == null) {
 			u.erreurs.add(new ObjetInconnu(this));
+			return;
 
 		}
 

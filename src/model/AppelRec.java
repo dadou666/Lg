@@ -47,7 +47,7 @@ public class AppelRec extends AppelBase {
 
 	public TypeFunction verifierSemantiqueRec(Univers u,
 			Map<String, TypeLiteral> variables, Map<String, FonctionLocal> locals) {
-		TypeFunction tf = appel.verifierSemantiqueRec(u, variables, null);
+		TypeFunction tf = appel.verifierSemantiqueRec(u, variables, locals);
 		if (tf == null) {
 			u.erreurs.add(new ErreurNonFonction(appel));
 			return null;

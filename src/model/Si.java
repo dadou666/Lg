@@ -81,17 +81,17 @@ public void assignerModule(String nom) {
 	}
 
 	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables, Map<String, FonctionLocal> locals) {
-		test.verifierSemantique(u, variables, null);
+		test.verifierSemantique(u, variables, locals);
 		TypeLiteral tl = null;
 		if (!negation) {
 			tl = test.ajouterPourSi(this, variables);
 		}
-		alors.verifierSemantique(u, variables, null);
+		alors.verifierSemantique(u, variables, locals);
 		test.supprimerPourSi(variables, tl);
 		if (negation) {
 			tl = test.ajouterPourSi(this, variables);
 		}
-		sinon.verifierSemantique(u, variables, null);
+		sinon.verifierSemantique(u, variables, locals);
 		test.supprimerPourSi(variables, tl);
 
 	}

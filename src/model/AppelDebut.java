@@ -65,8 +65,12 @@ public class AppelDebut extends AppelBase implements Reference {
 				tf = (TypeFunction) tl;
 			}
 		}
+		FonctionLocal fl = locals.get(nom());
+		if (fl != null) {
+			tf = fl.typeFunction();
+		}
 		if (tf == null) {
-			FonctionLocal fl = u.donnerFonction(nom());
+			 fl = u.donnerFonction(nom());
 			if (fl == null) {
 
 				u.erreurs.add(new ObjetInconnu(this));

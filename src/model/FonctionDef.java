@@ -79,6 +79,9 @@ public class FonctionDef extends Code {
 			tmpLocals.put(fl.nom(), fl);
 		}
 		Map<String,TypeLiteral> tmpVariables = new HashMap<>();
+		for(Champ c:this.params) {
+			tmpVariables.put(c.nom(), c.type);
+		}
 		
 		return typeFunction(u, tmpVariables, tmpLocals);
 		

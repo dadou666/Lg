@@ -124,12 +124,12 @@ public class FonctionLocal extends Element {
 			map.put(c.nom(), c.type);
 		}
 
-		code.verifierSemantique(u, map, null);
+		code.verifierSemantique(u, map, locals);
 		tlReturn = code.typeRetour(u, map, locals);
 	}
 
 	public void verifierSemantique(Univers u) {
-		this.verifierSemantique(u, null);
+		this.verifierSemantique(u, new HashMap<String,FonctionLocal>());
 	}
 
 	public Code creer(GestionNom gestionNom, String module,

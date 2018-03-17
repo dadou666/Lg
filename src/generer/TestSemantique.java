@@ -116,6 +116,11 @@ public class TestSemantique {
 				null);
 
 	}
+	@Test 
+	public void testFctMultiArg() {
+		test(" type a {} type b { } type c {} function f a:a b:b | c {} function u c:c | c function v a:a b:b | u(f(a b)) ");
+		
+	}
 	
 	@Test 
 	public void testCalculTypeRetour() {
@@ -198,11 +203,23 @@ public class TestSemantique {
 		assertEquals(e.nom, "x");
 
 	}
-
+	@Test 
+	public void testCreationEntierSansType() {
+		
+		ObjetInconnu oi =test(" type a {} function f a:a | 45m ",ObjetInconnu.class);
+		
+		
+	}
+	
+	@Test 
+	public void testCurrification() {
+		
+		test(" type a {}  function f a:a a:b | a  function u  [a]->a:m  | m(a {} ) function v a:a |  u(f(a))");
+	}
 	@Test
 	public void testCreerAvecAttributInexistant() {
 
-		ObjetInconnu e = test(" type m {} " + " type u { m:x } "
+		ObjetInconnu e = test(" type @a {} type m {} " + " type u { m:x } "
 
 		+ " function  t |  u { x=m {} o= 45a }  ", ObjetInconnu.class);
 

@@ -21,7 +21,7 @@ public class AppelBase extends Code {
 		return this.toStringRec()+")";
 	}
 	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables, Map<String, FonctionLocal> locals) {
-		this.verifierSemantiqueRec(u, variables, null);
+		this.verifierSemantiqueRec(u, variables, locals);
 }
 	public TypeFunction verifierSemantiqueRec(Univers u, Map<String, TypeLiteral> variables, Map<String, FonctionLocal> locals) {
 		return null;
