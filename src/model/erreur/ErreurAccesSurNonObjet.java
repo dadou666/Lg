@@ -1,6 +1,6 @@
 package model.erreur;
 
-import model.Acces;
+import model.semantique.Acces;
 
 public class ErreurAccesSurNonObjet extends ErreurSemantique {
 

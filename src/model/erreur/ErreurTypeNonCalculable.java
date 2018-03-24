@@ -1,6 +1,6 @@
 package model.erreur;
 
-import model.Si;
+import model.semantique.Si;
 
 public class ErreurTypeNonCalculable extends ErreurSemantique {
 	public Si si;

@@ -1,14 +1,14 @@
 package generer;
 
 import static org.junit.Assert.*;
-import model.FonctionDef;
-import model.FonctionLocal;
-import model.ObjetInconnu;
-import model.Univers;
 import model.erreur.ErreurAccesChampInexistant;
 import model.erreur.ErreurAttributAbsentDansCreer;
 import model.erreur.ErreurSemantique;
 import model.erreur.ErreurTypeNonCalculable;
+import model.semantique.FonctionDef;
+import model.semantique.FonctionLocal;
+import model.semantique.ObjetInconnu;
+import model.semantique.Univers;
 
 import org.junit.Test;
 
@@ -111,8 +111,8 @@ public class TestSemantique {
 	@Test
 	public void testTypeMultipleOk() {
 		test(" type @t { } function u t:a | a "
-				+ " function m | u(@t { next= t {}} ) ", null);
-		test(" type @t { } function u t:a | a " + " function m | u(t {} ) ",
+				+ " function m  t:a| u(@t { next= t {}} ) ", null);
+		test(" type @t { } function u t:a | a " + " function m t:t| u(t {} ) ",
 				null);
 
 	}
@@ -134,7 +134,7 @@ public class TestSemantique {
 		"	red(a ib ib   @naturel { next=naturel {} } )" ; 
 		Univers u=test(src);
 		FonctionLocal fl = u.donnerFonction("red");
-		assertTrue(fl.tlReturn.toString().equals("naturel"));
+		assertTrue(fl.def.tlReturn.toString().equals("naturel"));
 		 
 
 	}
@@ -155,14 +155,14 @@ public class TestSemantique {
 
 	@Test
 	public void testEntierOk() {
-		test(" type @t { } function u t:a | a " + " function m | u(458t ) ",
+		test(" type @t { } function u t:a | a " + " function m  t:t| u(458t ) ",
 				null);
 	}
    
 	@Test
 	public void testFonctionLocalOk() {
 		test(" type @t { } function u [t]->t:f t:a | f(a) "
-				+ " function m | u(#{ t:a | a } t {}) ", null);
+				+ " function m t:t | u(#{ t:a | a } t {}) ", null);
 	}
 
 	@Test
@@ -182,7 +182,7 @@ public class TestSemantique {
 	public void testCreerArgOk() {
 
 		test("  type u {} " + "  function m u:x | x "
-				+ " function  t |  m(u { } ) ", null);
+				+ " function  t u:u |  m(u { } ) ", null);
 
 	}
 
@@ -198,7 +198,7 @@ public class TestSemantique {
 		ErreurAttributAbsentDansCreer e = test(" type m {} "
 				+ " type u { m:x } "
 
-				+ " function  t |  u { }  ",
+				+ " function  t u:u |  u { }  ",
 				ErreurAttributAbsentDansCreer.class);
 		assertEquals(e.nom, "x");
 
@@ -221,7 +221,7 @@ public class TestSemantique {
 
 		ObjetInconnu e = test(" type @a {} type m {} " + " type u { m:x } "
 
-		+ " function  t |  u { x=m {} o= 45a }  ", ObjetInconnu.class);
+		+ " function  t m:x |  u { x=m {} o= 45a }  ", ObjetInconnu.class);
 
 		assertEquals(e.ref.nomRef(), "o");
 
@@ -232,10 +232,10 @@ public class TestSemantique {
 
 		Univers u = test("type bool {}  type true:bool {} type false:bool { }  "
 				+ "function not  bool:a | if a is true then false {} else true {} "
-				+ "function u | not(not(true {} ))   ");
+				+ "function u bool:t | not(not(true {} ))   ");
 
 		FonctionLocal fd = u.donnerFonction("not");
-		assertEquals(fd.tlReturn.toString(), "bool");
+		assertEquals(fd.def.tlReturn.toString(), "bool");
 
 	}
 

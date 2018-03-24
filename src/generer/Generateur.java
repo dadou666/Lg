@@ -43,31 +43,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import model.Acces;
-
-import model.AppelBase;
-import model.AppelDebut;
-import model.AppelRec;
-import model.Attribut;
-import model.Champ;
-import model.Code;
-import model.Const;
-import model.Objet;
-import model.Entier;
-import model.Element;
-import model.FonctionDef;
-import model.FonctionLocal;
-import model.Si;
-import model.TypeBasic;
-import model.TypeDef;
-import model.TypeFunction;
-import model.TypeLiteral;
-import model.TypeMultiple;
-
-import model.TypeSimple;
-
-import model.Univers;
-import model.Var;
+import model.semantique.Acces;
+import model.semantique.AppelBase;
+import model.semantique.AppelDebut;
+import model.semantique.AppelRec;
+import model.semantique.Attribut;
+import model.semantique.Champ;
+import model.semantique.Code;
+import model.semantique.Const;
+import model.semantique.Element;
+import model.semantique.Entier;
+import model.semantique.FonctionDef;
+import model.semantique.FonctionLocal;
+import model.semantique.Objet;
+import model.semantique.Si;
+import model.semantique.TypeBasic;
+import model.semantique.TypeDef;
+import model.semantique.TypeFunction;
+import model.semantique.TypeLiteral;
+import model.semantique.TypeMultiple;
+import model.semantique.TypeSimple;
+import model.semantique.Univers;
+import model.semantique.Var;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -212,16 +209,17 @@ public class Generateur implements ANTLRErrorListener {
 
 		}
 		this.fonctions.put(f, fc);
-		f.params = new ArrayList<Champ>();
+		f.def = new FonctionDef();
+		f.def.params = new ArrayList<Champ>();
 		if (fc.champs() != null) {
 			for (ChampContext cc : fc.champs().champ()) {
 				Champ champ = new Champ(cc.ID().getText(), this.transformer(cc
 						.defType()));
 
-				f.params.add(champ);
+				f.def.params.add(champ);
 				this.champs.put(champ, cc);
 			}
-			f.code = this.transformer(fc.tmpCode());
+			f.def.code = this.transformer(fc.tmpCode());
 
 		}
 		return f;
@@ -230,22 +228,22 @@ public class Generateur implements ANTLRErrorListener {
 
 	public FonctionLocal transformer(FunctionLocalContext flc) {
 		FonctionLocal r = new FonctionLocal(flc.ID().getText());
-
-		r.params = new ArrayList<Champ>();
+		r.def= new FonctionDef();
+		r.def.params = new ArrayList<Champ>();
 		this.fonctionLocals.put(r, flc);
 		if (flc.champs() != null) {
 			for (ChampContext cc : flc.champs().champ()) {
 				Champ champ = new Champ(cc.ID().getText(), this.transformer(cc
 						.defType()));
 
-				r.params.add(champ);
+				r.def.params.add(champ);
 				this.champs.put(champ, cc);
 
 			}
 
 		}
 
-		r.code = this.transformer(flc.tmpCode());
+		r.def.code = this.transformer(flc.tmpCode());
 		return r;
 
 	}
@@ -265,11 +263,7 @@ public class Generateur implements ANTLRErrorListener {
 
 		}
 		r.code = this.transformer(fdc.tmpCode());
-		r.locals = new ArrayList<>();
-		for (FunctionLocalContext flc : fdc.functionLocal()) {
-			r.locals.add(this.transformer(flc));
-
-		}
+	
 
 		return r;
 
@@ -313,16 +307,16 @@ public class Generateur implements ANTLRErrorListener {
 			TerminalNode mn = cc.id_externe().ID(0);
 			TerminalNode tn = cc.id_externe().ID(1);
 			if (multiple) {
-				r.type = new TypeMultiple(tn.getText(), mn.getText());
+				r.typeRetour = new TypeMultiple(tn.getText(), mn.getText());
 			} else {
-				r.type = new TypeSimple(tn.getText(), mn.getText());
+				r.typeRetour = new TypeSimple(tn.getText(), mn.getText());
 			}
 		}
 		if (cc.ID() != null) {
 			if (multiple) {
-				r.type = new TypeMultiple(cc.ID().getText(), null);
+				r.typeRetour = new TypeMultiple(cc.ID().getText(), null);
 			} else {
-				r.type = new TypeSimple(cc.ID().getText(), null);
+				r.typeRetour = new TypeSimple(cc.ID().getText(), null);
 			}
 		}
 
@@ -343,7 +337,8 @@ public class Generateur implements ANTLRErrorListener {
 
 		for (AttributsContext asc : clc.attributs()) {
 			Objet creerTmp = new Objet();
-			creerTmp.type = tp;
+			
+			creerTmp.typeRetour = tp;
 
 			for (AttributContext ac : asc.attribut()) {
 				Attribut a = creerTmp.ajouterAttribut(ac.ID().getText(),

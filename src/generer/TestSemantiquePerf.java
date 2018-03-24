@@ -6,7 +6,7 @@ import grammaire.lgParser;
 
 import java.io.IOException;
 
-import model.Univers;
+import model.semantique.Univers;
 
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;

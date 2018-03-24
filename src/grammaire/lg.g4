@@ -36,7 +36,7 @@ operateur : '->' |'=>' | '+' | '-' |'*' |'/'|'>' | '<'  | '&' |'|' |'=' ;
 si :  'if' code 'is' negation (simple | multiple ) 'then' code 'else' ( si |code );
 negation : '!' | ;  
 function : 'function'   (ID|operateur)  champs '|' tmpCode;
-functionDef : '#' '{' champs '|' tmpCode  functionLocal * '}';
+functionDef : '#' '{' champs '|' tmpCode  '}';
 functionLocal : ID '=' champs '|' tmpCode;
 
 tmpCode : functionDef| appel | si  |code | '(' tmpCode ')'  ;

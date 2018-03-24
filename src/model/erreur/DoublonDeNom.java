@@ -1,6 +1,6 @@
 package model.erreur;
 
-import model.Element;
+import model.semantique.Element;
 
 public class DoublonDeNom extends ErreurSemantique {
 

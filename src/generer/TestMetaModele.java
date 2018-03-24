@@ -5,10 +5,10 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.Map;
 
-import model.Code;
-import model.Const;
-import model.Objet;
-import model.Univers;
+import model.semantique.Code;
+import model.semantique.Const;
+import model.semantique.Objet;
+import model.semantique.Univers;
 
 import org.junit.Test;
 

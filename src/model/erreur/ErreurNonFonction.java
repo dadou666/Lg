@@ -1,6 +1,6 @@
 package model.erreur;
 
-import model.AppelBase;
+import model.semantique.AppelBase;
 
 public class ErreurNonFonction extends ErreurSemantique {
 	/**

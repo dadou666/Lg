@@ -43,25 +43,22 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import model.Acces;
-
-import model.Attribut;
-import model.Champ;
-import model.Code;
-import model.Objet;
-import model.Element;
-import model.FonctionDef;
-import model.FonctionLocal;
-import model.Si;
-import model.TypeBasic;
-import model.TypeDef;
-import model.TypeFunction;
-import model.TypeLiteral;
-import model.TypeMultiple;
-
-import model.TypeSimple;
-
-import model.Var;
+import model.semantique.Acces;
+import model.semantique.Attribut;
+import model.semantique.Champ;
+import model.semantique.Code;
+import model.semantique.Element;
+import model.semantique.FonctionDef;
+import model.semantique.FonctionLocal;
+import model.semantique.Objet;
+import model.semantique.Si;
+import model.semantique.TypeBasic;
+import model.semantique.TypeDef;
+import model.semantique.TypeFunction;
+import model.semantique.TypeLiteral;
+import model.semantique.TypeMultiple;
+import model.semantique.TypeSimple;
+import model.semantique.Var;
 
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -311,10 +308,7 @@ public class ColorerSource {
 			this.transformer(fdc.tmpCode());
 		}
 
-		for (FunctionLocalContext flc : fdc.functionLocal()) {
-			this.transformer(flc);
-
-		}
+	
 
 	}
 

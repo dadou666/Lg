@@ -1,9 +1,8 @@
 type @nom { }
 type element {}
 type @elements { element:val }
-type functionDef:element {nom:nom champs:champs code:code } 
-type @functions { functionDef:val }
-type functionLiteral :code {  functionDef:main functions:interne }
+type functionDef:element {nom:nom functionLiteral:def } 
+type functionLiteral :code {  champs:champs code:code  }
 type code {}
 type @champsCreer { nom:nom code:code }
 type appel:code {  code:param }

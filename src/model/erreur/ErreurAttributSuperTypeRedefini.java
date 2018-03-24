@@ -1,6 +1,6 @@
 package model.erreur;
 
-import model.Champ;
+import model.semantique.Champ;
 
 public class ErreurAttributSuperTypeRedefini extends ErreurSemantique {
 

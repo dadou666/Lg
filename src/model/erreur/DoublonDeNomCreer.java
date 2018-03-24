@@ -1,7 +1,7 @@
 package model.erreur;
 
-import model.Attribut;
-import model.Objet;
+import model.semantique.Attribut;
+import model.semantique.Objet;
 
 public class DoublonDeNomCreer extends ErreurSemantique {
 

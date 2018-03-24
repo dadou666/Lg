@@ -1,7 +1,7 @@
 package model.erreur;
 
-import model.Attribut;
-import model.TypeLiteral;
+import model.semantique.Attribut;
+import model.semantique.TypeLiteral;
 
 public class ErreurTypeIncompatibleAttribut extends ErreurSemantique {
 	/**

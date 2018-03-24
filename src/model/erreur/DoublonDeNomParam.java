@@ -1,6 +1,6 @@
 package model.erreur;
 
-import model.Champ;
+import model.semantique.Champ;
 
 public class DoublonDeNomParam extends ErreurSemantique {
   public Champ champ;
