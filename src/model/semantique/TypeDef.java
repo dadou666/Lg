@@ -9,8 +9,8 @@ import java.util.Set;
 import model.erreur.DoublonDeNom;
 import model.erreur.ErreurAttributSuperTypeRedefini;
 import model.execution.ECode;
-import model.execution.EType;
-import model.execution.Machine;
+import model.execution.ETypeObjet;
+import model.execution.EUniversDef;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -30,9 +30,9 @@ public class TypeDef extends Element implements Reference {
 		}
 		return superType;
 	}
-	public EType compiler(Univers u,Machine machine) {
-			return machine.donnerType(nom(), u);
-	}
+
+
+
 	public void donnerModules(Set<String> modules) {
 		for (Champ c : champs) {
 			c.donnerModules(modules);
@@ -149,50 +149,22 @@ public class TypeDef extends Element implements Reference {
 		return this.superType();
 	}
 
-	public Code  creer(GestionNom gestionNom, String module,Map<String,Code> map) {
-		Objet r = new Objet();
-		r.typeRetour = new TypeSimple("typeDef", "metaModele");
-		Objet type = new Objet();
-		if (this.multiple) {
-			type.typeRetour = new TypeSimple("tpMultiple", "metaModele");
+	@Override
+	public void compiler(String nomModule, EUniversDef machine, Univers u) {
+		String nomComplet = null;
+		if (nomModule == null) {
+			nomComplet = nom;
 		} else {
-			type.typeRetour = new TypeSimple("tp", "metaModele");
+			nomComplet = nomModule+"$"+nom;
 		}
-		String nomComplet = nom;
-		if (module != null) {
-			nomComplet = module + "$" + nom;
-		}
+		
 		if (multiple) {
+
 			nomComplet = "@" + nomComplet;
 		}
-
-		type.ajouterAttribut("nom", gestionNom.donnerNom(nomComplet));
-		if (superType == null) {
-			r.ajouterAttribut("superType", new Objet("vide",
-					"metaModele"));
-
-		} else {
-			Objet st = new Objet("superType", "metaModele");
-			st.ajouterAttribut("nom", gestionNom
-					.donnerNom(superType()));
-			r.ajouterAttribut("superType",st);
-
-		}
-		List<List<Attribut>> ls = new ArrayList<List<Attribut>>();
-		for(Champ c:this.champs) {
-			List<Attribut> tmp = new ArrayList<>();
-			tmp.add(new Attribut("nom",gestionNom.donnerNom(c.nom())));
-			tmp.add(new Attribut("tp",c.type.creer(gestionNom)));
-			
-			
-		}
-		Objet coChamps = new Objet("metaModele","champs",ls,0);
-		r.ajouterAttribut("tp", type);
-		r.ajouterAttribut("champs",coChamps);
+		machine.donnerType(nomComplet, u);
 		
-		map.put(nomComplet, r);
-		return r;
-	
-
 	}
+
+	
 }

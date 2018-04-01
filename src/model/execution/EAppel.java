@@ -4,36 +4,23 @@ abstract public class EAppel extends ECode {
 	public int numAppelArgs;
 	public int numFonctionArgs;
 
-	public ECode param;
+	abstract public EAppel initLocal(ECode[] vars, EUniversDef machine);
 
-	public EAppel initLocal(ECode[] vars) {
-		return null;
+	public ECode calculer(ECode vars[], EUniversDef machine) {
+		EAppel appel = this.initLocal(vars, machine);
 
-	}
-
-	public ECode calculer(ECode vars[]) {
-		EAppel appel = this.initLocal(vars);
-		
 		if (appel.numAppelArgs < appel.numFonctionArgs) {
 			return appel;
 		}
-		return this.calculer();
+		return appel.calculer(machine);
 
 	}
-	abstract public ECode calculer() ;
-	abstract public void arguments(ECode vars[] ,int idxVar);
-	
-	public EFonctionAnonyme donnerFonctionAnonyme() {
-		return null;
-	}
 
-	public EAppel asAppel(ECode param) {
-		EAppelRec ar = new EAppelRec();
-		ar.appel = this;
-		ar.param = param;
-		ar.numFonctionArgs = ar.appel.numFonctionArgs;
-		ar.numAppelArgs = ar.numAppelArgs + 1;
-		return ar;
-	}
+	abstract public ECode calculer(EUniversDef machine);
+
+	abstract public void arguments(ECode vars[], int idxVar);
+
+	abstract public EFonction donnerFonction(EUniversDef machine);
+	abstract public void afficher(StringBuilder sb,EUniversDef univers) ;
 
 }

@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Set;
 
 import model.execution.ECode;
-import model.execution.Machine;
+import model.execution.EUniversDef;
 
-public class Code implements Serializable{
+abstract public class Code implements Serializable{
 	/**
 	 * 
 	 */
@@ -17,9 +17,7 @@ public class Code implements Serializable{
 	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables) {
 
 	}
-	public void donnerModules(Set<String> modules) {
-		
-	}
+	abstract public void donnerModules(Set<String> modules) ;
 	public TypeLiteral typeRetour(Univers u,
 			Map<String, TypeLiteral> variables) {
 		return null;
@@ -39,13 +37,8 @@ public class Code implements Serializable{
 	public void assignerModule(String nom) {
 
 	}
-	public Code creer(GestionNom gestionNom) {
-		return null;
-	}
 	
-	public ECode compiler(Univers u,Machine machine) {
-		
-		return null;
-	}
+	
+abstract	public ECode compiler(Univers u,EUniversDef machine);
 	
 }

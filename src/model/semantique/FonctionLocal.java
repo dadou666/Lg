@@ -8,6 +8,8 @@ import java.util.Set;
 
 import model.erreur.DoublonDeNom;
 import model.erreur.DoublonDeNomParam;
+import model.execution.EFonction;
+import model.execution.EUniversDef;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -22,11 +24,6 @@ public class FonctionLocal extends Element {
 
 	public FonctionDef def;
 
-
-
-
-	
-
 	public boolean defType = false;
 
 	public FonctionLocal(String nom) {
@@ -38,20 +35,19 @@ public class FonctionLocal extends Element {
 	}
 
 	public void donnerModules(Set<String> modules) {
-		
+
 		def.donnerModules(modules);
 
 	}
 
 	public void assignerModule(String nom) {
-	
+
 		def.assignerModule(nom);
-		
 
 	}
 
 	public TypeLiteral tl(Univers u) {
-		return def.typeRetour(u, new HashMap<String,TypeLiteral>());
+		return def.typeRetour(u, new HashMap<String, TypeLiteral>());
 
 	}
 
@@ -79,15 +75,20 @@ public class FonctionLocal extends Element {
 		def.typeRetour(u, map);
 	}
 
-	
 
-	public Code creer(GestionNom gestionNom, String module,
-			Map<String, Code> map) {
+
+
+	@Override
+	public void compiler(String nomModule, EUniversDef machine, Univers u) {
+		String nomComplet = null;
+		if (nomModule == null) {
+			nomComplet = nom;
+		} else {
+			nomComplet = nomModule + "$" + nom;
+		}
+
+		machine.donnerFonction(nomComplet, u);
 		
-		return def.creer(gestionNom);
-
 	}
-
-	
 
 }

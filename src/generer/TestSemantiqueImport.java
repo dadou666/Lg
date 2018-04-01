@@ -20,7 +20,7 @@ public class TestSemantiqueImport {
 	
 	@Test
 	public void testModules() {
-		Univers u = new Generateur().lireSource("const o m6$r { }  type t { m3$a:a }  function h m1$a:a [m4$a]->t:a | m2$a { u= m5$f(a)  } ");
+		Univers u = new Generateur().lireSourceUnivers("const o m6$r { }  type t { m3$a:a }  function h m1$a:a [m4$a]->t:a | m2$a { u= m5$f(a)  } ");
 		Set<String> modules = u.modules();
 		assertTrue(modules.contains("m6"));
 		assertTrue(modules.contains("m5"));
@@ -36,8 +36,8 @@ public class TestSemantiqueImport {
 	}
 	public <T extends ErreurSemantique> T test(String src,String module, Class<T> erreur) {
 
-		Univers u = new Generateur().lireSource(src);
-		Univers umodule = new Generateur().lireSource(module);
+		Univers u = new Generateur().lireSourceUnivers(src);
+		Univers umodule = new Generateur().lireSourceUnivers(module);
 		umodule.verifierSemantique();
 		if (!umodule.erreurs.isEmpty()) {
 			fail("Module erreur");
@@ -69,8 +69,8 @@ public class TestSemantiqueImport {
 
 	public Univers test(String src,String module) {
 
-		Univers u = new Generateur().lireSource(src);
-		Univers umodule = new Generateur().lireSource(module);
+		Univers u = new Generateur().lireSourceUnivers(src);
+		Univers umodule = new Generateur().lireSourceUnivers(module);
 		umodule.init();
 		umodule.verifierSemantique();
 		if (!umodule.erreurs.isEmpty()) {

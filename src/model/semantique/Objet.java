@@ -10,6 +10,11 @@ import java.util.Set;
 import model.erreur.DoublonDeNomCreer;
 import model.erreur.ErreurAttributAbsentDansCreer;
 import model.erreur.ErreurTypeIncompatibleAttribut;
+import model.execution.EAttribut;
+import model.execution.ECode;
+import model.execution.EObjet;
+import model.execution.ETypeObjet;
+import model.execution.EUniversDef;
 
 public class Objet extends Code {
 
@@ -133,23 +138,22 @@ public class Objet extends Code {
 		return typeRetour;
 	}
 
-	public Code creer(GestionNom gestionNom) {
-		Objet r = new Objet();
-		r.typeRetour = new TypeSimple("objet", "metaModele");
-		r.ajouterAttribut("tp", this.typeRetour.creer(gestionNom));
-		List<List<Attribut>> attributs = new ArrayList<List<Attribut>>();
-		for (Attribut a : this.attributs.values()) {
-			List<Attribut> ls = new ArrayList<Attribut>();
-			ls.add(new Attribut("nom", gestionNom.donnerNom(a.nom())));
-			ls.add(new Attribut("code", a.code.creer(gestionNom)));
-			attributs.add(ls);
 
+	
+
+	@Override
+	public ECode compiler(Univers u, EUniversDef machine) {
+		EObjet eo = new EObjet();
+		eo.attributes = new ECode[this.attributs.size()];
+		ETypeObjet to = machine.donnerType(this.typeRetour.nomRef(), u);
+		eo.idx = to.idx;
+		for(Map.Entry<String, Attribut> e:this.attributs.entrySet()) {
+			eo.attributes[to.map.get(e.getKey()).adr] = e.getValue().code.compiler(u, machine); 
+			
 		}
-		r.ajouterAttribut("champsCreer", new Objet("metaModele", "champsCreer",
-				attributs, 0));
-
-		return r;
-
+		
+		
+		return eo;
 	}
 
 

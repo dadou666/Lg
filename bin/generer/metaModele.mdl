@@ -1,33 +1,30 @@
-type @nom { }
-type element {}
-type @elements { element:val }
-type functionDef:element {nom:nom functionLiteral:def } 
-type functionLiteral :code {  champs:champs code:code  }
+type @ref { }
+type @types { typeBase:typeBase }
+type @typeDefs { typeDefBase:typeDef  }
+type typeDefBase {ref:ref types:types }
+type typeDef:typeDefBase { ref:superType }
+type @functions {  function:function }
+type function { ref:ref types:types code:code }
 type code {}
-type @champsCreer { nom:nom code:code }
-type appel:code {  code:param }
-type appelDebut:appel { nom:nom }
-type appelRec:appel { appel:appel  }
-type var:code { nom:nom }
-type entier:code { nom:tp nom:nom}
-type objet:code { tp:tp champsCreer:champs  } 
-type si:code { code:test tp:tp code:alors code:sinon }
-type constante:element { nom:nom code:code}
+type @codes {  code:code }
+type objet:code { ref:ref codes:params }
+type atom:code { ref:ref ref:valeur }
+type appel:code { }
+type appelRec:appel { appel:appel  code:param }
+
+type freeRef: code {ref:ref }
+type refFonction:appel{}
+type refLocal:appel {}
+
+type si:code { code:test ref:tp code:alors code:sinon }
 type typeBase {}
-type tp:typeBase { nom:nom }
-type tpFunction:typeBase  { tp:param tp:tpReturn  } 
-type tpMultiple:tp { }
-type @champs {nom:nom tp:tp }
-type vide {}
-type superType : vide  { nom:nom}
-type typeDef:element {tp:tp superType:super champs:champs  }
-type acces :code {  code:code nom:var }
-type expression  { elements:elements code:code }
-abstract type _predicat:element  { _predicat:val}
-type quantification : _predicat { @champs:champs }
-type _all : quantification { }
-type _exist : quantification { } 
-type prop : _predicat {  code:code  tp:tp }
+type tpObjet:typeBase { ref:ref }
+type tpFunction:typeBase  { typeBase:param typeBase:tpReturn  } 
+type acces :code {  code:code ref:ref }
+type univers:code {}
+type universDef  { functions:functions typeDefs:typeDefs }
+type expression { types:types  code:code  ref:tp }
+
 
 
 

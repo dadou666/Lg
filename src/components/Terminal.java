@@ -206,7 +206,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 	Univers donnerUniversPourSource(String nom, String src, Univers courant) {
 		Generateur gen = new Generateur();
 		try {
-			Univers u = gen.lireSource(src);
+			Univers u = gen.lireSourceUnivers(src);
 
 			if (gen.error) {
 				ErreurModule erreur = new ErreurModule(nom, courant.nom,

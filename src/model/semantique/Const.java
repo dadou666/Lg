@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import model.erreur.DoublonDeNom;
+import model.execution.EUniversDef;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -60,20 +61,15 @@ public void donnerModules(Set<String> modules) {
 		value.verifierSemantique(u, map);
 
 	}
-	
-	public Code creer(GestionNom gestionNom, String module,Map<String,Code> map) {
-		
-		Objet obj = new Objet("metaModele","constante");
-		String nom = this.nom;
-		if (module != null) {
-			nom = module+"$"+this.nom;
-		}
-		obj.ajouterAttribut("nom", gestionNom.donnerNom(nom));
-		obj.ajouterAttribut("code", value.creer(gestionNom));
-		
-		map.put(nom, obj);
-		return obj;
-		
 
+	@Override
+	public void compiler(String nomModule, EUniversDef machine, Univers u) {
+		String nomComplet = nom;
+		if (nomModule != null) {
+			nomComplet =nomModule+"$"+nom;
+		}
+		machine.donnerConstante(nomComplet, u);
 	}
+	
+
 }

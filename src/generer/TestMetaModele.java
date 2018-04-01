@@ -63,8 +63,8 @@ public class TestMetaModele {
 
 	public Univers test(String src, String module) {
 
-		Univers u = new Generateur().lireSource(src);
-		Univers umodule = new Generateur().lireSource(module);
+		Univers u = new Generateur().lireSourceUnivers(src);
+		Univers umodule = new Generateur().lireSourceUnivers(module);
 		umodule.verifierSemantique();
 		if (!umodule.erreurs.isEmpty()) {
 			fail("Module erreur");
@@ -84,7 +84,7 @@ public class TestMetaModele {
 
 	public Univers test(String src) throws IOException {
 
-		Univers u = new Generateur().lireSource(src);
+		Univers u = new Generateur().lireSourceUnivers(src);
 		u.init();
 		u.creerMetaModele("main");
 		

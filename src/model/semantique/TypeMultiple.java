@@ -83,13 +83,6 @@ public class TypeMultiple extends TypeBasic {
 		if (module != null) {
 		modules.add(module); }
 	}
-	public Code creer(GestionNom gestionNom) {
-		Objet r = new Objet();
-		r.typeRetour = new TypeSimple("tpMultiple","metaModele");
-		r.ajouterAttribut("nom",gestionNom.donnerNom(this.nom()));
-		
-		return r;
 
-	}
 
 }

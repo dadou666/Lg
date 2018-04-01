@@ -1,25 +1,22 @@
 package model.execution;
 
 abstract public class ECode {
-	public ECode calculer(ECode vars[]) {
-		return this;
-
+	public abstract ECode calculer(ECode vars[],EUniversDef machine) ;
+	
+	public ECode calculer(EUniversDef machine) {
+		return this.calculer(new ECode[0],machine);
 	}
+	
 
-	public ECode getAttribute(int adr) {
-		throw new Error("No Objet");
-	}
+	abstract public ECode getAttribute(int adr,EUniversDef machine) ;
 
-	public EFonctionAnonyme asFonctionAnonyme() {
+	public EFonction asFonctionAnonyme() {
 		throw new Error("No Fonction");
 	}
 
-	public EAppel asAppel(ECode param) {
-		throw new Error(" pas appel");
-	}
 
-	public EType type() {
-		throw new Error(" Pas objet ");
-	}
+
+	abstract public ETypeObjet type(EUniversDef machine) ;
+	abstract public String afficher(EUniversDef univers);
 
 }

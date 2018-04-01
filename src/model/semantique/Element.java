@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
-public class Element implements Serializable {
+import model.execution.EUniversDef;
+
+public abstract class Element implements Serializable {
 	/**
 	 * 
 	 */
@@ -29,9 +31,7 @@ public class Element implements Serializable {
 	public void donnerModules(Set<String> modules) {
 
 	}
+	abstract  public void compiler(String nomModule,EUniversDef machine,Univers u);
 
-	public Code creer(GestionNom gestionNom, String module,Map<String,Code> map) {
-	return null;
-
-	}
+	
 }

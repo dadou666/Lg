@@ -6,6 +6,9 @@ import java.util.Set;
 
 import model.erreur.ErreurNonFonction;
 import model.erreur.ErreurTypeIncompatiblePourFonction;
+import model.execution.EAppelRec;
+import model.execution.ECode;
+import model.execution.EUniversDef;
 
 public class AppelRec extends AppelBase {
 
@@ -44,11 +47,9 @@ public class AppelRec extends AppelBase {
 		return sb.toString();
 	}
 
-
-
 	public TypeFunction verifierSemantiqueRec(Univers u,
 			Map<String, TypeLiteral> variables) {
-		
+
 		TypeFunction tf = appel.verifierSemantiqueRec(u, variables);
 		if (tf == null) {
 			u.erreurs.add(new ErreurNonFonction(appel));
@@ -64,25 +65,20 @@ public class AppelRec extends AppelBase {
 		}
 		typeRetour = tf.retour;
 		if (tf.retour instanceof TypeFunction) {
-		
+
 			return (TypeFunction) tf.retour;
 		}
 		return null;
 
 	}
-	public Code creer(GestionNom gestionNom) {
 
-		Objet co = new Objet();
-		co.typeRetour = new TypeSimple("appelDebut", "metaModele");
-		co.ajouterAttribut("param", param.creer(gestionNom));
-		co.ajouterAttribut("appel", appel.creer(gestionNom));
-		return co;
 
+
+	@Override
+	public ECode compiler(Univers u, EUniversDef machine) {
+		EAppelRec ar = new EAppelRec();
+		this.appel.compiler(u, machine, ar);
+		return ar;
 	}
-	public Code reduire(Univers u, Map<String, Code> variables,
-			Map<String, FonctionLocal> locals,List<Code> args) {
-		args.add(param);
-		return this.appel.reduire(u, variables, locals, args);
 
-	}
 }

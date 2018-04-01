@@ -75,18 +75,11 @@ public class TypeSimple extends TypeBasic {
 		}
 
 	}
-public void donnerModules(Set<String> modules) {
-	if (module != null) {
-	modules.add(module); }
+
+	public void donnerModules(Set<String> modules) {
+		if (module != null) {
+			modules.add(module);
+		}
 	}
-public Code creer(GestionNom gestionNom) {
-	Objet r = new Objet();
-	r.typeRetour = new TypeSimple("tp","metaModele");
-	r.ajouterAttribut("nom",gestionNom.donnerNom(this.nom()));
-	
-	return r;
-
-}
-
 
 }

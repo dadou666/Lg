@@ -4,10 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import model.execution.EType;
+import model.execution.ETypeFonction;
+import model.execution.EUniversDef;
+
 public class TypeFunction extends TypeLiteral {
 	public TypeLiteral retour;
 	public TypeLiteral param;
-
+	public EType compiler(EUniversDef machine,Univers u) {
+		ETypeFonction etf = new ETypeFonction();
+		etf.retour = retour.compiler(machine, u);
+		etf.param = retour.compiler(machine, u);
+		return etf;
+	}
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[ ");
@@ -62,14 +71,5 @@ public class TypeFunction extends TypeLiteral {
 		return null;
 	}
 
-	public Code creer(GestionNom gestionNom) {
-		Objet obj = new Objet("metaModele", "tpFunction");
-		obj.ajouterAttribut("tpReturn", this.retour.creer(gestionNom));
-		obj.ajouterAttribut("param", param.creer(gestionNom));
-		
 
-
-		return obj;
-
-	}
 }

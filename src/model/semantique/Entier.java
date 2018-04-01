@@ -3,6 +3,9 @@ package model.semantique;
 import java.util.Map;
 import java.util.Set;
 
+import model.execution.ECode;
+import model.execution.EUniversDef;
+
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class Entier extends Code implements Reference {
@@ -118,17 +121,12 @@ public class Entier extends Code implements Reference {
 		return type();
 	}
 
+
+
 	@Override
-	public Code creer(GestionNom gestionNom) {
-		Objet r = new Objet("metaModele", "entier");
-
-		Entier entier = new Entier("nom", "metaModele", this.valeur);
-
-		r.ajouterAttribut("nom", entier);
-		r.ajouterAttribut("tp", gestionNom.donnerNom(type()));
-
-		return r;
-
+	public ECode compiler(Univers u, EUniversDef machine) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

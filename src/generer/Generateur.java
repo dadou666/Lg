@@ -127,7 +127,7 @@ public class Generateur implements ANTLRErrorListener {
 
 	}
 
-	public Univers lireSource(String src) {
+	public Univers lireSourceUnivers(String src) {
 
 		lgLexer lgLexer = new lgLexer(
 				org.antlr.v4.runtime.CharStreams.fromString(src));
@@ -139,6 +139,20 @@ public class Generateur implements ANTLRErrorListener {
 		}
 
 		return this.generer(parser.system());
+
+	}
+	public Code lireSourceCode(String src) {
+
+		lgLexer lgLexer = new lgLexer(
+				org.antlr.v4.runtime.CharStreams.fromString(src));
+		CommonTokenStream tokens = new CommonTokenStream(lgLexer);
+		lgParser parser = new lgParser(tokens);
+		parser.addErrorListener(this);
+		if (error) {
+			return null;
+		}
+
+		return transformer(parser.code());
 
 	}
 
@@ -396,7 +410,10 @@ public class Generateur implements ANTLRErrorListener {
 						.id_externe().ID(0).getText());
 
 			}
-			v.metaModele = !ct.var().metaModele().getText().isEmpty();
+			if ( !ct.var().metaModele().getText().isEmpty()) {
+				v.typeVar = Var.TypeVar.MetaModele;
+				
+			}
 			this.vars.put(v, ct.var());
 			r = v;
 			if (ret) {

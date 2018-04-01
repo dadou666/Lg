@@ -250,7 +250,7 @@ public class TestSemantique {
 
 	public <T extends ErreurSemantique> T test(String src, Class<T> erreur) {
 
-		Univers u = new Generateur().lireSource(src);
+		Univers u = new Generateur().lireSourceUnivers(src);
 		u.init();
 		u.verifierSemantique();
 
@@ -275,7 +275,7 @@ public class TestSemantique {
 
 	public Univers test(String src) {
 
-		Univers u = new Generateur().lireSource(src);
+		Univers u = new Generateur().lireSourceUnivers(src);
 		u.init();
 		u.verifierSemantique();
 

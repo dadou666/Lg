@@ -1,16 +1,45 @@
 package model.execution;
 
-public class EFonction extends EFonctionAnonyme {
+import java.util.HashMap;
+import java.util.Map;
+
+public class EFonction  {
+	public int idx;
+	public EType params[];
+	public Map<String, Integer> map = new HashMap<>();
 	public String nom;
+	public ECode code;
 
-	public void initAppel(ECode vars[], ECode param, EAppelRec parent) {
-		EAppelFonction ar = new EAppelFonction();
-		ar.param = param;
-		ar.fonction = this;
-		ar.numAppelArgs = 1;
-		parent.numAppelArgs++;
-		parent.appel = ar;
-
+	public EFonction asFonctionAnonyme() {
+		return this;
 	}
+
+	public String afficher(EUniversDef univers) {
+		StringBuilder sb = new StringBuilder();
+		if (nom == null) {
+			sb.append("#{ ");
+			
+		} else {
+			sb.append("function ");
+		}
+		String [] noms = new String[params.length];
+		for(Map.Entry<String, Integer> e:map.entrySet()) {
+			noms[e.getValue()] = e.getKey();
+		}
+		for(int i=0;i < params.length ;i++) {
+			sb.append(params[i].afficher(univers));
+			sb.append(":");
+			sb.append(noms[i]);
+			sb.append(" ");
+		}
+		sb.append("|");
+		sb.append(code.afficher(univers));
+		if (nom == null) {
+			sb.append("}");
+		}
+		
+		return null;
+	}
+	
 
 }

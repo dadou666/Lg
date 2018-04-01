@@ -2,6 +2,8 @@ package model.semantique;
 
 import java.util.List;
 
+import model.execution.EUniversDef;
+
 public class PredicatDef extends Element{
 	/**
 	 * 
@@ -10,5 +12,10 @@ public class PredicatDef extends Element{
 	public String nom;
 	public List<Champ> params;
 	public Predicat predicat;
+	@Override
+	public void compiler(String nomModule, EUniversDef machine, Univers u) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

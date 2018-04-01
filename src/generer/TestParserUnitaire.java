@@ -27,13 +27,13 @@ public class TestParserUnitaire {
 //	test(" type f {[l]->u:i t:o }  function m #{ o:o | m(o)  tu= [a]->t: l|l } ");
 	//	test("   function m #{ o:o | tot [ { a= o } {a=p} {a = q} ] } ");
 	//	test("   function m  o:o | f(o).mol | o ");
-	test (" function m t:a |  m(z  @t  { } )");
+	test (" type u { t:t } type t {}  function m t:t | u { t=t {} }");
 
 	}
 
 	static public void test(String src) {
 
-		System.out.println(new Generateur().lireSource(src));
+		System.out.println(new Generateur().lireSourceUnivers(src));
 
 	}
 	

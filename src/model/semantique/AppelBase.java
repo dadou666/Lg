@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class AppelBase extends Code {
+import model.execution.EAppelRec;
+import model.execution.ECode;
+import model.execution.EUniversDef;
+
+abstract public class AppelBase extends Code {
 	/**
 	 * 
 	 */
@@ -41,21 +45,12 @@ public class AppelBase extends Code {
 
 	}
 
-	public Code reduire(Univers u, Map<String, Code> variables,
-			Map<String, FonctionLocal> locals) {
-		Code r = this.reduire(u, variables, locals, new ArrayList<Code>());
-		if (r == null) {
-			return this;
-		}
-		return r;
 
+	public void compiler(Univers u, EUniversDef machine,EAppelRec ar) {
+		
 	}
+
 	
-	public Code reduire(Univers u, Map<String, Code> variables,
-			Map<String, FonctionLocal> locals,List<Code> args) {
-		return null;
-
-	}
 	
 
 }

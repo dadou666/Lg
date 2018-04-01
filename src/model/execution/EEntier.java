@@ -1,21 +1,35 @@
 package model.execution;
 
 public class EEntier extends ECode {
-	public EType type;
-	public long valeur;
+	public int idx;
+	public int valeur;
 
-	public ECode getAttribute(int adr) {
+	public ECode getAttribute(int adr, EUniversDef machine) {
 		EEntier r = new EEntier();
 		r.valeur = this.valeur - 1;
 		if (r.valeur == 0) {
-			r.type = type.superType;
+			r.idx = machine.typeArray[idx].superType.idx;
 		} else {
-			r.type = type;
+			r.idx = idx;
 		}
 		return r;
 
 	}
-	public EType type() {
-		return type;
+
+	public ETypeObjet type(EUniversDef machine) {
+		return machine.typeArray[idx];
 	}
+
+	@Override
+	public ECode calculer(ECode[] vars, EUniversDef machine) {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+	@Override
+	public String afficher(EUniversDef univers) {
+		String s = valeur + univers.typeArray[idx].nom;
+		return s;
+	}
+
 }

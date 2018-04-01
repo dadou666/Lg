@@ -2,6 +2,9 @@ package model.semantique;
 
 import java.util.Set;
 
+import model.execution.EType;
+import model.execution.EUniversDef;
+
 public class TypeLiteral implements Reference {
 	public void verifierSemantique(Univers u) {
 
@@ -11,6 +14,10 @@ public class TypeLiteral implements Reference {
 
 		return false;
 
+	}
+	
+	public EType compiler(EUniversDef machine,Univers u) {
+		return null;
 	}
 
 	public TypeLiteral typeUnion(TypeLiteral tl, Univers u) {
@@ -25,10 +32,7 @@ public class TypeLiteral implements Reference {
 
 	}
 
-	public Code creer(GestionNom gestionNom) {
-		return null;
-
-	}
+	
 
 	@Override
 	public String nomRef() {

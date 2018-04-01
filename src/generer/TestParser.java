@@ -53,7 +53,7 @@ public class TestParser {
 
 	static public void test(String src) {
 
-		System.out.println( new Generateur().lireSource(src) );
+		System.out.println( new Generateur().lireSourceUnivers(src) );
 
 	}
 	

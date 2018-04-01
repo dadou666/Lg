@@ -12,7 +12,7 @@ import java.util.Set;
 
 import model.erreur.DoublonDeNomParam;
 import model.erreur.ErreurSemantique;
-import model.execution.Machine;
+import model.execution.EUniversDef;
 
 public class Univers {
 	public String nom;
@@ -22,11 +22,16 @@ public class Univers {
 	private Map<String, TypeDef> types;
 	public Map<String, Const> constantes;
 	public List<ErreurSemantique> erreurs = new ArrayList<>();
-	
-	public Machine compiler() {
-		return null;
-		
-		
+
+	public void compiler(String nomModule, EUniversDef univers) {
+
+		for (Element e : elements) {
+			e.compiler(nomModule, univers, this);
+		}
+		for (Map.Entry<String, Univers> e : imports.entrySet()) {
+			e.getValue().compiler(nomModule, univers);
+		}
+
 	}
 
 	public void ajouterImportModule(String nom, Univers u) {
@@ -67,6 +72,17 @@ public class Univers {
 
 	}
 
+	public Const donnerConstante(String nom) {
+		int idxModule = nom.indexOf("$");
+		if (idxModule < 0) {
+			return constantes.get(nom);
+		}
+		String module = nom.substring(0, idxModule);
+		return imports.get(module)
+				.donnerConstante(nom.substring(idxModule + 1));
+
+	}
+
 	public void ajouterFonction(String nom, FonctionLocal fl) {
 		fonctions.put(nom, fl);
 
@@ -92,6 +108,7 @@ public class Univers {
 
 		return imports.get(module).donnerType(null, nom);
 	}
+
 	public void init() {
 		fonctions = new HashMap<>();
 		types = new HashMap<>();
@@ -102,8 +119,9 @@ public class Univers {
 			}
 		}
 	}
+
 	public void verifierSemantique() {
-	
+
 		for (Element elt : elements) {
 			List<ErreurSemantique> tmpLs = new ArrayList<>();
 
@@ -154,26 +172,26 @@ public class Univers {
 		return typeUnion(td0.superType(), td1.superType());
 
 	}
-	
-	public TypeSimple donnerTypeElement(String var,String module) {
+
+	public TypeSimple donnerTypeElement(String var, String module) {
 		if (module == null) {
 			if (var.equals(this.nom) || imports.get(var) != null) {
-				return new TypeSimple("elements","metaModele");
+				return new TypeSimple("elements", "metaModele");
 			}
 			return null;
-			
+
 		}
 		if (nom.equals(module)) {
-			
+
 			if (fonctions.get(var) != null) {
-				return new TypeSimple("functionDef","metaModele");
+				return new TypeSimple("functionDef", "metaModele");
 			}
 			if (types.get(var) != null) {
-				
-				return new TypeSimple("typeDef","metaModele");
+
+				return new TypeSimple("typeDef", "metaModele");
 			}
 			if (constantes.get(var) != null) {
-				return new TypeSimple("constante","metaModele");
+				return new TypeSimple("constante", "metaModele");
 			}
 			return null;
 		}
@@ -182,11 +200,11 @@ public class Univers {
 			return null;
 		}
 		return u.donnerTypeElement(var, module);
-		
+
 	}
 
 	public boolean heriteDe(String a, String b) {
-		
+
 		String tpNom = a;
 		TypeDef current = types.get(b);
 
@@ -254,42 +272,9 @@ public class Univers {
 
 	}
 
-	public Map<String, Code> creerObjet(String module) {
-		Map<String,Code> map = new HashMap<>();
-		GestionNom gestionNom = new GestionNom();
-		this.creerObjet(gestionNom, module, map);
-		for(Map.Entry<String, Univers> e:this.imports.entrySet()) {
-			e.getValue().creerObjet(gestionNom, e.getKey(), map);
-			
-		}
-		return map;
-
-	}
-	
 	public void creerMetaModele(String module) throws IOException {
-		Map<String,Code> map = creerObjet(module);
-		for(Map.Entry<String, Code> e:map.entrySet()) {
-			Const cst = new Const("%"+e.getKey(),e.getValue());
-			this.constantes.put(cst.nom, cst);
-		}
-		
+
 		this.ajouterImportModule("metaModele", Generateur.metaModele());
 	}
 
-	public void creerObjet(GestionNom gestionNom, String module,
-			Map<String, Code> map) {
-		List<Code>  objets = new ArrayList<>();
-		for (Element elt : this.fonctions.values()) {
-			objets.add(elt.creer(gestionNom, module, map));
-		}
-		for (Element elt : this.types.values()) {
-			objets.add(elt.creer(gestionNom, module, map));
-		}
-		for (Element elt : this.constantes.values()) {
-			objets.add(elt.creer(gestionNom, module, map));
-		}
-		Objet tmp = new Objet("metaModele","elements","val",objets,0);
-		map.put(module, tmp);
-		
-	}
 }

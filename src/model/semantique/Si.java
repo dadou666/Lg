@@ -4,6 +4,9 @@ import java.util.Map;
 import java.util.Set;
 
 import model.erreur.ErreurTypeNonCalculable;
+import model.execution.ECode;
+import model.execution.ESi;
+import model.execution.EUniversDef;
 
 public class Si extends Code {
 	/**
@@ -104,20 +107,20 @@ public class Si extends Code {
 
 	}
 
-	public Code creer(GestionNom gestionNom) {
-		Objet r = new Objet("metaModele", "si");
-		r.ajouterAttribut("test", test.creer(gestionNom));
-		r.ajouterAttribut("tp", type.creer(gestionNom));
+
+	@Override
+	public ECode compiler(Univers u, EUniversDef machine) {
+		ESi esi = new ESi();
+		esi.test = this.test.compiler(u, machine);
+		
 		if (this.negation) {
-			r.ajouterAttribut("sinon", alors.creer(gestionNom));
-			r.ajouterAttribut("alors", sinon.creer(gestionNom));
-			return r;
-
+			esi.alors = this.sinon.compiler(u, machine);
+			esi.sinon =this.alors.compiler(u, machine);
+		} else{
+			esi.alors = this.alors.compiler(u, machine);
+			esi.sinon = this.sinon.compiler(u, machine);
 		}
-		r.ajouterAttribut("alors", alors.creer(gestionNom));
-		r.ajouterAttribut("sinon", sinon.creer(gestionNom));
-		return r;
-
+		return esi;
 	}
 
 	

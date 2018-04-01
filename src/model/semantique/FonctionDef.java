@@ -4,8 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import model.erreur.DoublonDeNomParam;
+import model.execution.ECode;
+import model.execution.EFonction;
+import model.execution.EFonctionRef;
+import model.execution.EType;
+import model.execution.ETypeObjet;
+import model.execution.EUniversDef;
 
 public class FonctionDef extends Code {
 	/**
@@ -100,8 +107,44 @@ public class FonctionDef extends Code {
 		return r;
 
 	}
-	public Code reduire(Univers u,Map<String,Code> variables) {
-		return this;
+	public ECode compiler(Univers u,EUniversDef machine) {
+	
+		
+		EFonction ef= this.compiler(u, machine, null);
+		EFonctionRef efr = new EFonctionRef(ef.idx);
+		return efr;
 	}
+	public EFonction compiler(Univers u,EUniversDef machine,String nom) {
+		EFonction ef = new EFonction();
+		ef.nom = nom;
+		for(int i=0;i < this.params.size();i++) {
+			ef.map.put(params.get(i).nom(), i);
+		}
+		ef.params =  new EType[ params.size()];
+		for(int i=0;i < ef.params.length;i++) {
+			ef.params[i] = params.get(i).type.compiler(machine, u);
+		}
+		EFonction oldFonction = machine.fonctionCourante;
+		machine.fonctionCourante = ef;
+		ef.code = code.compiler(u, machine);
+		ef.idx = machine.fonctions.size();
+		if (nom == null) {
+			nom="#"+ef.idx+"#";
+		}
+		machine.fonctions.put(nom,ef);
+	
+		machine.fonctionCourante =oldFonction;
+		return ef;
+	}
+	@Override
+	public void donnerModules(Set<String> modules) {
+		for(Champ champ:this.params) {
+			champ.donnerModules(modules);
+		}
+		code.donnerModules(modules);
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }

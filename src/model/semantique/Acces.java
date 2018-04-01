@@ -8,8 +8,8 @@ import model.erreur.ErreurAccesSurNonObjet;
 import model.execution.EAcces;
 import model.execution.EAttribut;
 import model.execution.ECode;
-import model.execution.EType;
-import model.execution.Machine;
+import model.execution.ETypeObjet;
+import model.execution.EUniversDef;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -27,10 +27,11 @@ public class Acces extends Code implements Reference {
 		return nom;
 	}
 
-	public ECode compiler(Univers u, Machine machine) {
-		EType etype = machine.donnerType(objet.typeRetour.nomRef(), u);
+	public ECode compiler(Univers u, EUniversDef machine) {
+		ETypeObjet etype = machine.donnerType(objet.typeRetour.nomRef(), u);
 		EAcces ea = new EAcces();
 		ea.adr = etype.map.get(nom).adr;
+		ea.nom = nom;
 		return ea;
 	}
 
@@ -83,15 +84,6 @@ public class Acces extends Code implements Reference {
 		return nom();
 	}
 
-	public Code creer(GestionNom gestionNom) {
-		Code tmp = this.objet.creer(gestionNom);
-		Objet co = new Objet();
-
-		co.typeRetour = new TypeSimple("acces", "metaModele");
-		co.ajouterAttribut("code", tmp);
-		co.ajouterAttribut("nom", gestionNom.donnerNom(nom));
-		return co;
-
-	}
+	
 
 }
