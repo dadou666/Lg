@@ -55,6 +55,7 @@ public class Si extends Code {
 		if (typeRetour != null) {
 			return typeRetour;
 		}
+		test.typeRetour(u, variables);
 		TypeLiteral tl = null;
 		if (!negation) {
 			tl = test.ajouterPourSi(this, variables);

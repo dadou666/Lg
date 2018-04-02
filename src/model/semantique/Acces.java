@@ -30,6 +30,7 @@ public class Acces extends Code implements Reference {
 	public ECode compiler(Univers u, EUniversDef machine) {
 		ETypeObjet etype = machine.donnerType(objet.typeRetour.nomRef(), u);
 		EAcces ea = new EAcces();
+		ea.code =  objet.compiler(u, machine);
 		ea.adr = etype.map.get(nom).adr;
 		ea.nom = nom;
 		return ea;

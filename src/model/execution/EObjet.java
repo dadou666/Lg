@@ -15,16 +15,14 @@ public class EObjet extends ECode {
 		
 		
 	}
-	public ECode getAttribute(int adr) {
-		return attributes[adr];
-	}
+
 	public ETypeObjet type(EUniversDef machine) {
 		return machine.typeArray[idx];
 	}
 
 	@Override
 	public ECode getAttribute(int adr, EUniversDef machine) {
-		throw new Error("getAttribute");
+		return attributes[adr];
 	}
 	@Override
 	public String afficher(EUniversDef univers) {

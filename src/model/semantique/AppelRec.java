@@ -78,6 +78,7 @@ public class AppelRec extends AppelBase {
 	public ECode compiler(Univers u, EUniversDef machine) {
 		EAppelRec ar = new EAppelRec();
 		this.appel.compiler(u, machine, ar);
+		ar.param = param.compiler(u, machine);
 		return ar;
 	}
 

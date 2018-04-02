@@ -10,7 +10,7 @@ public class EAppelRec extends EAppel {
 		r.appel = appel.initLocal(vars, machine);
 		r.numFonctionArgs = r.appel.numFonctionArgs;
 
-		r.numAppelArgs = r.numAppelArgs + 1;
+		r.numAppelArgs = r.appel.numAppelArgs + 1;
 		return r;
 
 	}

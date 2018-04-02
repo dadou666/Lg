@@ -15,8 +15,8 @@ import org.junit.Test;
 public class TestCompiler {
 
 	@Test
-	public void test() {
-		EContext ctx =compiler("type u { t:t } type t {}  function m t:t | u { t=t {} } "," ( m(t {} ) )");
+	public void testAppelFonction() {
+		EContext ctx =compiler("type u { t:t } type t {}  function m t:t | u { t=t  } "," ( m(t {} ) )");
 		assertTrue(ctx.univers.fonctionArray != null);
 		assertTrue(ctx.univers.fonctionArray .length==1);
 		System.out.println(" code="+ctx);
@@ -26,6 +26,40 @@ public class TestCompiler {
 		assertTrue(r.equals("u{ t=t{ } }"));
 	}
 
+	@Test
+	public void testAppelFonctionCurryFication() {
+		EContext ctx =compiler("type u { t:a t:b} type t {} function g [t]->u:o t:m | o(m)  function m t:a t:b| u { a=a b=b } "," g( m(t {} ) t {} ) ");
+		assertTrue(ctx.univers.fonctionArray != null);
+		assertTrue(ctx.univers.fonctionArray .length==2);
+		System.out.println(" code="+ctx);
+		ctx.calculer();
+		System.out.println(" code="+ctx);
+		String r = ctx.toString();
+		assertTrue(r.equals("u{ a=t{ } b=t{ } }"));
+	}
+	@Test
+	public void testAppelFonctionEtAcces() {
+		EContext ctx =compiler("type u { t:t } type t {}  function m t:t | u { t=t  } "," ( m(t {} ) ).t");
+		assertTrue(ctx.univers.fonctionArray != null);
+		assertTrue(ctx.univers.fonctionArray .length==1);
+		System.out.println(" code="+ctx);
+		ctx.calculer();
+		System.out.println(" code="+ctx);
+		String r = ctx.toString();
+		assertTrue(r.equals("t{ }"));
+	}
+	
+	@Test
+	public void testSi() {
+		EContext ctx =compiler("type bool {} type true:bool {} type false:bool {}  function not bool:b | if b is true then false {} else true {} "," not(true {} )");
+		assertTrue(ctx.univers.fonctionArray != null);
+		assertTrue(ctx.univers.fonctionArray .length==1);
+		System.out.println(" code="+ctx);
+		ctx.calculer();
+		System.out.println(" code="+ctx);
+		String r = ctx.toString();
+		assertTrue(r.equals("false{ }"));
+	}
 	public EContext compiler(String src, String expression) {
 		Generateur g = new Generateur();
 		if (g.error) {
