@@ -28,7 +28,7 @@ public class Acces extends Code implements Reference {
 	}
 
 	public ECode compiler(Univers u, EUniversDef machine) {
-		ETypeObjet etype = machine.donnerType(objet.typeRetour.nomRef(), u);
+		ETypeObjet etype = machine.donnerType(objet.typeRetour.toString(), u);
 		EAcces ea = new EAcces();
 		ea.code =  objet.compiler(u, machine);
 		ea.adr = etype.map.get(nom).adr;
@@ -55,6 +55,7 @@ public class Acces extends Code implements Reference {
 
 	public void verifierSemantique(Univers u, Map<String, TypeLiteral> variables) {
 		objet.verifierSemantique(u, variables);
+		objet.typeRetour(u, variables);
 		this.typeRetour(u, variables);
 	}
 

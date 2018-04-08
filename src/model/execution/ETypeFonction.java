@@ -19,6 +19,10 @@ public  class ETypeFonction extends EType {
 		
 		
 	}
+	@Override
+	ESymbol symbol(String nom) {
+		throw new Error(" Impossible de créer un symbol ");
+	}
 	
 
 

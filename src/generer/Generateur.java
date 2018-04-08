@@ -99,6 +99,7 @@ public class Generateur implements ANTLRErrorListener {
 	public Map<FonctionLocal, FunctionLocalContext> fonctionLocals = new HashMap<>();
 	public Map<TypeDef, TypeContext> types = new HashMap<>();
 	public Map<Const, ConstanteContext> constantes = new HashMap<>();
+	public Map<String, FonctionDef> fonctionsAnonyme = new HashMap<>();
 	public boolean error = false;
 
 	public static Univers metaModele() throws IOException {
@@ -141,6 +142,7 @@ public class Generateur implements ANTLRErrorListener {
 		return this.generer(parser.system());
 
 	}
+
 	public Code lireSourceCode(String src) {
 
 		lgLexer lgLexer = new lgLexer(
@@ -152,8 +154,21 @@ public class Generateur implements ANTLRErrorListener {
 			return null;
 		}
 
-		return transformer(parser.code());
+		return transformer(parser.tmpCode());
 
+	}
+
+	public void ajouterFonctionAnonyme(Univers u) {
+		for (Map.Entry<String, FonctionDef> e : this.fonctionsAnonyme
+				.entrySet()) {
+			FonctionLocal fl = new FonctionLocal(e.getKey());
+			fl.def = e.getValue();
+			fl.anonyme = true;
+
+			// u.ajouterFonction(e.getKey(), fl);
+			u.elements.add(fl);
+
+		}
 	}
 
 	public Univers generer(SystemContext sc) {
@@ -161,8 +176,11 @@ public class Generateur implements ANTLRErrorListener {
 		for (ElementContext ec : sc.element()) {
 			r.add(transformer(ec));
 		}
+
 		Univers u = new Univers();
+		
 		u.elements = r;
+		this.ajouterFonctionAnonyme(u);
 		return u;
 	}
 
@@ -242,7 +260,7 @@ public class Generateur implements ANTLRErrorListener {
 
 	public FonctionLocal transformer(FunctionLocalContext flc) {
 		FonctionLocal r = new FonctionLocal(flc.ID().getText());
-		r.def= new FonctionDef();
+		r.def = new FonctionDef();
 		r.def.params = new ArrayList<Champ>();
 		this.fonctionLocals.put(r, flc);
 		if (flc.champs() != null) {
@@ -277,7 +295,6 @@ public class Generateur implements ANTLRErrorListener {
 
 		}
 		r.code = this.transformer(fdc.tmpCode());
-	
 
 		return r;
 
@@ -351,7 +368,7 @@ public class Generateur implements ANTLRErrorListener {
 
 		for (AttributsContext asc : clc.attributs()) {
 			Objet creerTmp = new Objet();
-			
+
 			creerTmp.typeRetour = tp;
 
 			for (AttributContext ac : asc.attribut()) {
@@ -410,9 +427,9 @@ public class Generateur implements ANTLRErrorListener {
 						.id_externe().ID(0).getText());
 
 			}
-			if ( !ct.var().metaModele().getText().isEmpty()) {
+			if (!ct.var().metaModele().getText().isEmpty()) {
 				v.typeVar = Var.TypeVar.MetaModele;
-				
+
 			}
 			this.vars.put(v, ct.var());
 			r = v;
@@ -527,7 +544,12 @@ public class Generateur implements ANTLRErrorListener {
 	public Code transformer(TmpCodeContext tmpCode) {
 
 		if (tmpCode.functionDef() != null) {
-			return this.transformer(tmpCode.functionDef());
+			FonctionDef fd = this.transformer(tmpCode.functionDef());
+			String nom = "#" + this.fonctionsAnonyme.size() + "#";
+			this.fonctionsAnonyme.put(nom, fd);
+			Var var = new Var(nom, null);
+			var.typeVar = Var.TypeVar.Fonction;
+			return var;
 
 		}
 		if (tmpCode.si() != null) {
@@ -546,8 +568,17 @@ public class Generateur implements ANTLRErrorListener {
 						.getText(), tmpCode.appel().id_externe().ID(0)
 						.getText(), params.get(0));
 			} else {
-				appel = new AppelDebut(tmpCode.appel().ID().getText(), null,
-						params.get(0));
+				FunctionDefContext fdc = tmpCode.appel().functionDef();
+				if (fdc != null) {
+					FonctionDef fd = this.transformer(fdc);
+
+					String nom = "#" + this.fonctionsAnonyme.size() + "#";
+					this.fonctionsAnonyme.put(nom, fd);
+					appel = new AppelDebut(nom, null, params.get(0));
+				} else {
+					appel = new AppelDebut(tmpCode.appel().ID().getText(),
+							null, params.get(0));
+				}
 			}
 
 			return appelBase(appel, params, params.size() - 1);

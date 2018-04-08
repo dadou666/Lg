@@ -25,6 +25,9 @@ public class EUniversDef {
 			return ef;
 		}
 		FonctionLocal fl = u.donnerFonction(nom);
+		if (fl.anonyme) {
+			nom = null;
+		}
 		 ef = fl.def.compiler(u, this, nom);
 		
 	
@@ -75,6 +78,7 @@ public class EUniversDef {
 		    r.map.put(ea.nom,ea);
 		}
 		r.idx = types.size();
+		r.superType =superEType;
 		types.put(nom, r);
 		return r;
 		

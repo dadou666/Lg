@@ -23,6 +23,7 @@ public class FonctionLocal extends Element {
 	private String nom;
 
 	public FonctionDef def;
+	public boolean anonyme = false;
 
 	public boolean defType = false;
 

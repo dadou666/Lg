@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 
 import model.execution.EContext;
+import model.execution.EEntier;
 import model.execution.EUniversDef;
 import model.semantique.Code;
 import model.semantique.TypeLiteral;
@@ -50,6 +51,63 @@ public class TestCompiler {
 	}
 	
 	@Test
+	public void testAppelEntierNext() {
+		EContext ctx =compiler("type @n { }  "," 45n.next");
+	
+		System.out.println(" code="+ctx);
+		ctx.calculer();
+		System.out.println(" code="+ctx);
+		
+		assertTrue(ctx.toString().equals("44n"));
+	}
+	
+	@Test
+	public void testAppelCompilerFonction() {
+		EContext ctx =compiler("type @n { }  "," # { @n:a | a.next }");
+		assertTrue(ctx.univers.fonctionArray != null);
+		assertTrue(ctx.univers.fonctionArray .length==1);
+		System.out.println(" code="+ctx);
+		
+	}
+	@Test
+	public void testAppelCompilerAppelFonctionAnonype() {
+		EContext ctx =compiler("type @n { }  "," # { @n:a | a.next } ( 4n )");
+		assertTrue(ctx.univers.fonctionArray != null);
+		assertTrue(ctx.univers.fonctionArray .length==1);
+		ctx.calculer();
+		System.out.println(" code="+ctx);
+		
+	}
+	
+	@Test
+	public void testAppelEntierNew() {
+		EContext ctx =compiler("type @n { }  "," @n { next= 45n }");
+	
+		System.out.println(" code="+ctx);
+		ctx.calculer();
+		System.out.println(" code="+ctx);
+		
+		assertTrue(ctx.toString().equals("46n"));
+	}
+	@Test 
+	public void testCalculSymbolic() {
+		EContext ctx =compiler("type @n { }  "," #{ n:x | if x is n then n {} else 45n }");
+		System.out.println(" code="+ctx);
+		ctx.calculerSymbolic();
+		System.out.println(" code="+ctx);
+		
+		
+	}
+	@Test 
+	public void testCalculSymbolic2() {
+		EContext ctx =compiler("type @n { }  "," #{ n:x | #{ n:x | if x is @n then @n {next=x} else 45n }(@n {next=x})}");
+		System.out.println(" code="+ctx);
+		ctx.calculerSymbolic();
+		System.out.println(" code="+ctx);
+		
+		
+	}
+	@Test
 	public void testSi() {
 		EContext ctx =compiler("type bool {} type true:bool {} type false:bool {}  function not bool:b | if b is true then false {} else true {} "," not(true {} )");
 		assertTrue(ctx.univers.fonctionArray != null);
@@ -66,8 +124,8 @@ public class TestCompiler {
 			fail(" error syntaxe univers");
 		}
 		Univers u = g.lireSourceUnivers(src);
-		u.init();
-		u.verifierSemantique();
+		
+	
 
 		if (!u.erreurs.isEmpty()) {
 
@@ -76,6 +134,10 @@ public class TestCompiler {
 		}
 		 g = new Generateur();
 		Code code = g.lireSourceCode(expression);
+		g.ajouterFonctionAnonyme(u);
+		u.init();
+		u.verifierSemantique();
+	
 		if (g.error) {
 			fail(" error syntaxe code");
 		}
@@ -88,11 +150,11 @@ public class TestCompiler {
 
 		EUniversDef univers = new EUniversDef();
 		u.compiler(null, univers);
-		univers.init();
+		
 		EContext context = new EContext();
 		context.univers =univers;
 		context.code = code.compiler(u, univers);
-		
+		univers.init();
 
 		return context;
 	}

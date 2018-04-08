@@ -21,7 +21,7 @@ code :(  ('(' code ')' ) |  (appel|creerListe| creer | var  |entier| ('(' (  si)
 var : metaModele (ID |id_externe);
 metaModele : '%' | ;
 entier : ENTIER | ENTIER_EXTERNE;
-appel :  (ID | id_externe ) '(' tmpCode * ')' ;
+appel :  (ID | id_externe | functionDef ) '(' tmpCode * ')' ;
 flagMultiple : '@' ;
 creer : ( flagMultiple | )  ( ID| id_externe ) '{' attributs  '}';
 creerListe : ID '[' (  (('{' attributs  '}' ) + )      ) ']' ;

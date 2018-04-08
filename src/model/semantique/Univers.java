@@ -18,9 +18,9 @@ public class Univers {
 	public String nom;
 	public Map<String, Univers> imports = new HashMap<String, Univers>();
 	public List<Element> elements;
-	private Map<String, FonctionLocal> fonctions;
-	private Map<String, TypeDef> types;
-	public Map<String, Const> constantes;
+	private Map<String, FonctionLocal> fonctions= new HashMap<>();
+	private Map<String, TypeDef> types= new HashMap<>();
+	public Map<String, Const> constantes= new HashMap<>();
 	public List<ErreurSemantique> erreurs = new ArrayList<>();
 
 	public void compiler(String nomModule, EUniversDef univers) {
@@ -110,9 +110,7 @@ public class Univers {
 	}
 
 	public void init() {
-		fonctions = new HashMap<>();
-		types = new HashMap<>();
-		constantes = new HashMap<>();
+	
 		for (Element elt : elements) {
 			if (elt != null) {
 				elt.init(this);
@@ -234,10 +232,7 @@ public class Univers {
 			return td.map;
 		}
 		td.map = new HashMap<String, TypeLiteral>();
-		if (td.multiple) {
-			td.map.put("next", new TypeSimple(td.superType, null));
-
-		}
+	
 		TypeDef tmp = td;
 		while (tmp != null) {
 

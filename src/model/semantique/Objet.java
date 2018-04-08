@@ -145,7 +145,7 @@ public class Objet extends Code {
 	public ECode compiler(Univers u, EUniversDef machine) {
 		EObjet eo = new EObjet();
 		eo.attributes = new ECode[this.attributs.size()];
-		ETypeObjet to = machine.donnerType(this.typeRetour.nomRef(), u);
+		ETypeObjet to = machine.donnerType(this.typeRetour.toString(), u);
 		eo.idx = to.idx;
 		for(Map.Entry<String, Attribut> e:this.attributs.entrySet()) {
 			eo.attributes[to.map.get(e.getKey()).adr] = e.getValue().code.compiler(u, machine); 

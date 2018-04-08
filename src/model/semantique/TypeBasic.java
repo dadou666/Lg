@@ -16,7 +16,7 @@ abstract public class TypeBasic extends TypeLiteral implements Reference {
 		return false;
 	}
 	public EType compiler(EUniversDef machine,Univers u) {
-		ETypeObjet eto= machine.donnerType(nom(), u);
+		ETypeObjet eto= machine.donnerType(toString(), u);
 		return new ETypeRef(eto.idx);
 	}
 	public TypeLiteral typeUnion(TypeLiteral tl, Univers u) {

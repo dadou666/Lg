@@ -13,6 +13,14 @@ public class EFonction  {
 	public EFonction asFonctionAnonyme() {
 		return this;
 	}
+	public String [] noms() {
+		String [] noms = new String[params.length];
+		for(Map.Entry<String, Integer> e:map.entrySet()) {
+			noms[e.getValue()] = e.getKey();
+		}
+		return noms;
+		
+	}
 
 	public String afficher(EUniversDef univers) {
 		StringBuilder sb = new StringBuilder();
@@ -22,10 +30,7 @@ public class EFonction  {
 		} else {
 			sb.append("function ");
 		}
-		String [] noms = new String[params.length];
-		for(Map.Entry<String, Integer> e:map.entrySet()) {
-			noms[e.getValue()] = e.getKey();
-		}
+		String [] noms = noms();
 		for(int i=0;i < params.length ;i++) {
 			sb.append(params[i].afficher(univers));
 			sb.append(":");
@@ -38,7 +43,7 @@ public class EFonction  {
 			sb.append("}");
 		}
 		
-		return null;
+		return sb.toString();
 	}
 	
 

@@ -43,6 +43,7 @@ public class FonctionDef extends Code {
 		}
 	
 		code.verifierSemantique(u, map);
+		code.typeRetour(u, map);
 
 	}
 	public String toString() {

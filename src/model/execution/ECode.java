@@ -18,5 +18,8 @@ abstract public class ECode {
 
 	abstract public ETypeObjet type(EUniversDef machine) ;
 	abstract public String afficher(EUniversDef univers);
+	 public ECode calculSymbolic(EUniversDef univers) {
+		 return this;
+	 }
 
 }

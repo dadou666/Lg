@@ -28,8 +28,11 @@ public class EEntier extends ECode {
 
 	@Override
 	public String afficher(EUniversDef univers) {
-		String s = valeur + univers.typeArray[idx].nom;
-		return s;
+		if (valeur == 0) {
+			return ""+valeur + univers.typeArray[idx].nom;
+		}
+		int superIdx = univers.typeArray[idx].superType.idx;
+		return ""+valeur + univers.typeArray[superIdx].nom;
 	}
 
 }

@@ -104,6 +104,9 @@ public class Var extends Code implements Reference {
 		return false;
 	}
 	public TypeLiteral typeRetour(Univers u, Map<String, TypeLiteral> variables) {
+		if (typeRetour != null) {
+			return typeRetour;
+		}
 		if (estAccesMetaModele() ) {
 			String nomObjet = this.nom;
 			if (module != null) {
@@ -130,6 +133,7 @@ public class Var extends Code implements Reference {
 		TypeLiteral tl = variables.get(nom());
 		if (tl != null) {
 			typeVar = TypeVar.Local;
+			typeRetour = tl;
 			return tl;
 		}
 
@@ -141,13 +145,15 @@ public class Var extends Code implements Reference {
 
 				fl.tl(u);
 
-				return fl.def.typeFunction(u, variables);
+				typeRetour = fl.def.typeFunction(u, variables);
+				return typeRetour;
 			}
 			u.erreurs.add(new ObjetInconnu(this));
 			return null;
 		}
 		typeVar = TypeVar.Constante;
-		return c.tl(u);
+		typeRetour= c.tl(u);
+		return typeRetour;
 
 	}
 

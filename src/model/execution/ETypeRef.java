@@ -9,7 +9,7 @@ public class ETypeRef extends EType {
 	@Override
 	String afficher(EUniversDef univers) {
 		// TODO Auto-generated method stub
-		return null;
+		return univers.typeArray[idx].nom;
 	}
 
 	@Override
@@ -20,6 +20,12 @@ public class ETypeRef extends EType {
 		sb.append(univers.typeArray[idx].nom);
 		
 
+	}
+
+	@Override
+	ESymbol symbol(String nom) {
+		// TODO Auto-generated method stub
+		 return new ESymbol(nom,idx);
 	}
 
 }

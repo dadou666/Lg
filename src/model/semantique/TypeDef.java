@@ -113,6 +113,8 @@ public class TypeDef extends Element implements Reference {
 				u.erreurs.add(new DoublonDeNom(vide.nom, this));
 			}
 			u.ajouterType(vide.nom, vide);
+			Champ champ  = new Champ("next", new TypeSimple(vide.nom,null));
+			this.champs.add(champ);
 
 		}
 
