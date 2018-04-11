@@ -14,6 +14,7 @@ public class EFonctionRef extends EAppel {
 	}
 
 	public ECode calculSymbolic(EUniversDef univers) {
+		
 		EFonction f = univers.fonctionArray[idx];
 		ECode[] vars = new ECode[f.params.length];
 		String noms[] = f.noms();
@@ -35,11 +36,7 @@ public class EFonctionRef extends EAppel {
 		throw new Error("type");
 	}
 
-	@Override
-	public ECode calculer(EUniversDef machine) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public void arguments(ECode[] vars, int idxVar) {
@@ -82,6 +79,12 @@ public class EFonctionRef extends EAppel {
 			return ef.afficher(univers);
 		}
 		return ef.nom;
+	}
+
+	@Override
+	public ECode calculer(EUniversDef machine) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

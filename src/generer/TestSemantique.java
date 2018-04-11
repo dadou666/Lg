@@ -25,6 +25,11 @@ public class TestSemantique {
 		test("type m {} function f m:x | x", null);
 
 	}
+	@Test
+	public void testFonctionAvec2Parametre() {
+		String s ="type @naturel {} function + naturel:a naturel:b | if a is @naturel then @naturel { next=a.next+b } else b ";
+		test(s,null);
+	}
 
 	@Test
 	public void testAttributInconnuDansFonction() {

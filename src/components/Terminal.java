@@ -96,13 +96,13 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 		sb.beginX();
 		sb.beginY();
-		sb.setSize(1020, 700);
+		sb.setSize(1600, 700);
 		sb.add(inputScrollPane);
 		sb.beginX();
 		sb.setSize(600, 200);
 		sb.add(outputScrollPane);
 		sb.space(4);
-		sb.setSize(416, 200);
+		sb.setSize(996, 200);
 		sb.add(listErreurSemantique);
 		sb.end();
 		sb.end();

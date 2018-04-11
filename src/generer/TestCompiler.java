@@ -93,7 +93,7 @@ public class TestCompiler {
 	public void testCalculSymbolic() {
 		EContext ctx =compiler("type @n { }  "," #{ n:x | if x is n then n {} else 45n }");
 		System.out.println(" code="+ctx);
-		ctx.calculerSymbolic();
+		ctx.calculer();
 		System.out.println(" code="+ctx);
 		
 		
@@ -102,7 +102,7 @@ public class TestCompiler {
 	public void testCalculSymbolic2() {
 		EContext ctx =compiler("type @n { }  "," #{ n:x | #{ n:x | if x is @n then @n {next=x} else 45n }(@n {next=x})}");
 		System.out.println(" code="+ctx);
-		ctx.calculerSymbolic();
+		ctx.calculer();
 		System.out.println(" code="+ctx);
 		
 		
