@@ -19,6 +19,7 @@ import grammaire.lgParser.DefTypeFunctionContext;
 import grammaire.lgParser.ElementContext;
 import grammaire.lgParser.EstTypeContext;
 import grammaire.lgParser.ExistContext;
+import grammaire.lgParser.FonctionRefAppelContext;
 import grammaire.lgParser.FunctionContext;
 import grammaire.lgParser.FunctionDefContext;
 import grammaire.lgParser.FunctionLocalContext;
@@ -407,7 +408,8 @@ public class ColorerSource {
 		}
 		if (ct.appel() != null) {
 
-			this.colorerFonction(ct.appel().ID());
+		
+			this.transformer(ct.appel().fonctionRefAppel());
 
 			for (TmpCodeContext cc : ct.appel().tmpCode()) {
 				this.transformer(cc);
@@ -434,6 +436,12 @@ public class ColorerSource {
 
 		}
 
+	}
+	public void transformer(FonctionRefAppelContext fr) {
+		this.colorerFonction(fr.ID());
+		for(AccesContext ac:fr.acces()) {
+			this.colorerAttribut(ac.ID());
+		}
 	}
 
 	public void transformer(SiContext sic) {
@@ -471,7 +479,7 @@ public class ColorerSource {
 		}
 		if (tmpCode.appel() != null) {
 
-			this.colorerFonction(tmpCode.appel().ID());
+			this.transformer(tmpCode.appel().fonctionRefAppel());
 
 			for (TmpCodeContext cc : tmpCode.appel().tmpCode()) {
 				this.transformer(cc);

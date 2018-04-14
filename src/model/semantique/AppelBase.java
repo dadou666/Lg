@@ -13,7 +13,7 @@ abstract public class AppelBase extends Code {
 	 * 
 	 */
 	private static final long serialVersionUID = -5822263846028517415L;
-	public Code param;
+	
 
 
 	public String nom() {

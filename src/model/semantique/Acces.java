@@ -13,7 +13,7 @@ import model.execution.EUniversDef;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-public class Acces extends Code implements Reference {
+public class Acces extends AppelBase implements Reference {
 	public Code objet;
 	private String nom;
 

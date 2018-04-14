@@ -100,6 +100,9 @@ public class lgBaseListener implements lgListener {
 	@Override public void enterSystem(lgParser.SystemContext ctx) { }
 	@Override public void exitSystem(lgParser.SystemContext ctx) { }
 
+	@Override public void enterFonctionRefAppel(lgParser.FonctionRefAppelContext ctx) { }
+	@Override public void exitFonctionRefAppel(lgParser.FonctionRefAppelContext ctx) { }
+
 	@Override public void enterId_externe(lgParser.Id_externeContext ctx) { }
 	@Override public void exitId_externe(lgParser.Id_externeContext ctx) { }
 

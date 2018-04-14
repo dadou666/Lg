@@ -97,6 +97,9 @@ public interface lgListener extends ParseTreeListener {
 	void enterSystem(lgParser.SystemContext ctx);
 	void exitSystem(lgParser.SystemContext ctx);
 
+	void enterFonctionRefAppel(lgParser.FonctionRefAppelContext ctx);
+	void exitFonctionRefAppel(lgParser.FonctionRefAppelContext ctx);
+
 	void enterId_externe(lgParser.Id_externeContext ctx);
 	void exitId_externe(lgParser.Id_externeContext ctx);
 

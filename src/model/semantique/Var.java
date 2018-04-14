@@ -3,6 +3,7 @@ package model.semantique;
 import java.util.Map;
 import java.util.Set;
 
+import model.execution.EAppelRec;
 import model.execution.ECode;
 import model.execution.EEntier;
 import model.execution.EFonction;
@@ -14,7 +15,7 @@ import model.execution.EUniversDef;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-public class Var extends Code implements Reference {
+public class Var extends AppelBase implements Reference {
 	private String nom;
 	private String module;
 
@@ -175,6 +176,25 @@ public class Var extends Code implements Reference {
 	public String nomRef() {
 		// TODO Auto-generated method stub
 		return nom();
+	}
+	
+	public TypeFunction verifierSemantiqueRec(Univers u,
+			Map<String, TypeLiteral> variables) {
+		TypeLiteral tl = this.typeRetour(u, variables);
+		if (tl instanceof TypeFunction) {
+			return (TypeFunction) tl;
+		}
+		return null;
+	}
+	public void compiler(Univers u, EUniversDef machine, EAppelRec ar) {
+		if (typeVar == TypeVar.Local) {
+			ar.appel= new ELocal(machine.fonctionCourante.map.get(nom),nom);
+		}
+		if (typeVar == TypeVar.Fonction) {
+			EFonction ef = machine.donnerFonction(nom(), u);
+			ar.appel= new EFonctionRef(ef.idx);
+		}
+		
 	}
 
 }

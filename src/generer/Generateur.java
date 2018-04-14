@@ -20,6 +20,7 @@ import grammaire.lgParser.DefTypeFunctionContext;
 import grammaire.lgParser.ElementContext;
 import grammaire.lgParser.EstTypeContext;
 import grammaire.lgParser.ExistContext;
+import grammaire.lgParser.FonctionRefAppelContext;
 import grammaire.lgParser.FunctionContext;
 import grammaire.lgParser.FunctionDefContext;
 import grammaire.lgParser.FunctionLocalContext;
@@ -45,7 +46,7 @@ import java.util.Map;
 
 import model.semantique.Acces;
 import model.semantique.AppelBase;
-import model.semantique.AppelDebut;
+
 import model.semantique.AppelRec;
 import model.semantique.Attribut;
 import model.semantique.Champ;
@@ -103,9 +104,8 @@ public class Generateur implements ANTLRErrorListener {
 	public boolean error = false;
 
 	public static Univers metaModele() throws IOException {
-		lgLexer lgLexer = new lgLexer(
-				org.antlr.v4.runtime.CharStreams.fromStream(Univers.class
-						.getResourceAsStream("/generer/metaModele.mdl")));
+		lgLexer lgLexer = new lgLexer(org.antlr.v4.runtime.CharStreams
+				.fromStream(Univers.class.getResourceAsStream("/generer/metaModele.mdl")));
 		CommonTokenStream tokens = new CommonTokenStream(lgLexer);
 		lgParser parser = new lgParser(tokens);
 		Univers u = new Generateur().generer(parser.system());
@@ -119,8 +119,7 @@ public class Generateur implements ANTLRErrorListener {
 	}
 
 	public Univers lireFichier(String file) throws IOException {
-		lgLexer lgLexer = new lgLexer(
-				org.antlr.v4.runtime.CharStreams.fromFileName(file));
+		lgLexer lgLexer = new lgLexer(org.antlr.v4.runtime.CharStreams.fromFileName(file));
 		CommonTokenStream tokens = new CommonTokenStream(lgLexer);
 		lgParser parser = new lgParser(tokens);
 
@@ -130,8 +129,7 @@ public class Generateur implements ANTLRErrorListener {
 
 	public Univers lireSourceUnivers(String src) {
 
-		lgLexer lgLexer = new lgLexer(
-				org.antlr.v4.runtime.CharStreams.fromString(src));
+		lgLexer lgLexer = new lgLexer(org.antlr.v4.runtime.CharStreams.fromString(src));
 		CommonTokenStream tokens = new CommonTokenStream(lgLexer);
 		lgParser parser = new lgParser(tokens);
 		parser.addErrorListener(this);
@@ -145,8 +143,7 @@ public class Generateur implements ANTLRErrorListener {
 
 	public Code lireSourceCode(String src) {
 
-		lgLexer lgLexer = new lgLexer(
-				org.antlr.v4.runtime.CharStreams.fromString(src));
+		lgLexer lgLexer = new lgLexer(org.antlr.v4.runtime.CharStreams.fromString(src));
 		CommonTokenStream tokens = new CommonTokenStream(lgLexer);
 		lgParser parser = new lgParser(tokens);
 		parser.addErrorListener(this);
@@ -159,8 +156,7 @@ public class Generateur implements ANTLRErrorListener {
 	}
 
 	public void ajouterFonctionAnonyme(Univers u) {
-		for (Map.Entry<String, FonctionDef> e : this.fonctionsAnonyme
-				.entrySet()) {
+		for (Map.Entry<String, FonctionDef> e : this.fonctionsAnonyme.entrySet()) {
 			FonctionLocal fl = new FonctionLocal(e.getKey());
 			fl.def = e.getValue();
 			fl.anonyme = true;
@@ -178,7 +174,7 @@ public class Generateur implements ANTLRErrorListener {
 		}
 
 		Univers u = new Univers();
-		
+
 		u.elements = r;
 		this.ajouterFonctionAnonyme(u);
 		return u;
@@ -192,8 +188,7 @@ public class Generateur implements ANTLRErrorListener {
 			return transformer(ec.type());
 		}
 		if (ec.constante() != null) {
-			Const c = new Const(ec.constante().ID().toString(),
-					this.transformer(ec.constante().tmpCode()));
+			Const c = new Const(ec.constante().ID().toString(), this.transformer(ec.constante().tmpCode()));
 			this.constantes.put(c, ec.constante());
 			return c;
 
@@ -220,8 +215,7 @@ public class Generateur implements ANTLRErrorListener {
 		td.champs = new ArrayList<Champ>();
 		this.types.put(td, tc);
 		for (ChampContext cc : tc.champs().champ()) {
-			Champ champ = new Champ(cc.ID().getText(), this.transformer(cc
-					.defType()));
+			Champ champ = new Champ(cc.ID().getText(), this.transformer(cc.defType()));
 
 			td.champs.add(champ);
 			this.champs.put(champ, cc);
@@ -245,8 +239,7 @@ public class Generateur implements ANTLRErrorListener {
 		f.def.params = new ArrayList<Champ>();
 		if (fc.champs() != null) {
 			for (ChampContext cc : fc.champs().champ()) {
-				Champ champ = new Champ(cc.ID().getText(), this.transformer(cc
-						.defType()));
+				Champ champ = new Champ(cc.ID().getText(), this.transformer(cc.defType()));
 
 				f.def.params.add(champ);
 				this.champs.put(champ, cc);
@@ -265,8 +258,7 @@ public class Generateur implements ANTLRErrorListener {
 		this.fonctionLocals.put(r, flc);
 		if (flc.champs() != null) {
 			for (ChampContext cc : flc.champs().champ()) {
-				Champ champ = new Champ(cc.ID().getText(), this.transformer(cc
-						.defType()));
+				Champ champ = new Champ(cc.ID().getText(), this.transformer(cc.defType()));
 
 				r.def.params.add(champ);
 				this.champs.put(champ, cc);
@@ -285,8 +277,7 @@ public class Generateur implements ANTLRErrorListener {
 		r.params = new ArrayList<Champ>();
 		if (fdc.champs() != null) {
 			for (ChampContext cc : fdc.champs().champ()) {
-				Champ champ = new Champ(cc.ID().getText(), this.transformer(cc
-						.defType()));
+				Champ champ = new Champ(cc.ID().getText(), this.transformer(cc.defType()));
 
 				r.params.add(champ);
 				this.champs.put(champ, cc);
@@ -352,8 +343,7 @@ public class Generateur implements ANTLRErrorListener {
 		}
 
 		for (AttributContext ac : cc.attributs().attribut()) {
-			Attribut a = r.ajouterAttribut(ac.ID().getText(),
-					this.transformer(ac.tmpCode()));
+			Attribut a = r.ajouterAttribut(ac.ID().getText(), this.transformer(ac.tmpCode()));
 			this.attributs.put(a, ac);
 
 		}
@@ -372,8 +362,7 @@ public class Generateur implements ANTLRErrorListener {
 			creerTmp.typeRetour = tp;
 
 			for (AttributContext ac : asc.attribut()) {
-				Attribut a = creerTmp.ajouterAttribut(ac.ID().getText(),
-						this.transformer(ac.tmpCode()));
+				Attribut a = creerTmp.ajouterAttribut(ac.ID().getText(), this.transformer(ac.tmpCode()));
 				this.attributs.put(a, ac);
 				;
 
@@ -423,8 +412,7 @@ public class Generateur implements ANTLRErrorListener {
 			if (ct.var().id_externe() == null) {
 				v = new Var(ct.var().ID().getText(), null);
 			} else {
-				v = new Var(ct.var().id_externe().ID(1).getText(), ct.var()
-						.id_externe().ID(0).getText());
+				v = new Var(ct.var().id_externe().ID(1).getText(), ct.var().id_externe().ID(0).getText());
 
 			}
 			if (!ct.var().metaModele().getText().isEmpty()) {
@@ -451,19 +439,12 @@ public class Generateur implements ANTLRErrorListener {
 		}
 
 		if (ct.appel() != null) {
-			AppelDebut appel = null;
+			AppelBase appel = null;
 			ArrayList<Code> params = new ArrayList<Code>();
 			for (TmpCodeContext cc : ct.appel().tmpCode()) {
 				params.add(this.transformer(cc));
 			}
-			if (ct.appel().id_externe() != null) {
-				appel = new AppelDebut(ct.appel().id_externe().ID(1).getText(),
-						ct.appel().id_externe().ID(0).getText(), params.get(0));
-
-			} else {
-				appel = new AppelDebut(ct.appel().ID().getText(), null,
-						params.get(0));
-			}
+			appel = this.transformer(ct.appel().fonctionRefAppel());
 			AppelBase ab = this.appelBase(appel, params, params.size() - 1);
 
 			this.appels.put(ab, ct.appel());
@@ -477,12 +458,11 @@ public class Generateur implements ANTLRErrorListener {
 		Code tmp = r;
 		for (OperationOuAccesContext oc : ct.operationOuAcces()) {
 			if (oc.operation() != null) {
-				AppelDebut appel = new AppelDebut(oc.operation().operateur()
-						.getText(), null, tmp);
+				AppelRec appel = new AppelRec(new Var(oc.operation().operateur().getText(), null), tmp);
+
 				appel.isOp = true;
-				AppelRec appelRec = new AppelRec();
-				appelRec.appel = appel;
-				appelRec.param = transformer(oc.operation().tmpCode());
+				AppelRec appelRec = new AppelRec(appel, transformer(oc.operation().tmpCode()));
+				appelRec.isOp = true;
 
 				tmp = appelRec;
 				this.operations.put(appelRec, oc.operation());
@@ -530,14 +510,35 @@ public class Generateur implements ANTLRErrorListener {
 		return si;
 	}
 
-	public AppelBase appelBase(AppelDebut ad, List<Code> codes, int idx) {
-		if (idx == 0) {
+	public AppelBase appelBase(AppelBase ad, List<Code> codes, int idx) {
+		if (idx < 0) {
 			return ad;
 		}
-		AppelRec ar = new AppelRec();
-		ar.appel = appelBase(ad, codes, idx - 1);
-		ar.param = codes.get(idx);
-		return ar;
+		return new AppelRec(appelBase(ad, codes, idx - 1), codes.get(idx));
+
+	}
+
+	public AppelBase transformer(FonctionRefAppelContext fr) {
+		Var var = null;
+		if (fr.ID() != null) {
+			var = new Var(fr.ID().getText(), null);
+
+		}
+		if (fr.id_externe() != null) {
+			var = new Var(fr.id_externe().ID(1).getText(), fr.id_externe().ID(0).getText());
+
+		}
+		List<AccesContext> ls = fr.acces();
+
+		return acces(var, ls, ls.size() - 1);
+
+	}
+
+	public AppelBase acces(Var var, List<AccesContext> ls, int idx) {
+		if (idx < 0) {
+			return var;
+		}
+		return new Acces(acces(var, ls, idx - 1), ls.get(idx).getText());
 
 	}
 
@@ -556,29 +557,24 @@ public class Generateur implements ANTLRErrorListener {
 			return this.transformer(tmpCode.si());
 		}
 		if (tmpCode.appel() != null) {
-			AppelDebut appel;
+			AppelBase appel;
 			ArrayList<Code> params = new ArrayList<Code>();
 			for (TmpCodeContext cc : tmpCode.appel().tmpCode()) {
 				params.add(this.transformer(cc));
 			}
 
-			if (tmpCode.appel().id_externe() != null) {
+			if (tmpCode.appel().fonctionRefAppel() != null) {
 
-				appel = new AppelDebut(tmpCode.appel().id_externe().ID(1)
-						.getText(), tmpCode.appel().id_externe().ID(0)
-						.getText(), params.get(0));
+				appel = this.transformer(tmpCode.appel().fonctionRefAppel());
 			} else {
 				FunctionDefContext fdc = tmpCode.appel().functionDef();
-				if (fdc != null) {
-					FonctionDef fd = this.transformer(fdc);
 
-					String nom = "#" + this.fonctionsAnonyme.size() + "#";
-					this.fonctionsAnonyme.put(nom, fd);
-					appel = new AppelDebut(nom, null, params.get(0));
-				} else {
-					appel = new AppelDebut(tmpCode.appel().ID().getText(),
-							null, params.get(0));
-				}
+				FonctionDef fd = this.transformer(fdc);
+
+				String nom = "#" + this.fonctionsAnonyme.size() + "#";
+				this.fonctionsAnonyme.put(nom, fd);
+				appel = new Var(nom, null);
+
 			}
 
 			return appelBase(appel, params, params.size() - 1);
@@ -618,13 +614,11 @@ public class Generateur implements ANTLRErrorListener {
 
 	public TypeFunction transformer(DefTypeFunctionContext dtf) {
 
-		return this.typeFunction(this.transformer(dtf.defType()), dtf
-				.defTypes().defType(), 0);
+		return this.typeFunction(this.transformer(dtf.defType()), dtf.defTypes().defType(), 0);
 
 	}
 
-	public TypeFunction typeFunction(TypeLiteral retour,
-			List<DefTypeContext> ls, int idx) {
+	public TypeFunction typeFunction(TypeLiteral retour, List<DefTypeContext> ls, int idx) {
 		TypeFunction tf = new TypeFunction();
 		tf.param = this.transformer(ls.get(idx));
 		if (ls.size() - 1 == idx) {
@@ -639,29 +633,29 @@ public class Generateur implements ANTLRErrorListener {
 	}
 
 	@Override
-	public void reportAmbiguity(@NotNull Parser arg0, DFA arg1, int arg2,
-			int arg3, @NotNull BitSet arg4, @NotNull ATNConfigSet arg5) {
+	public void reportAmbiguity(@NotNull Parser arg0, DFA arg1, int arg2, int arg3, @NotNull BitSet arg4,
+			@NotNull ATNConfigSet arg5) {
 		// error=true;
 
 	}
 
 	@Override
-	public void reportAttemptingFullContext(@NotNull Parser arg0,
-			@NotNull DFA arg1, int arg2, int arg3, @NotNull ATNConfigSet arg4) {
+	public void reportAttemptingFullContext(@NotNull Parser arg0, @NotNull DFA arg1, int arg2, int arg3,
+			@NotNull ATNConfigSet arg4) {
 		// error=true;
 
 	}
 
 	@Override
-	public void reportContextSensitivity(@NotNull Parser arg0,
-			@NotNull DFA arg1, int arg2, int arg3, @NotNull ATNConfigSet arg4) {
+	public void reportContextSensitivity(@NotNull Parser arg0, @NotNull DFA arg1, int arg2, int arg3,
+			@NotNull ATNConfigSet arg4) {
 		// error=true;
 
 	}
 
 	@Override
-	public void syntaxError(Recognizer<?, ?> arg0, @Nullable Object arg1,
-			int arg2, int arg3, String arg4, @Nullable RecognitionException arg5) {
+	public void syntaxError(Recognizer<?, ?> arg0, @Nullable Object arg1, int arg2, int arg3, String arg4,
+			@Nullable RecognitionException arg5) {
 		error = true;
 
 	}

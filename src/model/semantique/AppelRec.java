@@ -17,6 +17,13 @@ public class AppelRec extends AppelBase {
 	 */
 	private static final long serialVersionUID = 229116752894134972L;
 	public AppelBase appel;
+	public Code param;
+	public boolean isOp = false;
+
+	public AppelRec(AppelBase appel, Code param) {
+		this.appel = appel;
+		this.param = param;
+	}
 
 	public void assignerModule(String nom) {
 		appel.assignerModule(nom);
@@ -47,8 +54,7 @@ public class AppelRec extends AppelBase {
 		return sb.toString();
 	}
 
-	public TypeFunction verifierSemantiqueRec(Univers u,
-			Map<String, TypeLiteral> variables) {
+	public TypeFunction verifierSemantiqueRec(Univers u, Map<String, TypeLiteral> variables) {
 
 		TypeFunction tf = appel.verifierSemantiqueRec(u, variables);
 		if (tf == null) {
@@ -72,14 +78,20 @@ public class AppelRec extends AppelBase {
 
 	}
 
-
-
 	@Override
 	public ECode compiler(Univers u, EUniversDef machine) {
 		EAppelRec ar = new EAppelRec();
 		this.appel.compiler(u, machine, ar);
 		ar.param = param.compiler(u, machine);
 		return ar;
+	}
+
+	public void compiler(Univers u, EUniversDef machine, EAppelRec ar) {
+		EAppelRec nar = new EAppelRec();
+		nar.param = param.compiler(u, machine);
+		this.appel.compiler(u, machine, nar);
+		ar.appel = nar;
+
 	}
 
 }
