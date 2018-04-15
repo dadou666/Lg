@@ -12,9 +12,9 @@ public class EObjet extends ECode {
 			r.attributes[i] = attributes[i].calculer(vars, machine);
 		}
 		if (attributes.length == 1) {
-			if (attributes[0] instanceof EEntier) {
+			if (r.attributes[0] instanceof EEntier) {
 				EEntier entier = new EEntier();
-				EEntier tmp = (EEntier) attributes[0];
+				EEntier tmp = (EEntier) r.attributes[0];
 				entier.idx = idx;
 				entier.valeur = tmp.valeur + 1;
 				return entier;

@@ -38,12 +38,26 @@ public class TestCompiler {
 		String r = ctx.toString();
 		assertTrue(r.equals("u{ a=t{ } b=t{ } }"));
 	}
+	
+	@Test
+	public void testAppelFonctionAvecAccesAtribut() {
+		EContext ctx =compiler("type @n {}  type  a { [n]->n:f  }  function o a:a n:n | a.f(n)   ","o(a { f=#{n:n | @n {next=n }}} 5n) ");
+		assertTrue(ctx.univers.fonctionArray != null);
+	//	assertTrue(ctx.univers.fonctionArray .length==2);
+		System.out.println(" code="+ctx);
+		ctx.calculer();
+		ctx.calculer();
+		System.out.println(" code="+ctx);
+		
+	}
+	
 	@Test
 	public void testAppelFonctionEtAcces() {
 		EContext ctx =compiler("type u { t:t } type t {}  function m t:t | u { t=t  } "," ( m(t {} ) ).t");
 		assertTrue(ctx.univers.fonctionArray != null);
 		assertTrue(ctx.univers.fonctionArray .length==1);
 		System.out.println(" code="+ctx);
+		ctx.calculer();
 		ctx.calculer();
 		System.out.println(" code="+ctx);
 		String r = ctx.toString();

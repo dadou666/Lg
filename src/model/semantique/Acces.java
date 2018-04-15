@@ -6,10 +6,15 @@ import java.util.Set;
 import model.erreur.ErreurAccesChampInexistant;
 import model.erreur.ErreurAccesSurNonObjet;
 import model.execution.EAcces;
+import model.execution.EAppelRec;
 import model.execution.EAttribut;
 import model.execution.ECode;
+import model.execution.EFonction;
+import model.execution.EFonctionRef;
+import model.execution.ELocal;
 import model.execution.ETypeObjet;
 import model.execution.EUniversDef;
+import model.semantique.Var.TypeVar;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -84,6 +89,26 @@ public class Acces extends AppelBase implements Reference {
 	public String nomRef() {
 		// TODO Auto-generated method stub
 		return nom();
+	}
+	public TypeFunction verifierSemantiqueRec(Univers u,
+			Map<String, TypeLiteral> variables) {
+		TypeLiteral tl = this.typeRetour(u, variables);
+		if (tl instanceof TypeFunction) {
+			return (TypeFunction) tl;
+		}
+		return null;
+	}
+	
+	public void compiler(Univers u, EUniversDef machine, EAppelRec ar) {
+		ETypeObjet etype = machine.donnerType(objet.typeRetour.toString(), u);
+		EAcces ea = new EAcces();
+		ea.code =  objet.compiler(u, machine);
+		ea.adr = etype.map.get(nom).adr;
+		ea.nom = nom;
+		ar.appel = ea;
+		
+	
+		
 	}
 
 	

@@ -538,7 +538,7 @@ public class Generateur implements ANTLRErrorListener {
 		if (idx < 0) {
 			return var;
 		}
-		return new Acces(acces(var, ls, idx - 1), ls.get(idx).getText());
+		return new Acces(acces(var, ls, idx - 1), ls.get(idx).ID().getText());
 
 	}
 

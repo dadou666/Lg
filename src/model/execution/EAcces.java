@@ -1,6 +1,6 @@
 package model.execution;
 
-public class EAcces extends ECode {
+public class EAcces extends EAppel {
 	public ECode code;
 	public int adr;
 	public String nom;
@@ -36,6 +36,37 @@ public class EAcces extends ECode {
 		sb.append(".");
 		sb.append(nom);
 		return sb.toString();
+	}
+
+	@Override
+	public EAppel initLocal(ECode[] vars, EUniversDef machine) {
+		// TODO Auto-generated method stub;
+		ECode code = this.calculer(vars, machine);
+		return (EAppel) code;
+	}
+
+	@Override
+	public ECode calculer(EUniversDef machine) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void arguments(ECode[] vars, int idxVar) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public EFonction donnerFonction(EUniversDef machine) {
+		// TODO Auto-generated method stub
+		throw new Error("pas une fonction");
+	}
+
+	@Override
+	public void afficher(StringBuilder sb, EUniversDef univers) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

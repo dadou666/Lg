@@ -84,7 +84,7 @@ public class EFonctionRef extends EAppel {
 	@Override
 	public ECode calculer(EUniversDef machine) {
 		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 
 }

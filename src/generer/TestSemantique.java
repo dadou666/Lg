@@ -54,6 +54,12 @@ public class TestSemantique {
 				null);
 
 	}
+	
+	@Test 
+	
+	public void testAppelFonctionAvecAccesAttribut() {
+		test("type @n {}  type  a { [n]->n:f  }  function o a:a n:n | a.f(n)  ");
+	}
 
 	@Test
 	public void testAttributOkDansFonctionDansSi() {
