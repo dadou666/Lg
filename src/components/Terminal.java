@@ -62,7 +62,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 	JTextPane output;
 	// public static String chemin = "F:\\workspaces\\Lg";
-	public static String chemin = "I:\\workspaces\\Lg";
+	public static String chemin = "F:\\workspaces\\Lg";
 	Map<Color, AttributeSet> asets = new HashMap<>();
 
 	/**
@@ -119,7 +119,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 		input.addKeyListener(this);
 		list.addListSelectionListener(this);
 		// list.addLis
-		sb.open("Theorie du tout");
+		sb.open("Langage fonctionnel");
 
 	}
 
