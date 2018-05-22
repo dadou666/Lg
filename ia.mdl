@@ -1,0 +1,46 @@
+abstract type action {
+
+ }
+abstract type objet {}
+type  @ n {}
+type avancer:action { }
+type reculer:action {}
+type dirigerVers:action {
+	n:ref	
+}
+type tirer:action {}
+type stop:action {}
+type prop:action { 
+	objet:clef
+	objet:valeur
+}
+type supprimer:action {
+	objet:clef
+}
+type informer:action {
+	n:ref
+	objet:info
+}
+
+abstract type vue {}
+abstract type boolean {}
+type true:boolean {}
+type false:boolean {}
+type detection:vue { n:distance  n:ref  boolean:estCible }
+type detectionEntre:vue { n:distance n:ref1 n:ref2 }
+type visionObjetVivant:vue { n:ref n:vie n:race n:puissance n:vitesse  }
+type visionObjet:vue { n:id boolean:estUtilisable }
+type visionObjetPuissance:vue { }
+type visionObjetVie:vue {}
+type visionObjetVitesse:vue {}
+type visionObjetSauvegarde:vue {}
+type visionTire:vue { n:source n:cible }
+type information:vue { n:ref objet:info }
+type memoire:vue { objet:clef objet:valeur }
+
+type @ list_vue { vue:vue  }
+
+
+
+
+

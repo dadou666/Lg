@@ -62,7 +62,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 	JTextPane output;
 	// public static String chemin = "F:\\workspaces\\Lg";
-	public static String chemin = "F:\\workspaces\\Lg";
+	public static String chemin = "I:\\workspaces\\Lg";
 	Map<Color, AttributeSet> asets = new HashMap<>();
 
 	/**
