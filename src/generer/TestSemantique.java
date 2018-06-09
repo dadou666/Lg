@@ -145,7 +145,7 @@ public class TestSemantique {
 		"	red(a ib ib   @naturel { next=naturel {} } )" ; 
 		Univers u=test(src);
 		FonctionLocal fl = u.donnerFonction("red");
-		assertTrue(fl.def.tlReturn.toString().equals("naturel"));
+		assertTrue(fl.def.typeRetour.toString().equals("naturel"));
 		 
 
 	}
@@ -246,7 +246,7 @@ public class TestSemantique {
 				+ "function u bool:t | not(not(true {} ))   ");
 
 		FonctionLocal fd = u.donnerFonction("not");
-		assertEquals(fd.def.tlReturn.toString(), "bool");
+		assertEquals(fd.def.typeRetour.toString(), "bool");
 
 	}
 

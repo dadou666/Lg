@@ -19,6 +19,7 @@ import grammaire.lgParser.DefTypeFunctionContext;
 import grammaire.lgParser.ElementContext;
 import grammaire.lgParser.EstTypeContext;
 import grammaire.lgParser.ExistContext;
+import grammaire.lgParser.ExternContext;
 import grammaire.lgParser.FonctionRefAppelContext;
 import grammaire.lgParser.FunctionContext;
 import grammaire.lgParser.FunctionDefContext;
@@ -76,7 +77,7 @@ public class ColorerSource {
 	public Color colorParam = Color.BLUE;
 	public Color colorFonction = Color.ORANGE;
 	public Color colorModule = Color.magenta;
-	public Color colorEntier =Color.PINK;
+	public Color colorEntier = Color.PINK;
 
 	public List<MotAvecCouleur> ls = new ArrayList<>();
 
@@ -86,15 +87,14 @@ public class ColorerSource {
 
 	public SystemContext lireSource(String src) {
 
-		lgLexer lgLexer = new lgLexer(
-				org.antlr.v4.runtime.CharStreams.fromString(src));
+		lgLexer lgLexer = new lgLexer(org.antlr.v4.runtime.CharStreams.fromString(src));
 		CommonTokenStream tokens = new CommonTokenStream(lgLexer);
 		lgParser parser = new lgParser(tokens);
 		SystemContext sys = parser.system();
 		for (ElementContext ec : sys.element()) {
 			transformer(ec);
 		}
-		
+
 		return sys;
 
 	}
@@ -112,6 +112,9 @@ public class ColorerSource {
 		}
 		if (ec.defPredicat() != null) {
 			this.transformer(ec.defPredicat());
+		}
+		if (ec.extern() != null) {
+			this.transformer(ec.extern());
 		}
 
 	}
@@ -273,6 +276,17 @@ public class ColorerSource {
 
 	}
 
+	public void transformer(ExternContext ec) {
+		if (ec.ID() != null) {
+			this.colorerFonction(ec.ID());
+		}
+		if (ec.operateur() != null) {
+			this.colorer(ec.operateur(), this.colorFonction);
+		}
+		this.transformer(ec.defTypeFunction());
+
+	}
+
 	public void transformer(FunctionLocalContext flc) {
 
 		this.colorerFonction(flc.ID());
@@ -309,15 +323,13 @@ public class ColorerSource {
 			this.transformer(fdc.tmpCode());
 		}
 
-	
-
 	}
 
 	public void transformer(CreerContext cc) {
-		
+
 		if (cc.id_externe() != null) {
-			this.colorerModule(cc.id_externe() .ID(0));
-			this.colorerType(cc.id_externe() .ID(1));
+			this.colorerModule(cc.id_externe().ID(0));
+			this.colorerType(cc.id_externe().ID(1));
 		}
 		if (cc.ID() != null) {
 			this.colorerType(cc.ID());
@@ -363,7 +375,7 @@ public class ColorerSource {
 		for (AttributsContext asc : clc.attributs()) {
 
 			for (AttributContext ac : asc.attribut()) {
-			
+
 				this.colorerAttribut(ac.ID());
 				this.transformer(ac.tmpCode());
 
@@ -386,7 +398,7 @@ public class ColorerSource {
 			if (ret) {
 				return;
 			}
-			
+
 		}
 		if (ct.var() != null) {
 			this.colorerParam(ct.var().ID());
@@ -408,7 +420,6 @@ public class ColorerSource {
 		}
 		if (ct.appel() != null) {
 
-		
 			this.transformer(ct.appel().fonctionRefAppel());
 
 			for (TmpCodeContext cc : ct.appel().tmpCode()) {
@@ -437,9 +448,10 @@ public class ColorerSource {
 		}
 
 	}
+
 	public void transformer(FonctionRefAppelContext fr) {
 		this.colorerFonction(fr.ID());
-		for(AccesContext ac:fr.acces()) {
+		for (AccesContext ac : fr.acces()) {
 			this.colorerAttribut(ac.ID());
 		}
 	}
@@ -500,7 +512,7 @@ public class ColorerSource {
 			this.transformer(tbc.multiple());
 			return;
 		}
-	
+
 		this.transformer(tbc.simple());
 	}
 

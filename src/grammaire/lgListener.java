@@ -22,6 +22,9 @@ public interface lgListener extends ParseTreeListener {
 	void enterOperationOuAcces(lgParser.OperationOuAccesContext ctx);
 	void exitOperationOuAcces(lgParser.OperationOuAccesContext ctx);
 
+	void enterExtern(lgParser.ExternContext ctx);
+	void exitExtern(lgParser.ExternContext ctx);
+
 	void enterSimple(lgParser.SimpleContext ctx);
 	void exitSimple(lgParser.SimpleContext ctx);
 

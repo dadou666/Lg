@@ -25,6 +25,9 @@ public class lgBaseListener implements lgListener {
 	@Override public void enterOperationOuAcces(lgParser.OperationOuAccesContext ctx) { }
 	@Override public void exitOperationOuAcces(lgParser.OperationOuAccesContext ctx) { }
 
+	@Override public void enterExtern(lgParser.ExternContext ctx) { }
+	@Override public void exitExtern(lgParser.ExternContext ctx) { }
+
 	@Override public void enterSimple(lgParser.SimpleContext ctx) { }
 	@Override public void exitSimple(lgParser.SimpleContext ctx) { }
 

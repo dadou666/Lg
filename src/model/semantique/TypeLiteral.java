@@ -1,5 +1,6 @@
 package model.semantique;
 
+import java.util.List;
 import java.util.Set;
 
 import model.execution.EType;
@@ -10,13 +11,22 @@ public class TypeLiteral implements Reference {
 
 	}
 
+	public void AddParamType(List<TypeLiteral> params) {
+
+	}
+
 	public boolean peutAccepter(Univers u, TypeLiteral type) {
 
 		return false;
 
 	}
-	
-	public EType compiler(EUniversDef machine,Univers u) {
+
+	public TypeLiteral typeRetour() {
+
+		return this;
+	}
+
+	public EType compiler(EUniversDef machine, Univers u) {
 		return null;
 	}
 
@@ -32,13 +42,10 @@ public class TypeLiteral implements Reference {
 
 	}
 
-	
-
 	@Override
 	public String nomRef() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 
 }

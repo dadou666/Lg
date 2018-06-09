@@ -20,6 +20,7 @@ import grammaire.lgParser.DefTypeFunctionContext;
 import grammaire.lgParser.ElementContext;
 import grammaire.lgParser.EstTypeContext;
 import grammaire.lgParser.ExistContext;
+import grammaire.lgParser.ExternContext;
 import grammaire.lgParser.FonctionRefAppelContext;
 import grammaire.lgParser.FunctionContext;
 import grammaire.lgParser.FunctionDefContext;
@@ -97,6 +98,7 @@ public class Generateur implements ANTLRErrorListener {
 	public Map<Champ, ChampContext> champs = new HashMap<>();
 	public Map<Attribut, AttributContext> attributs = new HashMap<>();
 	public Map<FonctionLocal, FunctionContext> fonctions = new HashMap<>();
+	public Map<FonctionLocal, ExternContext> externs = new HashMap<>();
 	public Map<FonctionLocal, FunctionLocalContext> fonctionLocals = new HashMap<>();
 	public Map<TypeDef, TypeContext> types = new HashMap<>();
 	public Map<Const, ConstanteContext> constantes = new HashMap<>();
@@ -193,6 +195,9 @@ public class Generateur implements ANTLRErrorListener {
 			return c;
 
 		}
+		if (ec.extern() != null) {
+			return this.transformer(ec.extern());
+		}
 
 		return null;
 
@@ -247,6 +252,37 @@ public class Generateur implements ANTLRErrorListener {
 			f.def.code = this.transformer(fc.tmpCode());
 
 		}
+		return f;
+
+	}
+
+	public FonctionLocal transformer(ExternContext ec) {
+		FonctionLocal f = null;
+		if (ec.ID() != null) {
+			f = new FonctionLocal(ec.ID().getText());
+		}
+		if (ec.operateur() != null) {
+			f = new FonctionLocal(ec.operateur().getText());
+
+		}
+		this.externs.put(f, ec);
+		f.def = new FonctionDef();
+		f.def.params = new ArrayList<Champ>();
+		TypeFunction tf = this.transformer(ec.defTypeFunction());
+		f.def.params = new ArrayList<Champ>();
+		List<TypeLiteral> params = new ArrayList<>();
+		tf.AddParamType(params);
+		TypeLiteral tr = tf.typeRetour();
+		int idx = 0;
+		for (TypeLiteral tl : params) {
+			Champ champ = new Champ("p" + idx, tl);
+			f.def.params.add(champ);
+
+		}
+	//	f.def.tlReturn = tr;
+		f.def.typeRetour = tr;
+
+		// for(T)
 		return f;
 
 	}

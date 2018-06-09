@@ -1,4 +1,5 @@
 type m  {  }
+extern u [m]->m 
 
 
 

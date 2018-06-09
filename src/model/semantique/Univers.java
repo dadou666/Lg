@@ -19,6 +19,7 @@ public class Univers {
 	public Map<String, Univers> imports = new HashMap<String, Univers>();
 	public List<Element> elements;
 	private Map<String, FonctionLocal> fonctions= new HashMap<>();
+
 	private Map<String, TypeDef> types= new HashMap<>();
 	public Map<String, Const> constantes= new HashMap<>();
 	public List<ErreurSemantique> erreurs = new ArrayList<>();

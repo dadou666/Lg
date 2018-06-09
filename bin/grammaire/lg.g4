@@ -1,7 +1,8 @@
 grammar lg;
 system : ( element   )*;
 
-element : type | function | defPredicat | constante;
+element : type | function | defPredicat | constante | extern;
+extern : 'extern'  (ID|operateur) defTypeFunction;
 constante :'const' ID tmpCode;
 type  :  abstractFlag 'type' (multipleFlag | ) ID  ( superType | )  '{' champs  '}' ;
 multipleFlag :'@';

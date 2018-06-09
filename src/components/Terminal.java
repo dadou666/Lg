@@ -56,13 +56,12 @@ import model.semantique.Univers;
 
 import org.xml.sax.SAXException;
 
-public class Terminal extends JFrame implements KeyListener, ActionListener,
-		ListSelectionListener {
+public class Terminal extends JFrame implements KeyListener, ActionListener, ListSelectionListener {
 	JTextPane input;
 
 	JTextPane output;
 	// public static String chemin = "F:\\workspaces\\Lg";
-	public static String chemin = "I:\\workspaces\\Lg";
+	public static String chemin = "F:\\GitHub\\Lg";
 	Map<Color, AttributeSet> asets = new HashMap<>();
 
 	/**
@@ -78,14 +77,13 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 		output = new JTextPane();
 		streamOutput = new TextAreaOutputStream(output);
-		System.setOut(new PrintStream(streamOutput));
-		//System.setErr(new PrintStream(streamOutput));
+		// System.setOut(new PrintStream(streamOutput));
+		// System.setErr(new PrintStream(streamOutput));
 		JScrollPane outputScrollPane = new JScrollPane(output);
 		input = new JTextPane();
 
 		JScrollPane inputScrollPane = new JScrollPane(input);
-		outputScrollPane
-				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		outputScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		list = new JList<String>();
 		listErreurSemantique = new JList<ErreurSemantique>();
@@ -138,12 +136,9 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 		if (as == null) {
 			SimpleAttributeSet attributes = new SimpleAttributeSet();
 			attributes = new SimpleAttributeSet();
-			attributes.addAttribute(StyleConstants.CharacterConstants.Bold,
-					Boolean.TRUE);
-			attributes.addAttribute(StyleConstants.CharacterConstants.Italic,
-					Boolean.FALSE);
-			attributes.addAttribute(
-					StyleConstants.CharacterConstants.Foreground, c);
+			attributes.addAttribute(StyleConstants.CharacterConstants.Bold, Boolean.TRUE);
+			attributes.addAttribute(StyleConstants.CharacterConstants.Italic, Boolean.FALSE);
+			attributes.addAttribute(StyleConstants.CharacterConstants.Foreground, c);
 			StyleConstants.setFontSize(attributes, 14);
 			as = attributes;
 			asets.put(c, as);
@@ -152,9 +147,8 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 	}
 
-	public static void main(String[] args) throws XPathExpressionException,
-			SQLException, SAXException, IOException,
-			ParserConfigurationException {
+	public static void main(String[] args)
+			throws XPathExpressionException, SQLException, SAXException, IOException, ParserConfigurationException {
 		// TODO Auto-generated method stub
 		if (args.length >= 1) {
 			chemin = args[0];
@@ -175,27 +169,23 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 	Univers donnerUnivers(String nom, Univers courant) {
 		if (modulesEnCours.contains(nom)) {
-			ErreurModule erreur = new ErreurModule(nom, courant.nom,
-					ErreurModule.TypeErreur.Cycle);
+			ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Cycle);
 			erreurs.add(erreur);
 			return null;
 
 		}
 		modulesEnCours.add(nom);
 		try {
-			String src = new String(Files.readAllBytes(Paths.get(chemin, nom
-					+ ".mdl")));
+			String src = new String(Files.readAllBytes(Paths.get(chemin, nom + ".mdl")));
 			Univers u = this.donnerUniversPourSource(nom, src, courant);
 			if (!u.erreurs.isEmpty()) {
-				ErreurModule erreur = new ErreurModule(nom, courant.nom,
-						ErreurModule.TypeErreur.Semantique);
+				ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Semantique);
 				erreurs.add(erreur);
 				return null;
 			}
 			return u;
 		} catch (IOException e) {
-			ErreurModule erreur = new ErreurModule(nom, courant.nom,
-					ErreurModule.TypeErreur.Inconnu);
+			ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Inconnu);
 			erreurs.add(erreur);
 
 		}
@@ -205,41 +195,36 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 	Univers donnerUniversPourSource(String nom, String src, Univers courant) {
 		Generateur gen = new Generateur();
-		try {
-			Univers u = gen.lireSourceUnivers(src);
 
-			if (gen.error) {
-				ErreurModule erreur = new ErreurModule(nom, courant.nom,
-						ErreurModule.TypeErreur.Syntaxe);
-				erreurs.add(erreur);
+		Univers u = gen.lireSourceUnivers(src);
 
-				return null;
-			}
-			u.nom = nom;
-			Set<String> modules = u.modules();
+		if (gen.error) {
+			ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Syntaxe);
+			erreurs.add(erreur);
 
-			for (String module : modules) {
-				Univers um = this.donnerUnivers(module, u);
-				if (um != null) {
-					u.ajouterImportModule(module, um);
-
-				}
-
-			}
-			if (!erreurs.isEmpty()) {
-				return null;
-			}
-
-			if (u != null) {
-				u.init();
-				u.verifierSemantique();
-
-			}
-			return u;
-
-		} catch (Throwable e) {
 			return null;
 		}
+		u.nom = nom;
+		Set<String> modules = u.modules();
+
+		for (String module : modules) {
+			Univers um = this.donnerUnivers(module, u);
+			if (um != null) {
+				u.ajouterImportModule(module, um);
+
+			}
+
+		}
+		if (!erreurs.isEmpty()) {
+			return null;
+		}
+
+		if (u != null) {
+			u.init();
+			u.verifierSemantique();
+
+		}
+		return u;
 
 	}
 
@@ -247,8 +232,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 
 		erreurs = new ArrayList<>();
 		modulesEnCours = new HashSet<String>();
-		Univers u = this.donnerUniversPourSource("courant", input.getText(),
-				null);
+		Univers u = this.donnerUniversPourSource("courant", input.getText(), null);
 		if (u != null) {
 			erreurs = u.erreurs;
 
@@ -287,7 +271,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 	public void setColor(Color c, int idx, int l) {
 		// System.out.println(" color " + c + " idx =" + idx + " l=" + l);
 		String src = input.getText();
-		// System.out.println(" src  " + src.substring(idx, l + idx));
+		// System.out.println(" src " + src.substring(idx, l + idx));
 		JTextPane tp = this.input;
 		int n = 0;
 		for (int i = 0; i < idx; i++) {
@@ -296,8 +280,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 			}
 		}
 
-		tp.getStyledDocument().setCharacterAttributes(idx - n, l,
-				this.attributeSet(c), true);
+		tp.getStyledDocument().setCharacterAttributes(idx - n, l, this.attributeSet(c), true);
 
 	}
 
@@ -314,8 +297,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 		try {
 			String sel = list.getSelectedValue();
 			Files.delete(Paths.get(".", sel));
-			Files.write(Paths.get(".", sel), this.input.getText().getBytes(),
-					StandardOpenOption.CREATE);
+			Files.write(Paths.get(".", sel), this.input.getText().getBytes(), StandardOpenOption.CREATE);
 			// System.out.println(" "+sel);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -342,8 +324,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener,
 				}
 			}
 			try {
-				Files.write(Paths.get(chemin, nom), this.input.getText()
-						.getBytes(), StandardOpenOption.CREATE_NEW);
+				Files.write(Paths.get(chemin, nom), this.input.getText().getBytes(), StandardOpenOption.CREATE_NEW);
 				this.chargerList();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

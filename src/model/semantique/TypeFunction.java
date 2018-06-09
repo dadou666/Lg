@@ -11,12 +11,24 @@ import model.execution.EUniversDef;
 public class TypeFunction extends TypeLiteral {
 	public TypeLiteral retour;
 	public TypeLiteral param;
-	public EType compiler(EUniversDef machine,Univers u) {
+
+	public void AddParamType(List<TypeLiteral> params) {
+		params.add(param);
+		retour.AddParamType(params);
+	}
+
+	public TypeLiteral typeRetour() {
+		return retour.typeRetour();
+
+	}
+
+	public EType compiler(EUniversDef machine, Univers u) {
 		ETypeFonction etf = new ETypeFonction();
 		etf.retour = retour.compiler(machine, u);
 		etf.param = retour.compiler(machine, u);
 		return etf;
 	}
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[ ");
@@ -70,6 +82,5 @@ public class TypeFunction extends TypeLiteral {
 	public TypeLiteral typeUnion(TypeLiteral tl, Univers u) {
 		return null;
 	}
-
 
 }
