@@ -277,6 +277,7 @@ public class Generateur implements ANTLRErrorListener {
 		for (TypeLiteral tl : params) {
 			Champ champ = new Champ("p" + idx, tl);
 			f.def.params.add(champ);
+			idx++;
 
 		}
 	//	f.def.tlReturn = tr;

@@ -77,7 +77,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 
 		output = new JTextPane();
 		streamOutput = new TextAreaOutputStream(output);
-		// System.setOut(new PrintStream(streamOutput));
+		 System.setOut(new PrintStream(streamOutput));
 		// System.setErr(new PrintStream(streamOutput));
 		JScrollPane outputScrollPane = new JScrollPane(output);
 		input = new JTextPane();

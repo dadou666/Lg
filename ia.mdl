@@ -10,6 +10,7 @@ type dirigerVers:action {
 }
 type tirer:action {}
 type stop:action {}
+type sauter:action {}
 type prop:action { 
 	objet:clef
 	objet:valeur
@@ -29,16 +30,19 @@ type false:boolean {}
 type detection:vue { n:distance  n:ref  boolean:estCible }
 type detectionEntre:vue { n:distance n:ref1 n:ref2 }
 type visionObjetVivant:vue { n:ref n:vie n:race n:puissance n:vitesse  }
+type objetVivantEnHauteur:vue { n:ref}
 type visionObjet:vue { n:id boolean:estUtilisable }
 type visionObjetPuissance:vue { }
 type visionObjetVie:vue {}
 type visionObjetVitesse:vue {}
+type visionObjetSaut:vue {}
 type visionObjetSauvegarde:vue {}
 type visionTire:vue { n:source n:cible }
 type information:vue { n:ref objet:info }
 type memoire:vue { objet:clef objet:valeur }
 
 type @ list_vue { vue:vue  }
+extern + [n n ]->n 
 
 
 
