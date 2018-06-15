@@ -39,11 +39,14 @@ import grammaire.lgParser.TypeContext;
 import grammaire.lgParser.VarContext;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import model.semantique.Acces;
 import model.semantique.AppelBase;
@@ -104,6 +107,32 @@ public class Generateur implements ANTLRErrorListener {
 	public Map<Const, ConstanteContext> constantes = new HashMap<>();
 	public Map<String, FonctionDef> fonctionsAnonyme = new HashMap<>();
 	public boolean error = false;
+	public String genererTypes(List<Class> classes) {
+		StringBuffer sb = new StringBuffer();
+		Set<String> names= new HashSet<>();
+		for(Class cls:classes) {
+			Class superclass = cls.getSuperclass();
+			String superclassSrc = "";
+			String name = cls.getSimpleName();
+		if (names.contains(name)) {
+			
+			throw new Error(" doublon : "+name);
+		}
+		names.add(name);
+			if (superclass !=Object.class) {
+				if (classes.contains(superclass)) {
+					superclassSrc = " : "+superclass.getSimpleName();
+					
+				}
+			}
+			for(Field field:cls.getDeclaredFields()) {
+				
+			}
+		
+		}
+		
+		return null;
+	}
 
 	public static Univers metaModele() throws IOException {
 		lgLexer lgLexer = new lgLexer(org.antlr.v4.runtime.CharStreams

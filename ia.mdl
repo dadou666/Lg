@@ -29,7 +29,7 @@ type true:boolean {}
 type false:boolean {}
 type detection:vue { n:distance  n:ref  boolean:estCible }
 type detectionEntre:vue { n:distance n:ref1 n:ref2 }
-type visionObjetVivant:vue { n:ref n:vie n:race n:puissance n:vitesse  }
+type visionObjetVivant:vue { n:ref n:vie n:race n:puissance n:vitesse  n:hauteurSaut}
 type objetVivantEnHauteur:vue { n:ref}
 type visionObjet:vue { n:id boolean:estUtilisable }
 type visionObjetPuissance:vue { }
@@ -43,6 +43,8 @@ type memoire:vue { objet:clef objet:valeur }
 
 type @ list_vue { vue:vue  }
 extern + [n n ]->n 
+extern = [n n]->boolean
+extern > [n n]->boolean
 
 
 
