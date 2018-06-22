@@ -15,6 +15,7 @@ import model.erreur.ErreurSemantique;
 import model.execution.EUniversDef;
 
 public class Univers {
+	public boolean estAPI= false;
 	public String nom;
 	public Map<String, Univers> imports = new HashMap<String, Univers>();
 	public List<Element> elements;

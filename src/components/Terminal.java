@@ -53,6 +53,9 @@ import javax.xml.xpath.XPathExpressionException;
 import model.erreur.ErreurModule;
 import model.erreur.ErreurSemantique;
 import model.semantique.Univers;
+import test.A;
+import test.B;
+import test.U;
 
 import org.xml.sax.SAXException;
 
@@ -63,6 +66,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 	// public static String chemin = "F:\\workspaces\\Lg";
 	public static String chemin = "F:\\GitHub\\Lg";
 	Map<Color, AttributeSet> asets = new HashMap<>();
+	public List<Class> api = new ArrayList<>();
 
 	/**
 	 * @param args
@@ -73,11 +77,15 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 	JButton nouveau;
 
 	public Terminal() {
+		api.add(A.class);
+		api.add(B.class);
+		api.add(U.class);
+
 		SwingBuilder sb = new SwingBuilder(this);
 
 		output = new JTextPane();
 		streamOutput = new TextAreaOutputStream(output);
-		 System.setOut(new PrintStream(streamOutput));
+		System.setOut(new PrintStream(streamOutput));
 		// System.setErr(new PrintStream(streamOutput));
 		JScrollPane outputScrollPane = new JScrollPane(output);
 		input = new JTextPane();
@@ -128,6 +136,9 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 			if (s.endsWith(".mdl"))
 				vector.add(s);
 		}
+		if (!this.api.isEmpty()) {
+			vector.add("api.mdl");
+		}
 		list.setListData(vector);
 	}
 
@@ -168,6 +179,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 	public List<ErreurSemantique> erreurs = new ArrayList<>();
 
 	Univers donnerUnivers(String nom, Univers courant) {
+
 		if (modulesEnCours.contains(nom)) {
 			ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Cycle);
 			erreurs.add(erreur);
@@ -176,7 +188,13 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 		}
 		modulesEnCours.add(nom);
 		try {
-			String src = new String(Files.readAllBytes(Paths.get(chemin, nom + ".mdl")));
+			String src;
+			if (nom.equals("api")) {
+				src = null;
+
+			} else {
+				src = new String(Files.readAllBytes(Paths.get(chemin, nom + ".mdl")));
+			}
 			Univers u = this.donnerUniversPourSource(nom, src, courant);
 			if (!u.erreurs.isEmpty()) {
 				ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Semantique);
@@ -195,9 +213,13 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 
 	Univers donnerUniversPourSource(String nom, String src, Univers courant) {
 		Generateur gen = new Generateur();
-
-		Univers u = gen.lireSourceUnivers(src);
-
+		Univers u;
+		if (src == null) {
+			u = gen.lireSourceUnivers(Generateur.genererTypes(api));
+			u.estAPI = true;
+		} else {
+			u = gen.lireSourceUnivers(src);
+		}
 		if (gen.error) {
 			ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Syntaxe);
 			erreurs.add(erreur);
@@ -288,6 +310,10 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
+		String sel = list.getSelectedValue();
+		if (sel != null && sel.equals("api.mdl")) {
+			return;
+		}
 		if (selection) {
 			return;
 		}
@@ -295,7 +321,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 		compiler();
 
 		try {
-			String sel = list.getSelectedValue();
+		
 			Files.delete(Paths.get(".", sel));
 			Files.write(Paths.get(".", sel), this.input.getText().getBytes(), StandardOpenOption.CREATE);
 			// System.out.println(" "+sel);
@@ -345,7 +371,14 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 		try {
 			selection = true;
 			this.input.setText("");
-			String src = new String(Files.readAllBytes(Paths.get(chemin, sel)));
+			String src;
+			if (sel.equals("api.mdl")) {
+				src = Generateur.genererTypes(api);
+				this.input.setEditable(false);
+			} else {
+				src = new String(Files.readAllBytes(Paths.get(chemin, sel)));
+				this.input.setEditable(true);
+			}
 			this.input.setText(src);
 			this.compiler();
 			this.input.setCaretPosition(0);

@@ -8,6 +8,7 @@ import java.util.Set;
 
 import model.erreur.DoublonDeNom;
 import model.erreur.ErreurAttributSuperTypeRedefini;
+import model.erreur.ErreurHeritageTypeAPINonPossible;
 import model.execution.ECode;
 import model.execution.ETypeObjet;
 import model.execution.EUniversDef;
@@ -15,6 +16,7 @@ import model.execution.EUniversDef;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class TypeDef extends Element implements Reference {
+	public boolean estAPI = false;
 	public boolean isAbstract = false;
 
 	private String nom;
@@ -117,7 +119,7 @@ public class TypeDef extends Element implements Reference {
 			this.champs.add(champ);
 
 		}
-
+		this.estAPI = u.estAPI;
 		u.ajouterType(nom(), this);
 
 	}
@@ -132,7 +134,12 @@ public class TypeDef extends Element implements Reference {
 				u.erreurs.add(new ObjetInconnu(this));
 			}
 		}
-
+		
+		if (superTypeDef != null && superTypeDef.estAPI) {
+			if (!this.estAPI) {
+				u.erreurs.add(new ErreurHeritageTypeAPINonPossible(this.nom));
+			}
+		}
 		for (Champ c : champs) {
 
 			if (superTypeDef != null

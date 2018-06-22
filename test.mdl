@@ -1,5 +1,6 @@
 type @f {  test2$m:a }
 
+function f api$A:r |  r
 
 
 

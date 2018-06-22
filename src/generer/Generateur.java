@@ -107,31 +107,62 @@ public class Generateur implements ANTLRErrorListener {
 	public Map<Const, ConstanteContext> constantes = new HashMap<>();
 	public Map<String, FonctionDef> fonctionsAnonyme = new HashMap<>();
 	public boolean error = false;
-	public String genererTypes(List<Class> classes) {
+
+	static public String genererTypes(List<Class> classes) {
 		StringBuffer sb = new StringBuffer();
-		Set<String> names= new HashSet<>();
-		for(Class cls:classes) {
+		Set<String> names = new HashSet<>();
+		String longDef = null;
+		for (Class cls : classes) {
 			Class superclass = cls.getSuperclass();
 			String superclassSrc = "";
 			String name = cls.getSimpleName();
-		if (names.contains(name)) {
+			if (names.contains(name)) {
+
+				throw new Error(" doublon : " + name);
+			}
+			sb.append("type");
+			sb.append(" ");
+			sb.append(name);
 			
-			throw new Error(" doublon : "+name);
-		}
-		names.add(name);
-			if (superclass !=Object.class) {
+			names.add(name);
+			if (superclass != Object.class) {
 				if (classes.contains(superclass)) {
-					superclassSrc = " : "+superclass.getSimpleName();
-					
+					superclassSrc = " : " + superclass.getSimpleName();
+					sb.append(superclassSrc);
+
 				}
 			}
-			for(Field field:cls.getDeclaredFields()) {
-				
+			sb.append(" {");
+	
+			for (Field field : cls.getDeclaredFields()) {
+				sb.append("\n");
+				Class fieldClass = field.getType();
+				if (fieldClass == long.class) {
+					if (longDef == null) {
+						longDef = "type @long { }";
+					}
+					sb.append("long:");
+
+				} else {
+
+					if (!classes.contains(fieldClass)) {
+						throw new Error(" no type for " + field.getType());
+
+					}
+					sb.append(fieldClass.getSimpleName());
+					sb.append(":");
+				}
+				sb.append(field.getName());
+			
 			}
-		
+			sb.append("}\n");
+		}
+		if (longDef != null) {
+			sb.append(longDef);
 		}
 		
-		return null;
+
+		return sb.toString();
 	}
 
 	public static Univers metaModele() throws IOException {
@@ -309,7 +340,7 @@ public class Generateur implements ANTLRErrorListener {
 			idx++;
 
 		}
-	//	f.def.tlReturn = tr;
+		// f.def.tlReturn = tr;
 		f.def.typeRetour = tr;
 
 		// for(T)
