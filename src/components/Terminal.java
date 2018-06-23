@@ -47,6 +47,7 @@ import javax.swing.text.Element;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -85,7 +86,7 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 
 		output = new JTextPane();
 		streamOutput = new TextAreaOutputStream(output);
-		System.setOut(new PrintStream(streamOutput));
+		// System.setOut(new PrintStream(streamOutput));
 		// System.setErr(new PrintStream(streamOutput));
 		JScrollPane outputScrollPane = new JScrollPane(output);
 		input = new JTextPane();
@@ -175,86 +176,42 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 	}
 
 	boolean colorer = false;
-	public Set<String> modulesEnCours = new HashSet<String>();
+
 	public List<ErreurSemantique> erreurs = new ArrayList<>();
 
-	Univers donnerUnivers(String nom, Univers courant) {
 
-		if (modulesEnCours.contains(nom)) {
-			ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Cycle);
-			erreurs.add(erreur);
-			return null;
-
-		}
-		modulesEnCours.add(nom);
-		try {
-			String src;
-			if (nom.equals("api")) {
-				src = null;
-
-			} else {
-				src = new String(Files.readAllBytes(Paths.get(chemin, nom + ".mdl")));
-			}
-			Univers u = this.donnerUniversPourSource(nom, src, courant);
-			if (!u.erreurs.isEmpty()) {
-				ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Semantique);
-				erreurs.add(erreur);
-				return null;
-			}
-			return u;
-		} catch (IOException e) {
-			ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Inconnu);
-			erreurs.add(erreur);
-
-		}
-		return null;
-
-	}
-
-	Univers donnerUniversPourSource(String nom, String src, Univers courant) {
+	Univers donnerUniversPourSource(String nom, String src, Univers courant) throws IOException {
 		Generateur gen = new Generateur();
-		Univers u;
-		if (src == null) {
-			u = gen.lireSourceUnivers(Generateur.genererTypes(api));
-			u.estAPI = true;
-		} else {
-			u = gen.lireSourceUnivers(src);
-		}
-		if (gen.error) {
-			ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Syntaxe);
-			erreurs.add(erreur);
-
-			return null;
-		}
-		u.nom = nom;
-		Set<String> modules = u.modules();
-
-		for (String module : modules) {
-			Univers um = this.donnerUnivers(module, u);
-			if (um != null) {
-				u.ajouterImportModule(module, um);
-
+	   Map<String,String> sources = new HashMap<>();
+		for(int i=0;i< this.list.getModel().getSize();i++) {
+			String n =this.list.getModel().getElementAt(i);
+			if (n.equals("api.mdl")) {
+				sources.put(n,Generateur.genererTypes(api));
+			} else {
+				sources.put(n,  new String(Files.readAllBytes(Paths.get(chemin, n ))));
 			}
-
 		}
-		if (!erreurs.isEmpty()) {
-			return null;
-		}
-
-		if (u != null) {
-			u.init();
-			u.verifierSemantique();
-
-		}
+		Univers u= gen.donnerUniversPourSource(nom, src,courant, sources);
+		u.erreurs.addAll(gen.erreurs);
 		return u;
+		
 
 	}
 
-	public void compiler() {
+	public void compiler() throws IOException{
 
 		erreurs = new ArrayList<>();
-		modulesEnCours = new HashSet<String>();
-		Univers u = this.donnerUniversPourSource("courant", input.getText(), null);
+
+		StyledDocument document = input.getStyledDocument();
+		String src="";
+		try {
+			src = document.getText(0, document.getLength());
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//String src = input.getText();
+		Univers u = this.donnerUniversPourSource("courant", src, null);
 		if (u != null) {
 			erreurs = u.erreurs;
 
@@ -268,8 +225,8 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 			return;
 		}
 		final ColorerSource cs = new ColorerSource();
-		System.out.println(" compilation ok ");
-		cs.lireSource(input.getText());
+		System.out.println(" compilation ok " + src);
+		cs.lireSource(src);
 		this.clearColor(Color.black);
 		for (MotAvecCouleur m : cs.ls) {
 
@@ -291,18 +248,11 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 	String s = "";
 
 	public void setColor(Color c, int idx, int l) {
-		// System.out.println(" color " + c + " idx =" + idx + " l=" + l);
-		String src = input.getText();
-		// System.out.println(" src " + src.substring(idx, l + idx));
+	
 		JTextPane tp = this.input;
-		int n = 0;
-		for (int i = 0; i < idx; i++) {
-			if (src.charAt(i) == '\n') {
-				n++;
-			}
-		}
 
-		tp.getStyledDocument().setCharacterAttributes(idx - n, l, this.attributeSet(c), true);
+
+		tp.getStyledDocument().setCharacterAttributes(idx , l, this.attributeSet(c), true);
 
 	}
 
@@ -318,10 +268,15 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 			return;
 		}
 		this.output.setText("");
-		compiler();
+		try {
+			compiler();
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 
 		try {
-		
+
 			Files.delete(Paths.get(".", sel));
 			Files.write(Paths.get(".", sel), this.input.getText().getBytes(), StandardOpenOption.CREATE);
 			// System.out.println(" "+sel);
@@ -358,7 +313,12 @@ public class Terminal extends JFrame implements KeyListener, ActionListener, Lis
 			}
 		}
 
-		this.compiler();
+		try {
+			this.compiler();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 

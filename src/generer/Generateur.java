@@ -40,6 +40,8 @@ import grammaire.lgParser.VarContext;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
@@ -48,6 +50,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import model.erreur.ErreurModule;
+import model.erreur.ErreurSemantique;
 import model.semantique.Acces;
 import model.semantique.AppelBase;
 
@@ -123,7 +127,7 @@ public class Generateur implements ANTLRErrorListener {
 			sb.append("type");
 			sb.append(" ");
 			sb.append(name);
-			
+
 			names.add(name);
 			if (superclass != Object.class) {
 				if (classes.contains(superclass)) {
@@ -133,7 +137,7 @@ public class Generateur implements ANTLRErrorListener {
 				}
 			}
 			sb.append(" {");
-	
+
 			for (Field field : cls.getDeclaredFields()) {
 				sb.append("\n");
 				Class fieldClass = field.getType();
@@ -153,14 +157,13 @@ public class Generateur implements ANTLRErrorListener {
 					sb.append(":");
 				}
 				sb.append(field.getName());
-			
+
 			}
 			sb.append("}\n");
 		}
 		if (longDef != null) {
 			sb.append(longDef);
 		}
-		
 
 		return sb.toString();
 	}
@@ -200,6 +203,83 @@ public class Generateur implements ANTLRErrorListener {
 		}
 
 		return this.generer(parser.system());
+
+	}
+
+	public Univers lireSourceUnivers(String src, Map<String, String> depandances) {
+
+		lgLexer lgLexer = new lgLexer(org.antlr.v4.runtime.CharStreams.fromString(src));
+		CommonTokenStream tokens = new CommonTokenStream(lgLexer);
+		lgParser parser = new lgParser(tokens);
+		parser.addErrorListener(this);
+		if (error) {
+			return null;
+		}
+
+		return this.generer(parser.system());
+
+	}
+
+	public Set<String> modulesEnCours = new HashSet<String>();
+	public List<ErreurSemantique> erreurs = new ArrayList<>();
+
+	public Univers donnerUnivers(String nom, Univers courant, Map<String, String> sources) {
+
+		if (modulesEnCours.contains(nom)) {
+			ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Cycle);
+			erreurs.add(erreur);
+			return null;
+
+		}
+		modulesEnCours.add(nom);
+
+		String src;
+
+		src = sources.get(nom+".mdl");
+
+		Univers u = this.donnerUniversPourSource(nom, src, courant, sources);
+		if (!u.erreurs.isEmpty()) {
+			ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Semantique);
+			erreurs.add(erreur);
+			return null;
+		}
+		return u;
+
+	}
+
+	public Univers donnerUniversPourSource(String nom, String src, Univers courant, Map<String, String> sources) {
+		Generateur gen = new Generateur();
+		Univers u;
+
+		u = gen.lireSourceUnivers(src);
+		u.estAPI = (nom.equals("api.mdl"));
+		if (gen.error) {
+			ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Syntaxe);
+			erreurs.add(erreur);
+
+			return null;
+		}
+		u.nom = nom;
+		Set<String> modules = u.modules();
+
+		for (String module : modules) {
+			Univers um = this.donnerUnivers(module, u, sources);
+			if (um != null) {
+				u.ajouterImportModule(module, um);
+
+			}
+
+		}
+		if (!erreurs.isEmpty()) {
+			return null;
+		}
+
+		if (u != null) {
+			u.init();
+			u.verifierSemantique();
+
+		}
+		return u;
 
 	}
 
