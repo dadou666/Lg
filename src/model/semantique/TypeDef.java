@@ -36,6 +36,9 @@ public class TypeDef extends Element implements Reference {
 
 
 	public void donnerModules(Set<String> modules) {
+		if (superModule != null) {
+			modules.add(superModule);
+		}
 		for (Champ c : champs) {
 			c.donnerModules(modules);
 		}
@@ -127,6 +130,7 @@ public class TypeDef extends Element implements Reference {
 	public void verifierSemantique(Univers u) {
 
 		TypeDef superTypeDef = null;
+		estAPI = u.estAPI;
 		if (superType != null) {
 			superTypeDef = u.donnerType(superModule, superType);
 

@@ -235,7 +235,7 @@ public class Generateur implements ANTLRErrorListener {
 
 		String src;
 
-		src = sources.get(nom+".mdl");
+		src = sources.get(nom);
 
 		Univers u = this.donnerUniversPourSource(nom, src, courant, sources);
 		if (!u.erreurs.isEmpty()) {
@@ -252,6 +252,7 @@ public class Generateur implements ANTLRErrorListener {
 		Univers u;
 
 		u = gen.lireSourceUnivers(src);
+		u.init();
 		u.estAPI = (nom.equals("api.mdl"));
 		if (gen.error) {
 			ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Syntaxe);
@@ -263,7 +264,7 @@ public class Generateur implements ANTLRErrorListener {
 		Set<String> modules = u.modules();
 
 		for (String module : modules) {
-			Univers um = this.donnerUnivers(module, u, sources);
+			Univers um = this.donnerUnivers(module+".mdl", u, sources);
 			if (um != null) {
 				u.ajouterImportModule(module, um);
 
@@ -275,7 +276,7 @@ public class Generateur implements ANTLRErrorListener {
 		}
 
 		if (u != null) {
-			u.init();
+		
 			u.verifierSemantique();
 
 		}

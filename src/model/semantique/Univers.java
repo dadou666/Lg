@@ -35,6 +35,15 @@ public class Univers {
 		}
 
 	}
+	public <T extends ErreurSemantique> List<T>  erreurs(Class<T> clazz) {
+		List<T> ls = new ArrayList<T>();
+		for(ErreurSemantique es:erreurs) {
+			if (es.getClass() == clazz) {
+				ls.add((T) es);
+			}
+		}
+		return ls;
+	}
 
 	
 
@@ -106,7 +115,9 @@ public class Univers {
 
 	public TypeDef donnerType(String module, String nom) {
 		if (module == null) {
-			return types.get(nom);
+			TypeDef td= types.get(nom);
+			td.estAPI = this.estAPI;
+			return td;
 		}
 
 		return imports.get(module).donnerType(null, nom);
