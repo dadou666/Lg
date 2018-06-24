@@ -52,6 +52,7 @@ import java.util.Set;
 
 import model.erreur.ErreurModule;
 import model.erreur.ErreurSemantique;
+import model.execution.EContext;
 import model.semantique.Acces;
 import model.semantique.AppelBase;
 

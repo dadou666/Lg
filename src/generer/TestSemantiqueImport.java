@@ -38,6 +38,20 @@ public class TestSemantiqueImport {
 		assertTrue(!l.isEmpty());
 
 	}
+	@Test
+	public void testAPIEmpty() {
+		List<Class> classes = new ArrayList<Class>();
+		classes.add(A.class);
+		classes.add(B.class);
+		classes.add(U.class);
+		Map<String,String> sources = new HashMap<String,String>();
+		sources.put("api.mdl", Generateur.genererTypes(classes));
+		sources.put("main.mdl", " type D : api$A {} ");
+		Univers u = this.test(" ", sources);
+		List<ErreurHeritageTypeAPINonPossible> l=u.erreurs(ErreurHeritageTypeAPINonPossible.class); 
+		assertTrue(!l.isEmpty());
+
+	}
 
 	@Test
 	public void testModules() {
