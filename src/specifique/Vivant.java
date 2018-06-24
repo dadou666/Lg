@@ -11,6 +11,6 @@ public class Vivant extends vue.ObjetMobile {
 	public long vision;
 	public long transport;
 	public long distance;
-	public long hauteurSaut;
+
 
 }
