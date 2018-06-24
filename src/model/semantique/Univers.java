@@ -18,7 +18,7 @@ public class Univers {
 	public boolean estAPI= false;
 	public String nom;
 	public Map<String, Univers> imports = new HashMap<String, Univers>();
-	public List<Element> elements;
+	public List<Element> elements = new ArrayList<Element>();
 	private Map<String, FonctionLocal> fonctions = new HashMap<>();
 
 	private Map<String, TypeDef> types = new HashMap<>();
@@ -31,7 +31,7 @@ public class Univers {
 			e.compiler(nomModule, univers, this);
 		}
 		for (Map.Entry<String, Univers> e : imports.entrySet()) {
-			e.getValue().compiler(nomModule, univers);
+			e.getValue().compiler(e.getKey(), univers);
 		}
 
 	}
@@ -114,7 +114,7 @@ public class Univers {
 	}
 
 	public TypeDef donnerType(String module, String nom) {
-		if (module == null) {
+		if (module == null || module.equals(this.nom)) {
 			TypeDef td= types.get(nom);
 			td.estAPI = this.estAPI;
 			return td;

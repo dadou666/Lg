@@ -27,7 +27,7 @@ public class TypeDef extends Element implements Reference {
 	Map<String, TypeLiteral> map;
 
 	public String superType() {
-		if (superModule != null) {
+		if (superModule != null && superType != null) {
 			return superModule + "$" + superType;
 		}
 		return superType;

@@ -222,6 +222,7 @@ public class Generateur implements ANTLRErrorListener {
 	}
 
 	public Set<String> modulesEnCours = new HashSet<String>();
+	public Map<String,Univers> cache = new HashMap<String,Univers>();
 	public List<ErreurSemantique> erreurs = new ArrayList<>();
 
 	public Univers donnerUnivers(String nom, Univers courant, Map<String, String> sources) {
@@ -239,7 +240,7 @@ public class Generateur implements ANTLRErrorListener {
 		src = sources.get(nom);
 
 		Univers u = this.donnerUniversPourSource(nom, src, courant, sources);
-		if (!u.erreurs.isEmpty()) {
+		if (u!= null && !u.erreurs.isEmpty()) {
 			ErreurModule erreur = new ErreurModule(nom, courant.nom, ErreurModule.TypeErreur.Semantique);
 			erreurs.add(erreur);
 			return null;
@@ -265,9 +266,20 @@ public class Generateur implements ANTLRErrorListener {
 		Set<String> modules = u.modules();
 
 		for (String module : modules) {
-			Univers um = this.donnerUnivers(module+".mdl", u, sources);
+			String s =module+".mdl";
+			
+			Univers um = cache.get(s);
+			if ( um == null) {
+					um= this.donnerUnivers(s, u, sources);
+					if (um != null) {
+						this.modulesEnCours.remove(s);
+						cache.put(s, um);
+						um.nom = s;
+					}
+			}
 			if (um != null) {
 				u.ajouterImportModule(module, um);
+				
 
 			}
 

@@ -36,7 +36,19 @@ public class EContext {
 		Univers u = new Univers();
 		List<ErreurSemantique> erreurs = new ArrayList<>();
 		for (String module : modules) {
-			Univers um = gen.donnerUnivers(module + ".mdl", u, sources);
+			String s = module + ".mdl";
+			
+			Univers um =gen.cache.get(s);
+			if (um == null) {
+				um=gen.donnerUnivers(module + ".mdl", u, sources);
+			
+				if (um != null) {
+					gen.cache.put(s,um);
+					gen.modulesEnCours.remove(s);
+					um.nom =module;
+					//um.assignerModule(module);
+				}
+			}
 			if (um != null) {
 				u.ajouterImportModule(module, um);
 				erreurs.addAll(u.erreurs);
