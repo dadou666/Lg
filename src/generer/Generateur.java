@@ -500,6 +500,7 @@ public class Generateur implements ANTLRErrorListener {
 
 	public TypeBasic transformer(SimpleContext sc) {
 
+		
 		if (sc.id_externe() != null) {
 			TerminalNode mn = sc.id_externe().ID(0);
 			TerminalNode tn = sc.id_externe().ID(1);
